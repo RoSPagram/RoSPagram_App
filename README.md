@@ -1,9 +1,8 @@
-# rospagram
-
-Rock ✊
-Scissor ✌️
-Paper 🖐️
-✉️ telegram
+# RoSPagram App
+### Rock ✊
+### Scissors ✌️
+### Paper 🖐️
+### ✉️ telegram
 
 ## Getting Started
 
