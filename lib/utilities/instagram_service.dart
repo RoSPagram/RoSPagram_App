@@ -1,8 +1,9 @@
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 import '../constants.dart';
 
 class InstagramService {
-  Future<void> getUserToken(String authCode) async {
+  Future<String> getUserToken(String? authCode) async {
     final uri = Uri.parse('https://api.instagram.com/oauth/access_token');
     final res = await http.post(
       uri,
@@ -14,6 +15,8 @@ class InstagramService {
         'code': authCode
       }
     );
-    print(res.body);
+    final resData = jsonDecode(res.body);
+    final shortLivedToken = resData['access_token'];
+    return shortLivedToken;
   }
 }
