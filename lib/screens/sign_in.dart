@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './auth_webview.dart';
 
 class SignIn extends StatelessWidget {
   const SignIn({super.key});
@@ -70,7 +71,9 @@ class SignIn extends StatelessWidget {
                 child: FilledButton(
                   style: FilledButton.styleFrom(backgroundColor: Color(0xff000000)),
                   child: Text('Sign in with Instagram'),
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const AuthWebView()));
+                  },
                 ),
               )
             ],
