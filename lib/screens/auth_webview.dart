@@ -4,6 +4,7 @@ import 'package:webview_flutter_android/webview_flutter_android.dart';
 import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 import '../constants.dart';
 import '../utilities/instagram_service.dart';
+import './main_screen.dart';
 
 class AuthWebView extends StatefulWidget {
   const AuthWebView({super.key});
@@ -20,22 +21,25 @@ class _AuthWebViewState extends State<AuthWebView> {
   initState() {
     super.initState();
     final WebViewController controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(NavigationDelegate(
-        onNavigationRequest: (NavigationRequest request) {
-          if(request.url.startsWith('https://localhost/')) {
-            final String code = Uri.parse(request.url).queryParameters['code'] ?? '';
-            instagramService.getUserToken(code);
-          }
-          return NavigationDecision.navigate;
-        }
-      ))
-      ..loadRequest(Uri.parse(Constants.url));
+      ..setJavaScriptMode(JavaScriptMode.unrestricted);
     _controller = controller;
   }
 
   @override
   Widget build(BuildContext context) {
+    _controller
+      ..setNavigationDelegate(NavigationDelegate(
+          onNavigationRequest: (NavigationRequest request) async {
+            if(request.url.startsWith('https://localhost/')) {
+              final code = Uri.parse(request.url).queryParameters['code'];
+              final token = await instagramService.getUserToken(code);
+              final userInfo = await instagramService.getUserInfo(token);
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen(userId: userInfo['id'], userName: userInfo['username'])), (route) => false);
+            }
+            return NavigationDecision.navigate;
+          }
+      ))
+      ..loadRequest(Uri.parse(Constants.url));
     return Scaffold(
       body: SafeArea(
         child: WebViewWidget(controller: _controller,),
