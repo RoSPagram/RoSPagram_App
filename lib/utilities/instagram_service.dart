@@ -19,4 +19,10 @@ class InstagramService {
     final shortLivedToken = resData['access_token'];
     return shortLivedToken;
   }
+  
+  Future<dynamic> getUserInfo(String token) async {
+    final uri = Uri.parse('https://graph.instagram.com/me?fields=id,username&access_token=$token');
+    final res = await http.get(uri);
+    return jsonDecode(res.body);
+  }
 }
