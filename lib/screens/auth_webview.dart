@@ -34,7 +34,8 @@ class _AuthWebViewState extends State<AuthWebView> {
               final code = Uri.parse(request.url).queryParameters['code'];
               final token = await instagramService.getUserToken(code);
               final userInfo = await instagramService.getUserInfo(token);
-              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen(userId: userInfo['id'], userName: userInfo['username'])), (route) => false);
+              // userId: userInfo['id'], userName: userInfo['username']
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
             }
             return NavigationDecision.navigate;
           }
