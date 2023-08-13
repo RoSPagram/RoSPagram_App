@@ -17,11 +17,40 @@ class _HomeState extends State<Home> {
         ProfileHeader(
           profileImgUrl: 'https://picsum.photos/200',
           userName: 'UserName',
-          userRank: 'Unranked',
+          userRank: 'Diamond',
         ),
         WinLossRecord(
           padding: EdgeInsets.all(16),
         ),
+        ElevatedButton(
+          onPressed: () {},
+          style: ElevatedButton.styleFrom(
+            padding: EdgeInsets.all(32),
+            primary: Colors.deepOrange,
+          ),
+          child: Column(
+            children: [
+              Text(
+                'Start game',
+                style: TextStyle(
+                  fontSize: 32,
+                ),
+              ),
+              Text(
+                '👤',
+                style: TextStyle(
+                  fontSize: 32,
+                ),
+              ),
+              Text(
+                'with a random user',
+                style: TextStyle(
+                  fontSize: 18,
+                ),
+              ),
+            ],
+          ),
+        )
       ],
     );
   }
