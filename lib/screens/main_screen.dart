@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './home.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -11,10 +12,10 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Text('Home'),
-    Text('Match'),
-    Text('Rank'),
-    Text('Social')
+    Home(),
+    Center(child: Text('Match')),
+    Center(child: Text('Rank')),
+    Center(child: Text('Social')),
   ];
 
   void _onItemTapped(int index) {
@@ -30,9 +31,7 @@ class _MainScreenState extends State<MainScreen> {
       body: SafeArea(
         child: Container(
           width: MediaQuery.of(context).size.width,
-          child: Center(
-            child: _widgetOptions.elementAt(_selectedIndex),
-          ),
+          child: _widgetOptions.elementAt(_selectedIndex),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
