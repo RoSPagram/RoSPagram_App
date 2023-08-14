@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import './home.dart';
+import './match.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -12,8 +13,8 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
   static const List<Widget> _widgetOptions = <Widget>[
-    Home(),
-    Center(child: Text('Match')),
+    const Home(),
+    const Match(),
     Center(child: Text('Rank')),
     Center(child: Text('Social')),
   ];
