@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import '../widgets/match_list_item.dart';
 
 class Match extends StatelessWidget {
   const Match({super.key});
+
+  static const List<String> dummyUserName = ['user', 'user123', 'user123456', 'user123456789', 'user123456789101112', 'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW', 'user', 'user', 'user', 'user', 'user'];
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +34,29 @@ class Match extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                Center(child: Text('Requested')),
-                Center(child: Text('Waiting')),
+                ListView.builder(
+                  itemCount: dummyUserName.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return MatchListItem(
+                      profileImgUrl: 'https://picsum.photos/200',
+                      userName: dummyUserName[index],
+                      description: 'Touch to Accept',
+                    );
+                  },
+                ),
+                ListView.builder(
+                  itemCount: dummyUserName.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return MatchListItem(
+                      profileImgUrl: 'https://picsum.photos/200',
+                      userName: dummyUserName[index],
+                      description: 'Touch to Cancel',
+                    );
+                  },
+                ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
