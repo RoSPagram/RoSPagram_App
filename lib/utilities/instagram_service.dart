@@ -8,10 +8,10 @@ class InstagramService {
     final res = await http.post(
       uri,
       body: {
-        'client_id': Constants.clientId,
-        'client_secret': Constants.appSecret,
+        'client_id': INSTAGRAM_API_CLIENT_ID,
+        'client_secret': INSTAGRAM_API_APP_SECRET,
         'grant_type': 'authorization_code',
-        'redirect_uri': Constants.redirectUrl,
+        'redirect_uri': INSTAGRAM_API_REDIRECT_URL,
         'code': authCode
       }
     );

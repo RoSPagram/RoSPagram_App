@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:webview_flutter_android/webview_flutter_android.dart';
-import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
+// import 'package:webview_flutter_android/webview_flutter_android.dart';
+// import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 import '../constants.dart';
 import '../utilities/instagram_service.dart';
 import './main_screen.dart';
@@ -40,7 +40,7 @@ class _AuthWebViewState extends State<AuthWebView> {
             return NavigationDecision.navigate;
           }
       ))
-      ..loadRequest(Uri.parse(Constants.url));
+      ..loadRequest(Uri.parse(INSTAGRAM_API_URL));
     return Scaffold(
       body: SafeArea(
         child: WebViewWidget(controller: _controller,),
