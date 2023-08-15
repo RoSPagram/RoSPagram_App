@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './home.dart';
 import './match.dart';
 import './rank.dart';
+import './social.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -17,7 +18,7 @@ class _MainScreenState extends State<MainScreen> {
     const Home(),
     const Match(),
     const Rank(),
-    Center(child: Text('Social')),
+    const Social(),
   ];
 
   void _onItemTapped(int index) {
