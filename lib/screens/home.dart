@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/win_loss_record.dart';
+import './play.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -23,7 +24,12 @@ class _HomeState extends State<Home> {
           padding: EdgeInsets.all(16),
         ),
         ElevatedButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Play(isRequest: true))
+            );
+          },
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.all(32),
             primary: Colors.deepOrange,
