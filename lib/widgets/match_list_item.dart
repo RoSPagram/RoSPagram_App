@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import './profile_image.dart';
 
 class MatchListItem extends StatelessWidget {
-  const MatchListItem({super.key, required this.profileImgUrl, required this.userName, required this.description});
+  const MatchListItem({super.key, required this.profileImgUrl, required this.userName, required this.description, required this.onTap});
 
   final String profileImgUrl;
   final String userName;
   final String description;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class MatchListItem extends StatelessWidget {
       ),
       child: Material(
         child: InkWell(
-          onTap: () {},
+          onTap: this.onTap,
           borderRadius: BorderRadius.circular(16),
           child: Padding(
             padding: EdgeInsets.all(16),
