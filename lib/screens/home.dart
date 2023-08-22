@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/win_loss_record.dart';
+import '../providers/my_info.dart';
 import './play.dart';
 
 class Home extends StatefulWidget {
@@ -11,13 +13,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ProfileHeader(
           profileImgUrl: 'https://picsum.photos/200',
-          userName: 'UserName',
+          userName: context.watch<MyInfo>().name,
           userRank: 'Diamond',
         ),
         WinLossRecord(
@@ -56,7 +59,8 @@ class _HomeState extends State<Home> {
               ),
             ],
           ),
-        )
+        ),
+        Text('Your ID : ${context.watch<MyInfo>().id}'),
       ],
     );
   }
