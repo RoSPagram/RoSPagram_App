@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../utilities/shared_prefs.dart';
 import '../utilities/instagram_service.dart';
-import '../screens/main_screen.dart';
+import './main_screen.dart';
 import '../providers/my_info.dart';
 
 class AuthWebView extends StatefulWidget {
@@ -46,6 +46,10 @@ class _AuthWebViewState extends State<AuthWebView> {
           }
       ))
       ..loadRequest(Uri.parse(INSTAGRAM_API_URL));
-    return WebViewWidget(controller: _controller);
+    return Scaffold(
+      body: SafeArea(
+        child: WebViewWidget(controller: _controller,),
+      ),
+    );
   }
 }
