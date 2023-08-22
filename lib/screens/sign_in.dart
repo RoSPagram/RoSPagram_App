@@ -101,12 +101,7 @@ class _SignInState extends State<SignIn> {
                   style: FilledButton.styleFrom(backgroundColor: Color(0xff000000)),
                   child: Text('Sign in with Instagram'),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) {
-                      return ChangeNotifierProvider(
-                        create: (_) => MyInfo(),
-                        child: const AuthWebView(),
-                      );
-                    }));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AuthWebView()));
                   },
                 ) :
                 Text(
