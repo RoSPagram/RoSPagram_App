@@ -18,16 +18,18 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    String? token = SharedPrefs.instance.getString('user_token');
-    if (token != null) {
-      InstagramService().getUserInfo(token).then((userProfile) {
-        if (userProfile['error'] == null) {
-          context.read<MyInfo>().id = userProfile['id'];
-          context.read<MyInfo>().name = userProfile['username'];
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
-        }
-        else setState(() {
-          showSignInButton = true;
+    String? oldToken = SharedPrefs.instance.getString('user_token');
+    if (oldToken != null) {
+      InstagramService().refreshUserToken(oldToken).then((newToken) {
+        InstagramService().getUserInfo(newToken).then((userProfile) {
+          if (userProfile['error'] == null) {
+            context.read<MyInfo>().id = userProfile['id'];
+            context.read<MyInfo>().name = userProfile['username'];
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
+          }
+          else setState(() {
+            showSignInButton = true;
+          });
         });
       });
     }
