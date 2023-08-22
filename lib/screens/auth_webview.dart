@@ -9,27 +9,15 @@ import '../utilities/instagram_service.dart';
 import './main_screen.dart';
 import '../providers/my_info.dart';
 
-class AuthWebView extends StatefulWidget {
-  const AuthWebView({super.key});
+class AuthWebView extends StatelessWidget {
+  AuthWebView({super.key});
 
-  @override
-  State<AuthWebView> createState() => _AuthWebViewState();
-}
-
-class _AuthWebViewState extends State<AuthWebView> {
-  late final WebViewController _controller;
-
-  @override
-  initState() {
-    super.initState();
-    final WebViewController controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted);
-    _controller = controller;
-  }
+  final WebViewController _controller = WebViewController();
 
   @override
   Widget build(BuildContext context) {
     _controller
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(NavigationDelegate(
           onNavigationRequest: (NavigationRequest request) async {
             if(request.url.startsWith('https://localhost/')) {
@@ -43,7 +31,7 @@ class _AuthWebViewState extends State<AuthWebView> {
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
             }
             return NavigationDecision.navigate;
-          }
+          },
       ))
       ..loadRequest(Uri.parse(INSTAGRAM_API_URL));
     return Scaffold(
