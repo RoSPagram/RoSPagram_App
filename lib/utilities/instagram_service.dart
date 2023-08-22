@@ -7,20 +7,28 @@ class InstagramService {
   InstagramService._internal();
 
   Future<String> getUserToken(String? authCode) async {
-    final uri = Uri.parse('https://api.instagram.com/oauth/access_token');
-    final res = await http.post(
+    Uri uri = Uri.parse('https://api.instagram.com/oauth/access_token');
+    http.Response res = await http.post(
       uri,
       body: {
         'client_id': INSTAGRAM_API_CLIENT_ID,
         'client_secret': INSTAGRAM_API_APP_SECRET,
         'grant_type': 'authorization_code',
         'redirect_uri': INSTAGRAM_API_REDIRECT_URL,
-        'code': authCode
+        'code': authCode,
       }
     );
-    final resData = jsonDecode(res.body);
-    final shortLivedToken = resData['access_token'];
-    return shortLivedToken;
+    print(res.body);
+    dynamic resData = jsonDecode(res.body);
+    String shortLivedToken = resData['access_token'];
+
+    uri = Uri.parse('https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=$INSTAGRAM_API_APP_SECRET&access_token=$shortLivedToken');
+    res = await http.get(uri);
+    print(res.body);
+    resData = jsonDecode(res.body);
+    String longLivedToken = resData['access_token'];
+
+    return longLivedToken;
   }
   
   Future<dynamic> getUserInfo(String token) async {
