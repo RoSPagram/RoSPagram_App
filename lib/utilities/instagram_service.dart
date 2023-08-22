@@ -18,17 +18,24 @@ class InstagramService {
         'code': authCode,
       }
     );
-    print(res.body);
     dynamic resData = jsonDecode(res.body);
     String shortLivedToken = resData['access_token'];
 
     uri = Uri.parse('https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=$INSTAGRAM_API_APP_SECRET&access_token=$shortLivedToken');
     res = await http.get(uri);
-    print(res.body);
     resData = jsonDecode(res.body);
     String longLivedToken = resData['access_token'];
 
     return longLivedToken;
+  }
+
+  Future<String> refreshUserToken(String longLivedToken) async {
+    Uri uri = Uri.parse('https://graph.instagram.com/refresh_access_token?grant_type=ig_refresh_token&access_token=$longLivedToken');
+    http.Response res = await http.get(uri);
+    dynamic resData = jsonDecode(res.body);
+    String newLongLivedToken = resData['access_token'];
+
+    return newLongLivedToken;
   }
   
   Future<dynamic> getUserInfo(String token) async {
