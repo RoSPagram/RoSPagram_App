@@ -57,7 +57,7 @@ class ProfileHeader extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 8, bottom: 8),
                     child: Text(
-                      this.userName,
+                      '@${this.userName}',
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                         fontSize: 20,
