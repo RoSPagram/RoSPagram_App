@@ -3,6 +3,9 @@ import 'dart:convert';
 import '../constants.dart';
 
 class InstagramService {
+  factory InstagramService() => InstagramService._internal();
+  InstagramService._internal();
+
   Future<String> getUserToken(String? authCode) async {
     final uri = Uri.parse('https://api.instagram.com/oauth/access_token');
     final res = await http.post(
