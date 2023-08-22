@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/my_info.dart';
 import '../widgets/rank_header.dart';
 import '../widgets/rank_list_item.dart';
 
@@ -19,7 +21,7 @@ class _RankState extends State<Rank> {
       children: [
         RankHeader(
           index: 10,
-          userName: 'UserName',
+          userName: context.watch<MyInfo>().name,
           userRank: 'Platinum',
         ),
         Padding(
