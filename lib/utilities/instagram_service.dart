@@ -45,7 +45,7 @@ class InstagramService {
   }
 
   Future<String> getUserProfileImgUrl(String userName) async {
-    final uri = Uri.parse('https://www.instagram.com/$userName/?__a=1&__d=dis');
+    final uri = Uri.parse('https://www.instagram.com/$userName/feed/?__a=1&__d=dis');
     final res = await http.get(uri);
     final resData = jsonDecode(res.body);
     final imgUrl = resData['graphql']['user']['profile_pic_url'];
