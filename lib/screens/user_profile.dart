@@ -40,7 +40,7 @@ class UserProfile extends StatelessWidget {
                 ),
               ),
               ProfileImage(
-                imgUrl: 'https://picsum.photos/200',
+                userName: this.userName,
                 width: 64,
                 height: 64,
               ),
