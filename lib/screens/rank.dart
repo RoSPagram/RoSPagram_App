@@ -3,18 +3,11 @@ import 'package:provider/provider.dart';
 import '../providers/my_info.dart';
 import '../widgets/rank_header.dart';
 import '../widgets/rank_list_item.dart';
+import '../constants.dart';
 
-class Rank extends StatefulWidget {
+class Rank extends StatelessWidget {
   const Rank({super.key});
 
-  State<Rank> createState() => _RankState();
-}
-
-class _RankState extends State<Rank> {
-
-  static const List<String> dummyUserName = ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8', 'user9', 'UserName'];
-  static const List<String> dummyUserRank = ['Master', 'Master', 'Diamond', 'Diamond', 'Diamond', 'Diamond', 'Platinum', 'Platinum', 'Platinum', 'Platinum'];
-  
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -36,12 +29,12 @@ class _RankState extends State<Rank> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: dummyUserName.length,
+            itemCount: DUMMY_USER_DATA.length,
             itemBuilder: (BuildContext context, int index) {
               return RankListItem(
                 index: index + 1,
-                userName: dummyUserName[index],
-                userRank: dummyUserRank[index],
+                userName: DUMMY_USER_DATA[index.toString()]['username'],
+                userRank: DUMMY_USER_DATA[index.toString()]['rank'],
               );
             },
           ),
