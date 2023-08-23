@@ -1,10 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/my_info.dart';
+import '../utilities/shared_prefs.dart';
+import '../utilities/instagram_service.dart';
 import './auth_webview.dart';
+import './main_screen.dart';
 
-class SignIn extends StatelessWidget {
+class SignIn extends StatefulWidget {
   const SignIn({super.key});
+
+  @override
+  State<SignIn> createState() => _SignInState();
+}
+
+class _SignInState extends State<SignIn> {
+  bool showSignInButton = false;
+
   @override
   Widget build(BuildContext context) {
+    String? oldToken = SharedPrefs.instance.getString('user_token');
+    if (oldToken != null) {
+      InstagramService().refreshUserToken(oldToken).then((newToken) {
+        InstagramService().getUserInfo(newToken).then((userProfile) {
+          if (userProfile['error'] == null) {
+            context.read<MyInfo>().id = userProfile['id'];
+            context.read<MyInfo>().name = userProfile['username'];
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
+          }
+          else setState(() {
+            showSignInButton = true;
+          });
+        });
+      });
+    }
+    else setState(() {
+      showSignInButton = true;
+    });
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -68,12 +99,19 @@ class SignIn extends StatelessWidget {
               ),
               Container(
                 padding: EdgeInsets.only(top: 128),
-                child: FilledButton(
+                child: showSignInButton ? FilledButton(
                   style: FilledButton.styleFrom(backgroundColor: Color(0xff000000)),
                   child: Text('Sign in with Instagram'),
                   onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const AuthWebView()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => AuthWebView()));
                   },
+                ) :
+                Text(
+                  'Loading...',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 24,
+                  ),
                 ),
               )
             ],
