@@ -4,9 +4,8 @@ import './profile_image.dart';
 import '../screens/user_profile.dart';
 
 class SocialFriendListItem extends StatelessWidget {
-  const SocialFriendListItem({super.key, required this.profileImgUrl, required this.userName, required this.userRank, this.isRequest = false});
+  const SocialFriendListItem({super.key, required this.userName, required this.userRank, this.isRequest = false});
 
-  final String profileImgUrl;
   final String userName;
   final String userRank;
   final bool isRequest;
@@ -50,7 +49,7 @@ class SocialFriendListItem extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(8),
                 child: ProfileImage(
-                  imgUrl: this.profileImgUrl,
+                  userName: this.userName,
                   width: 48,
                   height: 48,
                 ),
