@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:math';
 import '../constants.dart';
 import '../widgets/profile_image.dart';
 import './result.dart';
 
 class Play extends StatefulWidget {
-  const Play({super.key, required this.isRequest});
+  const Play({super.key, this.userId = '', required this.isRequest});
 
+  final String userId;
   final bool isRequest;
 
   @override
-  State<Play> createState() => _PlayState(isRequest: this.isRequest);
+  State<Play> createState() => _PlayState();
 }
 
 class _PlayState extends State<Play> {
-  _PlayState({required this.isRequest});
-
-  bool isRequest;
   bool isStart = false;
   int handIndex = 0;
+  String dummyUserId = '';
 
   void _showAlertDialog(BuildContext context) {
     showCupertinoModalPopup<void>(
@@ -50,7 +50,8 @@ class _PlayState extends State<Play> {
   @override
   initState() {
     super.initState();
-    isStart = !isRequest;
+    isStart = !widget.isRequest;
+    dummyUserId = widget.isRequest ? Random().nextInt(10).toString() : widget.userId;
   }
 
   @override
@@ -66,7 +67,7 @@ class _PlayState extends State<Play> {
             height: MediaQuery.of(context).size.height,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: rankColorGradient('Unranked'),
+                colors: rankColorGradient(DUMMY_USER_DATA[dummyUserId]['rank']),
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
               ),
@@ -74,15 +75,15 @@ class _PlayState extends State<Play> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const ProfileImage(
-                  imgUrl: 'https://picsum.photos/200',
+                ProfileImage(
+                  userName: DUMMY_USER_DATA[dummyUserId]['username'],
                   width: 64,
                   height: 64,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 16, bottom: 16),
                   child: Text(
-                    '@UserName',
+                    '@${DUMMY_USER_DATA[dummyUserId]['username']}',
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                       fontSize: 20,
@@ -91,7 +92,7 @@ class _PlayState extends State<Play> {
                   ),
                 ),
                 Text(
-                  'Unranked',
+                  DUMMY_USER_DATA[dummyUserId]['rank'],
                   style: TextStyle(
                     color: Colors.black.withOpacity(0.5),
                     fontSize: 16,
@@ -161,7 +162,7 @@ class _PlayState extends State<Play> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           ElevatedButton(
-                            onPressed: !isRequest ? null : () {
+                            onPressed: !widget.isRequest ? null : () {
                               setState(() {
                                 isStart = false;
                                 handIndex = 0;
@@ -222,7 +223,11 @@ class _PlayState extends State<Play> {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          setState(() {
+                            dummyUserId = Random().nextInt(10).toString();
+                          });
+                        },
                         child: Column(
                           children: [
                             Icon(
