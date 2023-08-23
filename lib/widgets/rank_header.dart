@@ -66,7 +66,7 @@ class RankHeader extends StatelessWidget {
                     child: Column(
                       children: [
                         ProfileImage(
-                          imgUrl: 'https://picsum.photos/200',
+                          userName: this.userName,
                           width: 32,
                           height: 32,
                         ),
