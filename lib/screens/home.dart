@@ -5,21 +5,13 @@ import '../widgets/win_loss_record.dart';
 import '../providers/my_info.dart';
 import './play.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         ProfileHeader(
-          profileImgUrl: 'https://picsum.photos/200',
           userName: context.watch<MyInfo>().name,
           userRank: 'Diamond',
         ),
@@ -29,8 +21,8 @@ class _HomeState extends State<Home> {
         ElevatedButton(
           onPressed: () {
             Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => Play(isRequest: true))
+                context,
+                MaterialPageRoute(builder: (context) => Play(isRequest: true))
             );
           },
           style: ElevatedButton.styleFrom(
