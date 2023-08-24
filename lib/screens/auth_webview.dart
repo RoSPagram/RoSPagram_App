@@ -27,7 +27,7 @@ class AuthWebView extends StatelessWidget {
               SharedPrefs.instance.setString('user_token', token);
               // userId: userProfile['id'], userName: userProfile['username']
               context.read<MyInfo>().id = userProfile['id'];
-              context.read<MyInfo>().name = userProfile['username'];
+              context.read<MyInfo>().username = userProfile['username'];
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
             }
             return NavigationDecision.navigate;
