@@ -14,7 +14,7 @@ class Rank extends StatelessWidget {
       children: [
         RankHeader(
           index: 10,
-          userName: context.watch<MyInfo>().name,
+          userName: context.watch<MyInfo>().username,
           userRank: 'Platinum',
         ),
         Padding(
