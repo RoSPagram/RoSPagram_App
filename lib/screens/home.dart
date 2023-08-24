@@ -12,7 +12,7 @@ class Home extends StatelessWidget {
     return Column(
       children: [
         ProfileHeader(
-          userName: context.watch<MyInfo>().name,
+          userName: context.watch<MyInfo>().username,
           userRank: 'Diamond',
         ),
         WinLossRecord(
