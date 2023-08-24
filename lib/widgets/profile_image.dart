@@ -20,6 +20,13 @@ class ProfileImage extends StatelessWidget {
               snapshot.data.toString(),
               width: this.width,
               height: this.height,
+              errorBuilder: (BuildContext context, Object exception, StackTrace? stackTrace) {
+                return Image(
+                  image: AssetImage('assets/img_profile_default.jpg'),
+                  width: this.width,
+                  height: this.height,
+                );
+              },
             );
           }
           else {
