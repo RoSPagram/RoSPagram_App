@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../widgets/match_list_item.dart';
 import '../screens/play.dart';
+import '../constants.dart';
 
 class Match extends StatelessWidget {
   const Match({super.key});
-
-  static const List<String> dummyUserName = ['user', 'user123', 'user123456', 'user123456789', 'user123456789101112', 'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW', 'user', 'user', 'user', 'user', 'user'];
 
   void _showAlertDialog(BuildContext context) {
     showCupertinoModalPopup<void>(
@@ -63,24 +62,22 @@ class Match extends StatelessWidget {
             child: TabBarView(
               children: [
                 ListView.builder(
-                  itemCount: dummyUserName.length,
+                  itemCount: DUMMY_USER_DATA.length,
                   itemBuilder: (BuildContext context, int index) {
                     return MatchListItem(
-                      profileImgUrl: 'https://picsum.photos/200',
-                      userName: dummyUserName[index],
+                      userName: DUMMY_USER_DATA[index.toString()]['username'],
                       description: 'Touch to Accept',
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Play(isRequest: false)));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Play(userId: index.toString(), isRequest: false)));
                       },
                     );
                   },
                 ),
                 ListView.builder(
-                  itemCount: dummyUserName.length,
+                  itemCount: DUMMY_USER_DATA.length,
                   itemBuilder: (BuildContext context, int index) {
                     return MatchListItem(
-                      profileImgUrl: 'https://picsum.photos/200',
-                      userName: dummyUserName[index],
+                      userName: DUMMY_USER_DATA[index.toString()]['username'],
                       description: 'Touch to Cancel',
                       onTap: () {
                         _showAlertDialog(context);

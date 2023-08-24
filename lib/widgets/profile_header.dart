@@ -4,9 +4,8 @@ import '../constants.dart';
 import '../screens/user_profile.dart';
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key, required this.profileImgUrl, required this.userName, required this.userRank});
+  const ProfileHeader({super.key, required this.userName, required this.userRank});
 
-  final String profileImgUrl;
   final String userName;
   final String userRank;
 
@@ -50,7 +49,7 @@ class ProfileHeader extends StatelessWidget {
               child: Column(
                 children: [
                   ProfileImage(
-                    imgUrl: this.profileImgUrl,
+                    userName: this.userName,
                     width: 64,
                     height: 64,
                   ),

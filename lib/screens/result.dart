@@ -31,7 +31,7 @@ class Result extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const ProfileImage(
-                imgUrl: 'https://picsum.photos/200',
+                userName: 'instagram',
                 width: 64,
                 height: 64,
               ),

@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import '../widgets/social_friend_list_item.dart';
+import '../constants.dart';
 
-class Social extends StatefulWidget {
+class Social extends StatelessWidget {
   const Social({super.key});
-
-  @override
-  State<Social> createState() => _SocialState();
-}
-
-class _SocialState extends State<Social> {
-  static const List<String> dummyUserName = ['user1', 'user2', 'user3', 'user4', 'user5', 'user6', 'user7', 'user8', 'user9', 'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWW'];
-  static const List<String> dummyUserRank = ['Master', 'Master', 'Diamond', 'Diamond', 'Diamond', 'Diamond', 'Platinum', 'Platinum', 'Platinum', 'Platinum'];
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +28,11 @@ class _SocialState extends State<Social> {
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                   ),
-                  itemCount: dummyUserName.length,
+                  itemCount: DUMMY_USER_DATA.length,
                   itemBuilder: (BuildContext context, int index) {
                     return SocialFriendListItem(
-                      profileImgUrl: 'https://picsum.photos/200',
-                      userName: dummyUserName[index],
-                      userRank: dummyUserRank[index],
+                      userName: DUMMY_USER_DATA[index.toString()]['username'],
+                      userRank: DUMMY_USER_DATA[index.toString()]['rank'],
                     );
                   },
                 ),
@@ -50,13 +42,12 @@ class _SocialState extends State<Social> {
                     crossAxisCount: 2,
                     childAspectRatio: 0.9,
                   ),
-                  itemCount: dummyUserName.length,
+                  itemCount: DUMMY_USER_DATA.length,
                   itemBuilder: (BuildContext context, int index) {
                     return SocialFriendListItem(
                       isRequest: true,
-                      profileImgUrl: 'https://picsum.photos/200',
-                      userName: dummyUserName[index],
-                      userRank: dummyUserRank[index],
+                      userName: DUMMY_USER_DATA[index.toString()]['username'],
+                      userRank: DUMMY_USER_DATA[index.toString()]['rank'],
                     );
                   },
                 ),

@@ -24,7 +24,7 @@ class _SignInState extends State<SignIn> {
         InstagramService().getUserInfo(newToken).then((userProfile) {
           if (userProfile['error'] == null) {
             context.read<MyInfo>().id = userProfile['id'];
-            context.read<MyInfo>().name = userProfile['username'];
+            context.read<MyInfo>().username = userProfile['username'];
             Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
           }
           else setState(() {

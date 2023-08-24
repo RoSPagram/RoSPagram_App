@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import './profile_image.dart';
 
 class MatchListItem extends StatelessWidget {
-  const MatchListItem({super.key, required this.profileImgUrl, required this.userName, required this.description, required this.onTap});
+  const MatchListItem({super.key, required this.userName, required this.description, required this.onTap});
 
-  final String profileImgUrl;
   final String userName;
   final String description;
   final void Function() onTap;
@@ -36,7 +35,7 @@ class MatchListItem extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 ProfileImage(
-                  imgUrl: 'https://picsum.photos/200',
+                  userName: this.userName,
                   width: 48,
                   height: 48,
                 ),

@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
 
-class MyInfo with ChangeNotifier implements User {
-  String _id = "";
-  String _name = "";
-
-  String get id => _id;
-  set id(String value) {
-    _id = value;
+class MyInfo extends User with ChangeNotifier {
+  @override set id(String value) {
+    super.id = value;
     notifyListeners();
   }
 
-  String get name => _name;
-  set name(String value) {
-    _name = value;
+  @override set username(String value) {
+    super.username = value;
     notifyListeners();
   }
 }
