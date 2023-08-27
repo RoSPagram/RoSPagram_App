@@ -4,10 +4,11 @@ import '../widgets/profile_image.dart';
 import '../widgets/win_loss_record.dart';
 
 class UserProfile extends StatelessWidget {
-  const UserProfile({super.key, required this.userName, required this.userRank});
+  const UserProfile({super.key, required this.imgUrl, required this.userName, required this.userRank});
 
+  final String imgUrl;
   final String userName;
-  final String userRank;
+  final int userRank;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,7 @@ class UserProfile extends StatelessWidget {
                 ),
               ),
               ProfileImage(
-                userName: this.userName,
+                url: this.imgUrl,
                 width: 64,
                 height: 64,
               ),
@@ -56,7 +57,7 @@ class UserProfile extends StatelessWidget {
                 ),
               ),
               Text(
-                this.userRank,
+                getRankNameFromCode(this.userRank),
                 style: TextStyle(
                   color: Colors.black.withOpacity(0.5),
                   fontSize: 16,
