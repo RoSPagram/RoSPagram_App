@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import '../widgets/match_list_item.dart';
+import '../utilities/supabase_util.dart';
 import '../screens/play.dart';
-import '../constants.dart';
 
 class Match extends StatelessWidget {
   const Match({super.key});
@@ -33,6 +33,11 @@ class Match extends StatelessWidget {
     );
   }
 
+  Future<List<dynamic>> _fetch() async {
+    final List<dynamic> topTen = await supabase.from('top_ten').select('username, img_url, rank');
+    return topTen;
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -58,35 +63,51 @@ class Match extends StatelessWidget {
               Tab(text: 'To'),
             ],
           ),
-          Expanded(
-            child: TabBarView(
-              children: [
-                ListView.builder(
-                  itemCount: DUMMY_USER_DATA.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return MatchListItem(
-                      userName: DUMMY_USER_DATA[index.toString()]['username'],
-                      description: 'Touch to Accept',
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Play(userId: index.toString(), isRequest: false)));
-                      },
-                    );
-                  },
-                ),
-                ListView.builder(
-                  itemCount: DUMMY_USER_DATA.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return MatchListItem(
-                      userName: DUMMY_USER_DATA[index.toString()]['username'],
-                      description: 'Touch to Cancel',
-                      onTap: () {
-                        _showAlertDialog(context);
-                      },
-                    );
-                  },
-                ),
-              ],
-            ),
+          FutureBuilder(
+            future: _fetch(),
+            builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.hasData) {
+                return Expanded(
+                  child: TabBarView(
+                    children: [
+                      ListView.builder(
+                        itemCount: snapshot.data?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return MatchListItem(
+                            userName: snapshot.data?[index]['username'],
+                            imgUrl: snapshot.data?[index]['img_url'],
+                            description: 'Touch to Accept',
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Play(userId: snapshot.data?[index]['id'], isRequest: false)));
+                            },
+                          );
+                        },
+                      ),
+                      ListView.builder(
+                        itemCount: snapshot.data?.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return MatchListItem(
+                            userName: snapshot.data?[index]['username'],
+                            imgUrl: snapshot.data?[index]['img_url'],
+                            description: 'Touch to Cancel',
+                            onTap: () {
+                              _showAlertDialog(context);
+                            },
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                );
+              }
+              else {
+                return Center(
+                  child: Text(
+                    'Loading...',
+                  ),
+                );
+              }
+            },
           ),
         ],
       ),
