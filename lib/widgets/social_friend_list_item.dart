@@ -4,20 +4,21 @@ import './profile_image.dart';
 import '../screens/user_profile.dart';
 
 class SocialFriendListItem extends StatelessWidget {
-  const SocialFriendListItem({super.key, required this.userName, required this.userRank, this.isRequest = false});
+  const SocialFriendListItem({super.key, required this.imgUrl, required this.userName, required this.userRank, this.isRequest = false});
 
+  final String imgUrl;
   final String userName;
-  final String userRank;
+  final int userRank;
   final bool isRequest;
 
   @override
   Widget build(BuildContext context) {
     void _onTap() {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => UserProfile(userName: this.userName, userRank: this.userRank)
-          )
+        context,
+        MaterialPageRoute(
+            builder: (context) => UserProfile(imgUrl: this.imgUrl, userName: this.userName, userRank: this.userRank,)
+        ),
       );
     }
 
@@ -49,7 +50,7 @@ class SocialFriendListItem extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.all(8),
                 child: ProfileImage(
-                  userName: this.userName,
+                  url: this.imgUrl,
                   width: 48,
                   height: 48,
                 ),
