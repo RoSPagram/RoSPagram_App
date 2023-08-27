@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../utilities/supabase_util.dart';
 import '../providers/my_info.dart';
 import '../widgets/rank_header.dart';
 import '../widgets/rank_list_item.dart';
-import '../constants.dart';
 
 class Rank extends StatelessWidget {
   const Rank({super.key});
+
+  Future<List<dynamic>> _fetch() async {
+    final List<dynamic> ranking = await supabase.from('top_ten').select('username, img_url, rank');
+    return ranking;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +19,9 @@ class Rank extends StatelessWidget {
       children: [
         RankHeader(
           index: 10,
+          imgUrl: context.watch<MyInfo>().img_url,
           userName: context.watch<MyInfo>().username,
-          userRank: 'Platinum',
+          userRank: 4,
         ),
         Padding(
           padding: EdgeInsets.all(8),
@@ -27,17 +33,32 @@ class Rank extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(
-          child: ListView.builder(
-            itemCount: DUMMY_USER_DATA.length,
-            itemBuilder: (BuildContext context, int index) {
-              return RankListItem(
-                index: index + 1,
-                userName: DUMMY_USER_DATA[index.toString()]['username'],
-                userRank: DUMMY_USER_DATA[index.toString()]['rank'],
+        FutureBuilder(
+          future: _fetch(),
+          builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+            if (snapshot.hasData) {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: snapshot.data?.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return RankListItem(
+                      index: index + 1,
+                      imgUrl: snapshot.data?[index]['img_url'],
+                      userName: snapshot.data?[index]['username'],
+                      userRank: snapshot.data?[index]['rank'],
+                    );
+                  },
+                ),
               );
-            },
-          ),
+            }
+            else {
+              return Center(
+                child: Text(
+                  'Loading...',
+                ),
+              );
+            }
+          },
         ),
       ],
     );
