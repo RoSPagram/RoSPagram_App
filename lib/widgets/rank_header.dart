@@ -4,11 +4,12 @@ import './profile_image.dart';
 import '../screens/user_profile.dart';
 
 class RankHeader extends StatelessWidget {
-  const RankHeader({super.key, required this.index, required this.userName, required this.userRank});
+  const RankHeader({super.key, required this.index, required this.imgUrl, required this.userName, required this.userRank});
 
   final int index;
+  final String imgUrl;
   final String userName;
-  final String userRank;
+  final int userRank;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class RankHeader extends StatelessWidget {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => UserProfile(userName: this.userName, userRank: this.userRank)
+              builder: (context) => UserProfile(imgUrl: this.imgUrl, userName: this.userName, userRank: this.userRank)
           )
       );
     }
@@ -66,7 +67,7 @@ class RankHeader extends StatelessWidget {
                     child: Column(
                       children: [
                         ProfileImage(
-                          userName: this.userName,
+                          url: this.imgUrl,
                           width: 32,
                           height: 32,
                         ),
@@ -77,7 +78,7 @@ class RankHeader extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          this.userRank,
+                          getRankNameFromCode(this.userRank),
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),
