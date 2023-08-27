@@ -11,4 +11,29 @@ class MyInfo extends User with ChangeNotifier {
     super.username = value;
     notifyListeners();
   }
+
+  @override set img_url(String value) {
+    super.img_url = value;
+    notifyListeners();
+  }
+
+  @override set rank(int value) {
+    super.rank = value;
+    notifyListeners();
+  }
+
+  @override set win(int value) {
+    super.win = value;
+    notifyListeners();
+  }
+
+  @override set loss(int value) {
+    super.loss = value;
+    notifyListeners();
+  }
+
+  @override set draw(int value) {
+    super.draw = value;
+    notifyListeners();
+  }
 }
