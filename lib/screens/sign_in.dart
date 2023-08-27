@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/my_info.dart';
 import '../utilities/shared_prefs.dart';
 import '../utilities/instagram_service.dart';
+import '../utilities/supabase_util.dart';
 import './auth_webview.dart';
 import './main_screen.dart';
 
@@ -23,9 +24,21 @@ class _SignInState extends State<SignIn> {
       InstagramService().refreshUserToken(oldToken).then((newToken) {
         InstagramService().getUserInfo(newToken).then((userProfile) {
           if (userProfile['error'] == null) {
-            context.read<MyInfo>().id = userProfile['id'];
-            context.read<MyInfo>().username = userProfile['username'];
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
+            supabase.rpc('get_user_data', params: {'user_id': userProfile['id']}).then((userData) {
+              if (userData.length == 0) setState(() {
+                showSignInButton = true;
+              });
+              else {
+                context.read<MyInfo>().id = userData[0]['id'];
+                context.read<MyInfo>().username = userData[0]['username'];
+                context.read<MyInfo>().img_url = userData[0]['img_url'];
+                context.read<MyInfo>().rank = userData[0]['rank'];
+                context.read<MyInfo>().win = userData[0]['win'];
+                context.read<MyInfo>().loss = userData[0]['loss'];
+                context.read<MyInfo>().draw = userData[0]['draw'];
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
+              }
+            });
           }
           else setState(() {
             showSignInButton = true;
