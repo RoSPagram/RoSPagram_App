@@ -12,8 +12,9 @@ class Home extends StatelessWidget {
     return Column(
       children: [
         ProfileHeader(
+          imgUrl: context.watch<MyInfo>().img_url,
           userName: context.watch<MyInfo>().username,
-          userRank: 'Diamond',
+          userRank: 5,
         ),
         WinLossRecord(
           padding: EdgeInsets.all(16),
