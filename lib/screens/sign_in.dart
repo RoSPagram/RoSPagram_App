@@ -7,48 +7,55 @@ import '../utilities/supabase_util.dart';
 import './auth_webview.dart';
 import './main_screen.dart';
 
-class SignIn extends StatefulWidget {
+class SignIn extends StatelessWidget {
   const SignIn({super.key});
 
-  @override
-  State<SignIn> createState() => _SignInState();
-}
+  Future<bool> _fetch(BuildContext context) async {
+    String? oldToken = SharedPrefs.instance.getString('user_token');
+    if (oldToken == null) return false;
 
-class _SignInState extends State<SignIn> {
-  bool showSignInButton = false;
+    final newToken = await InstagramService().refreshUserToken(oldToken);
+    final userProfile = await InstagramService().getUserInfo(newToken);
+    if (userProfile['id'] == null) return false;
+
+    final String? userImgUrl = await InstagramService().getUserProfileImgUrl(userProfile['username']);
+    final userData = await supabase.rpc('get_user_data', params: {'user_id': userProfile['id']});
+    if (userData.length == 0) return false;
+
+    await supabase.from('users').update({
+      'username': userProfile['username'],
+      'img_url': userImgUrl ?? userData[0]['img_url'],
+    }).eq('id', userProfile['id']);
+
+    context.read<MyInfo>().id = userProfile['id'];
+    context.read<MyInfo>().username = userProfile['username'];
+    context.read<MyInfo>().img_url = userImgUrl ?? userData[0]['img_url'];
+    context.read<MyInfo>().rank = userData[0]['rank'];
+    context.read<MyInfo>().win = userData[0]['win'];
+    context.read<MyInfo>().loss = userData[0]['loss'];
+    context.read<MyInfo>().draw = userData[0]['draw'];
+
+    return true;
+  }
 
   @override
   Widget build(BuildContext context) {
-    String? oldToken = SharedPrefs.instance.getString('user_token');
-    if (oldToken != null) {
-      InstagramService().refreshUserToken(oldToken).then((newToken) {
-        InstagramService().getUserInfo(newToken).then((userProfile) {
-          if (userProfile['error'] == null) {
-            supabase.rpc('get_user_data', params: {'user_id': userProfile['id']}).then((userData) {
-              if (userData.length == 0) setState(() {
-                showSignInButton = true;
-              });
-              else {
-                context.read<MyInfo>().id = userData[0]['id'];
-                context.read<MyInfo>().username = userData[0]['username'];
-                context.read<MyInfo>().img_url = userData[0]['img_url'];
-                context.read<MyInfo>().rank = userData[0]['rank'];
-                context.read<MyInfo>().win = userData[0]['win'];
-                context.read<MyInfo>().loss = userData[0]['loss'];
-                context.read<MyInfo>().draw = userData[0]['draw'];
-                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
-              }
-            });
-          }
-          else setState(() {
-            showSignInButton = true;
-          });
-        });
-      });
-    }
-    else setState(() {
-      showSignInButton = true;
-    });
+    Text loadingText = Text(
+      'Loading...',
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        fontSize: 24,
+      ),
+    );
+
+    FilledButton signInButton = FilledButton(
+      style: FilledButton.styleFrom(backgroundColor: Color(0xff000000)),
+      child: Text('Sign in with Instagram'),
+      onPressed: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => AuthWebView()));
+      },
+    );
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -112,21 +119,20 @@ class _SignInState extends State<SignIn> {
               ),
               Container(
                 padding: EdgeInsets.only(top: 128),
-                child: showSignInButton ? FilledButton(
-                  style: FilledButton.styleFrom(backgroundColor: Color(0xff000000)),
-                  child: Text('Sign in with Instagram'),
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => AuthWebView()));
+                child: FutureBuilder(
+                  future: _fetch(context),
+                  builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                    if (snapshot.hasData) {
+                      if(snapshot.data ?? false) {
+                        Future.microtask(() => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false));
+                        return loadingText;
+                      }
+                      else return signInButton;
+                    }
+                    else return loadingText;
                   },
-                ) :
-                Text(
-                  'Loading...',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 24,
-                  ),
                 ),
-              )
+              ),
             ],
           ),
         ),
