@@ -17,6 +17,9 @@ class Home extends StatelessWidget {
           userRank: 5,
         ),
         WinLossRecord(
+          win: context.watch<MyInfo>().win,
+          loss: context.watch<MyInfo>().loss,
+          draw: context.watch<MyInfo>().draw,
           padding: EdgeInsets.all(16),
         ),
         ElevatedButton(
