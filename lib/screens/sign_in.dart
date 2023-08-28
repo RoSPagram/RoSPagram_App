@@ -30,6 +30,7 @@ class SignIn extends StatelessWidget {
     context.read<MyInfo>().id = userProfile['id'];
     context.read<MyInfo>().username = userProfile['username'];
     context.read<MyInfo>().img_url = userImgUrl ?? userData[0]['img_url'];
+    context.read<MyInfo>().index = userData[0]['index'];
     context.read<MyInfo>().rank = userData[0]['rank'];
     context.read<MyInfo>().win = userData[0]['win'];
     context.read<MyInfo>().loss = userData[0]['loss'];
