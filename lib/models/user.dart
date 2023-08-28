@@ -6,6 +6,7 @@ class User {
   int win;
   int loss;
   int draw;
+  double score;
 
   User({
     this.id = '',
@@ -15,5 +16,6 @@ class User {
     this.win = 0,
     this.loss = 0,
     this.draw = 0,
+    this.score = 0,
   });
 }
