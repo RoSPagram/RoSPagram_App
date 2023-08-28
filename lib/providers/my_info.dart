@@ -17,6 +17,11 @@ class MyInfo extends User with ChangeNotifier {
     notifyListeners();
   }
 
+  @override set index(int value) {
+    super.index = value;
+    notifyListeners();
+  }
+
   @override set rank(int value) {
     super.rank = value;
     notifyListeners();
@@ -34,6 +39,11 @@ class MyInfo extends User with ChangeNotifier {
 
   @override set draw(int value) {
     super.draw = value;
+    notifyListeners();
+  }
+
+  @override set score(double value) {
+    super.score = value;
     notifyListeners();
   }
 }
