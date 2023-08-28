@@ -2,6 +2,7 @@ class User {
   String id;
   String username;
   String img_url;
+  int index;
   int rank;
   int win;
   int loss;
@@ -12,6 +13,7 @@ class User {
     this.id = '',
     this.username = '',
     this.img_url = '',
+    this.index = 0,
     this.rank = 0,
     this.win = 0,
     this.loss = 0,
