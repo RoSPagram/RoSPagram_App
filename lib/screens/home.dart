@@ -14,7 +14,7 @@ class Home extends StatelessWidget {
         ProfileHeader(
           imgUrl: context.watch<MyInfo>().img_url,
           userName: context.watch<MyInfo>().username,
-          userRank: 5,
+          userRank: context.watch<MyInfo>().rank,
         ),
         WinLossRecord(
           win: context.watch<MyInfo>().win,
