@@ -12,7 +12,7 @@ class RankHeader extends StatelessWidget {
 
   Future<dynamic> _fetchRankIndex(BuildContext context) async {
     if (context.read<MyInfo>().index != 0) return null;
-    final rankingIndex = supabase.from('ranking_view').select('index').eq('id', context.read<MyInfo>().id);
+    final List<dynamic> rankingIndex = await supabase.from('ranking_view').select('index').eq('id', context.read<MyInfo>().id);
     return rankingIndex;
   }
 
@@ -55,8 +55,9 @@ class RankHeader extends StatelessWidget {
                     future: _fetchRankIndex(context),
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                       if (snapshot.hasData) {
+                        myInfo.index = snapshot.data?[0]['index'];
                         return Text(
-                          '#${snapshot.data?[0]}',
+                          '#${snapshot.data?[0]['index']}',
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontWeight: FontWeight.bold,
@@ -65,8 +66,16 @@ class RankHeader extends StatelessWidget {
                         );
                       }
                       else {
-                        return Text(
+                        if (myInfo.index != 0) return Text(
                           '#${myInfo.index}',
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.5),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        );
+                        else return Text(
+                          '...',
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontWeight: FontWeight.bold,
