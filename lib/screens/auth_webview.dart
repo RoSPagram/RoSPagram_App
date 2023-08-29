@@ -25,7 +25,8 @@ class AuthWebView extends StatelessWidget {
               final code = Uri.parse(request.url).queryParameters['code'];
               final token = await InstagramService().getUserToken(code);
               final userProfile = await InstagramService().getUserInfo(token);
-              final userImgUrl = await InstagramService().getUserProfileImgUrl(userProfile['username']);
+              String? userImgUrl = await InstagramService().getUserProfileImgUrl(userProfile['username']);
+              if (userImgUrl == null) userImgUrl = 'https://i.ibb.co/Cv5LdCb/img-profile-default.jpg';
               final userData = await supabase.rpc('get_user_data', params: {'user_id': userProfile['id']});
 
               SharedPrefs.instance.setString('user_token', token);
