@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../widgets/social_friend_list_item.dart';
 import '../utilities/supabase_util.dart';
+import '../screens/user_profile.dart';
 
 class Social extends StatelessWidget {
   const Social({super.key});
 
   Future<List<dynamic>> _fetch() async {
-    final List<dynamic> usersData = await supabase.from('top_ten').select('username, img_url, rank');
+    final List<dynamic> usersData = await supabase.from('top_ten').select('id, username, img_url, rank');
     return usersData;
   }
 
@@ -43,6 +44,14 @@ class Social extends StatelessWidget {
                             userName: snapshot.data?[index]['username'],
                             imgUrl: snapshot.data?[index]['img_url'],
                             userRank: snapshot.data?[index]['rank'],
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => UserProfile(userId: snapshot.data?[index]['id']),
+                                ),
+                              );
+                            },
                           );
                         },
                       ),
@@ -59,6 +68,14 @@ class Social extends StatelessWidget {
                             userName: snapshot.data?[index]['username'],
                             imgUrl: snapshot.data?[index]['img_url'],
                             userRank: snapshot.data?[index]['rank'],
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UserProfile(userId: snapshot.data?[index]['id']),
+                                ),
+                              );
+                            },
                           );
                         },
                       ),
