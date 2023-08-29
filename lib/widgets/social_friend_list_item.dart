@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
 import './profile_image.dart';
-import '../screens/user_profile.dart';
 
 class SocialFriendListItem extends StatelessWidget {
-  const SocialFriendListItem({super.key, required this.imgUrl, required this.userName, required this.userRank, this.isRequest = false});
+  const SocialFriendListItem({
+    super.key,
+    required this.imgUrl,
+    required this.userName,
+    required this.userRank,
+    required this.onTap,
+    this.isRequest = false
+  });
 
   final String imgUrl;
   final String userName;
   final int userRank;
+  final void Function() onTap;
   final bool isRequest;
 
   @override
   Widget build(BuildContext context) {
-    void _onTap() {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => UserProfile(imgUrl: this.imgUrl, userName: this.userName, userRank: this.userRank,)
-        ),
-      );
-    }
-
     return Container(
       margin: EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -42,7 +40,7 @@ class SocialFriendListItem extends StatelessWidget {
       ),
       child: Material(
         child: InkWell(
-          onTap: _onTap,
+          onTap: this.onTap,
           borderRadius: BorderRadius.circular(16),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
