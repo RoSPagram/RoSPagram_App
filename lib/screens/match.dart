@@ -34,7 +34,7 @@ class Match extends StatelessWidget {
   }
 
   Future<List<dynamic>> _fetch() async {
-    final List<dynamic> topTen = await supabase.from('top_ten').select('username, img_url, rank');
+    final List<dynamic> topTen = await supabase.from('top_ten').select('id, username, img_url, rank');
     return topTen;
   }
 
