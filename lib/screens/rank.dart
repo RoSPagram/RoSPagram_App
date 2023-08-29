@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../screens/user_profile.dart';
 import '../utilities/supabase_util.dart';
 import '../providers/my_info.dart';
 import '../widgets/rank_header.dart';
@@ -9,7 +10,7 @@ class Rank extends StatelessWidget {
   const Rank({super.key});
 
   Future<List<dynamic>> _fetch() async {
-    final List<dynamic> ranking = await supabase.from('top_ten').select('username, img_url, rank');
+    final List<dynamic> ranking = await supabase.from('top_ten').select('index, id, username, img_url, rank');
     return ranking;
   }
 
@@ -18,10 +19,14 @@ class Rank extends StatelessWidget {
     return Column(
       children: [
         RankHeader(
-          index: 10,
-          imgUrl: context.watch<MyInfo>().img_url,
-          userName: context.watch<MyInfo>().username,
-          userRank: 4,
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserProfile(userId: context.read<MyInfo>().id),
+                )
+            );
+          },
         ),
         Padding(
           padding: EdgeInsets.all(8),
@@ -46,6 +51,14 @@ class Rank extends StatelessWidget {
                       imgUrl: snapshot.data?[index]['img_url'],
                       userName: snapshot.data?[index]['username'],
                       userRank: snapshot.data?[index]['rank'],
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => UserProfile(userId: snapshot.data?[index]['id']),
+                            )
+                        );
+                      },
                     );
                   },
                 ),
