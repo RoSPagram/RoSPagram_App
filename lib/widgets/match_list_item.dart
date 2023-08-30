@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import './profile_image.dart';
 
 class MatchListItem extends StatelessWidget {
-  const MatchListItem({super.key, required this.userName, required this.imgUrl, required this.description, required this.onTap});
+  const MatchListItem({super.key, required this.userName, required this.imgUrl, required this.description, this.desciptionColor = Colors.red, required this.onTap});
 
   final String userName;
   final String imgUrl;
   final String description;
+  final Color desciptionColor;
   final void Function() onTap;
 
   @override
@@ -56,7 +57,7 @@ class MatchListItem extends StatelessWidget {
                       Text(
                         this.description,
                         style: TextStyle(
-                          color: Colors.red,
+                          color: this.desciptionColor,
                         ),
                       ),
                     ],
