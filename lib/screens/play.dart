@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../widgets/profile_image.dart';
 import '../utilities/supabase_util.dart';
+import '../utilities/alert_dialog.dart';
+import '../providers/my_info.dart';
 import './result.dart';
 
 class Play extends StatefulWidget {
@@ -20,33 +22,6 @@ class _PlayState extends State<Play> {
   bool fetchData = true;
   int handIndex = 0;
   int userIndex = 0;
-
-  void _showAlertDialog(BuildContext context) {
-    showCupertinoModalPopup<void>(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: const Text('Exit'),
-        content: const Text('Are you exit this game?'),
-        actions: <CupertinoDialogAction>[
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('No'),
-          ),
-          CupertinoDialogAction(
-            isDestructiveAction: true,
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context);
-            },
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
-    );
-  }
 
   Future<List<dynamic>> _fetchRandomUsers() async {
     final List<dynamic> usersData = await supabase.rpc('get_random_users');
@@ -137,8 +112,7 @@ class _PlayState extends State<Play> {
                                         fetchData = false;
                                       });
                                     },
-                                    child: Text(
-                                      '✊',
+                                    child: Text('✊',
                                       style: TextStyle(
                                         fontSize: 48,
                                         color: handIndex == 1 ? null : Colors.black.withOpacity(0.5),
@@ -201,8 +175,39 @@ class _PlayState extends State<Play> {
                                 ),
                                 ElevatedButton(
                                   onPressed: handIndex == 0 ? null : () {
-                                    Navigator.pop(context);
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Result(result: 'win')));
+                                    if (widget.isRequest) {
+                                      supabase.from('match').insert({
+                                        'from': context.read<MyInfo>().id,
+                                        'to': userData['id'],
+                                        'send': handIndex
+                                      }).then((_) => Navigator.pop(context)).onError((error, stackTrace) {
+                                        showAlertDialog(
+                                          context,
+                                          title: 'Already in Progress',
+                                          content: 'You are already playing with this user',
+                                          defaultActionText: 'Cancel',
+                                          destructiveActionText: 'Find others',
+                                          destructiveActionOnPressed: () {
+                                            setState(() {
+                                              isStart = false;
+                                              handIndex = 0;
+                                              fetchData = false;
+                                            });
+                                            Navigator.pop(context);
+                                          },
+                                        );
+                                      });
+                                    }
+                                    else {
+                                      supabase.from('match').insert({
+                                        'respond': handIndex,
+                                        'finish': true
+                                      }).match({'from': widget.userId, 'to': context.read<MyInfo>().id})
+                                      .then((_) {
+                                        Navigator.pop(context);
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
+                                      });
+                                    }
                                   },
                                   child: Column(
                                     children: [
@@ -271,7 +276,17 @@ class _PlayState extends State<Play> {
                           children: [
                             IconButton(
                               onPressed: () {
-                                _showAlertDialog(context);
+                                showAlertDialog(
+                                  context,
+                                  title: 'Exit',
+                                  content: 'Are you exit this game?',
+                                  defaultActionText: 'No',
+                                  destructiveActionText: 'Yes',
+                                  destructiveActionOnPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                );
                               },
                               icon: Icon(Icons.cancel),
                               iconSize: 48,
