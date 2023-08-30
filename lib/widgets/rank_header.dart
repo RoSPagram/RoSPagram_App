@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
 import './profile_image.dart';
-import '../screens/user_profile.dart';
+import '../providers/my_info.dart';
+import '../utilities/supabase_util.dart';
 
 class RankHeader extends StatelessWidget {
-  const RankHeader({super.key, required this.index, required this.userName, required this.userRank});
+  const RankHeader({super.key, required this.onTap});
 
-  final int index;
-  final String userName;
-  final String userRank;
+  final void Function() onTap;
+
+  Future<dynamic> _fetchRankIndex(BuildContext context) async {
+    if (context.read<MyInfo>().index != 0) return null;
+    final List<dynamic> rankingIndex = await supabase.from('ranking_view').select('index').eq('id', context.read<MyInfo>().id);
+    return rankingIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
-    void _onTap() {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => UserProfile(userName: this.userName, userRank: this.userRank)
-          )
-      );
-    }
+    final MyInfo myInfo = context.read<MyInfo>();
 
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: rankColorGradient(this.userRank),
+            colors: rankColorGradient(myInfo.rank),
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -42,7 +41,7 @@ class RankHeader extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _onTap,
+          onTap: this.onTap,
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(64), bottomRight: Radius.circular(64)),
           child: Padding(
             padding: EdgeInsets.only(top: 16, bottom: 16, right: 8, left: 8),
@@ -52,13 +51,39 @@ class RankHeader extends StatelessWidget {
               children: [
                 Flexible(
                   flex: 1,
-                  child: Text(
-                    '#${this.index}',
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.5),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
+                  child: FutureBuilder(
+                    future: _fetchRankIndex(context),
+                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+                      if (snapshot.hasData) {
+                        myInfo.index = snapshot.data?[0]['index'];
+                        return Text(
+                          '#${snapshot.data?[0]['index']}',
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.5),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        );
+                      }
+                      else {
+                        if (myInfo.index != 0) return Text(
+                          '#${myInfo.index}',
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.5),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        );
+                        else return Text(
+                          '...',
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.5),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        );
+                      }
+                    },
                   ),
                 ),
                 Flexible(
@@ -66,18 +91,18 @@ class RankHeader extends StatelessWidget {
                     child: Column(
                       children: [
                         ProfileImage(
-                          userName: this.userName,
+                          url: myInfo.img_url,
                           width: 32,
                           height: 32,
                         ),
                         Text(
-                          '@${this.userName}',
+                          '@${myInfo.username}',
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.75),
                           ),
                         ),
                         Text(
-                          this.userRank,
+                          getRankNameFromCode(myInfo.rank),
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),

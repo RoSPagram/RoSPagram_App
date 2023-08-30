@@ -31,7 +31,7 @@ class Result extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const ProfileImage(
-                userName: 'instagram',
+                url: '',
                 width: 64,
                 height: 64,
               ),
@@ -70,6 +70,9 @@ class Result extends StatelessWidget {
                 ),
               ),
               WinLossRecord(
+                win: 0,
+                loss: 0,
+                draw: 0,
                 padding: EdgeInsets.all(16),
               ),
               Row(

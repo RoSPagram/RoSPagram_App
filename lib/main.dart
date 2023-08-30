@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './utilities/shared_prefs.dart';
+import './utilities/supabase_util.dart';
 import './screens/sign_in.dart';
 import './providers/my_info.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SharedPrefs().init();
+  initSupabase();
   runApp(const MyApp());
 }
 

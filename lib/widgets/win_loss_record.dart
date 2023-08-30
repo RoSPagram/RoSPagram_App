@@ -1,28 +1,28 @@
 import 'package:flutter/material.dart';
 
-class WinLossRecord extends StatefulWidget {
-  const WinLossRecord({
+class WinLossRecord extends StatelessWidget {
+  WinLossRecord({
     super.key,
+    required this.win,
+    required this.loss,
+    required this.draw,
     this.margin = const EdgeInsets.all(0),
     this.padding = const EdgeInsets.all(0),
     this.boxColor = Colors.transparent,
   });
 
+  final int win, loss, draw;
   final EdgeInsetsGeometry margin;
   final EdgeInsetsGeometry padding;
   final Color boxColor;
 
   @override
-  State<WinLossRecord> createState() => _WinLossRecordState();
-}
-
-class _WinLossRecordState extends State<WinLossRecord> {
-  @override build(BuildContext context) {
+  build(BuildContext context) {
     return Container(
-      margin: widget.margin,
-      padding: widget.padding,
+      margin: this.margin,
+      padding: this.padding,
       decoration: BoxDecoration(
-        color: widget.boxColor,
+        color: this.boxColor,
         borderRadius: BorderRadius.all(Radius.circular(16)),
       ),
       child: Table(
@@ -64,7 +64,7 @@ class _WinLossRecordState extends State<WinLossRecord> {
           TableRow(
             children: <Center>[
               Center(child: Text(
-                '0',
+                '${this.win}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -72,7 +72,7 @@ class _WinLossRecordState extends State<WinLossRecord> {
                 ),
               )),
               Center(child: Text(
-                '0',
+                '${this.loss}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -80,7 +80,7 @@ class _WinLossRecordState extends State<WinLossRecord> {
                 ),
               )),
               Center(child: Text(
-                '0',
+                '${this.draw}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

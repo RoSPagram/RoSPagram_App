@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import './profile_image.dart';
 import '../constants.dart';
-import '../screens/user_profile.dart';
+import '../providers/my_info.dart';
 
 class ProfileHeader extends StatelessWidget {
-  const ProfileHeader({super.key, required this.userName, required this.userRank});
+  const ProfileHeader({super.key, required this.onTap});
 
-  final String userName;
-  final String userRank;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    void _onTap() {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => UserProfile(userName: this.userName, userRank: this.userRank)
-          )
-      );
-    }
+    final MyInfo myInfo = context.read<MyInfo>();
 
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: rankColorGradient(this.userRank),
+            colors: rankColorGradient(myInfo.rank),
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -41,7 +34,7 @@ class ProfileHeader extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _onTap,
+          onTap: this.onTap,
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(64), bottomRight: Radius.circular(64)),
           child: Center(
             child: Container(
@@ -49,14 +42,14 @@ class ProfileHeader extends StatelessWidget {
               child: Column(
                 children: [
                   ProfileImage(
-                    userName: this.userName,
+                    url: myInfo.img_url,
                     width: 64,
                     height: 64,
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 8, bottom: 8),
                     child: Text(
-                      '@${this.userName}',
+                      '@${myInfo.username}',
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                         fontSize: 20,
@@ -65,7 +58,7 @@ class ProfileHeader extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    this.userRank,
+                    getRankNameFromCode(myInfo.rank),
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                       fontSize: 16,

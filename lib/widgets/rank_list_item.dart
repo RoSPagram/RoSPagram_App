@@ -1,26 +1,25 @@
 import 'package:flutter/material.dart';
 import '../constants.dart';
 import './profile_image.dart';
-import '../screens/user_profile.dart';
 
 class RankListItem extends StatelessWidget {
-  const RankListItem({super.key, required this.index, required this.userName, required this.userRank});
+  const RankListItem({
+    super.key,
+    required this.index,
+    required this.imgUrl,
+    required this.userName,
+    required this.userRank,
+    required this.onTap,
+  });
 
   final int index;
+  final String imgUrl;
   final String userName;
-  final String userRank;
+  final int userRank;
+  final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
-    void _onTap() {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => UserProfile(userName: this.userName, userRank: this.userRank)
-          )
-      );
-    }
-
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.all(8),
@@ -42,7 +41,7 @@ class RankListItem extends StatelessWidget {
       ),
       child: Material(
         child: InkWell(
-          onTap: _onTap,
+          onTap: this.onTap,
           borderRadius: BorderRadius.circular(16),
           child: Padding(
             padding: EdgeInsets.only(top: 16, bottom: 16, right: 8, left: 8),
@@ -61,7 +60,7 @@ class RankListItem extends StatelessWidget {
                 Column(
                   children: [
                     ProfileImage(
-                      userName: this.userName,
+                      url: this.imgUrl,
                       width: 32,
                       height: 32,
                     ),
@@ -74,7 +73,7 @@ class RankListItem extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  this.userRank,
+                  getRankNameFromCode(this.userRank),
                   style: TextStyle(
                     color: Colors.black.withOpacity(0.5),
                   ),

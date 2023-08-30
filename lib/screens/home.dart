@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/win_loss_record.dart';
 import '../providers/my_info.dart';
+import './user_profile.dart';
 import './play.dart';
 
 class Home extends StatelessWidget {
@@ -12,10 +13,19 @@ class Home extends StatelessWidget {
     return Column(
       children: [
         ProfileHeader(
-          userName: context.watch<MyInfo>().username,
-          userRank: 'Diamond',
+          onTap: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => UserProfile(userId: context.read<MyInfo>().id),
+                )
+            );
+          },
         ),
         WinLossRecord(
+          win: context.watch<MyInfo>().win,
+          loss: context.watch<MyInfo>().loss,
+          draw: context.watch<MyInfo>().draw,
           padding: EdgeInsets.all(16),
         ),
         ElevatedButton(
