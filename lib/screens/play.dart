@@ -199,13 +199,13 @@ class _PlayState extends State<Play> {
                                       });
                                     }
                                     else {
-                                      supabase.from('match').insert({
+                                      supabase.from('match').update({
                                         'respond': handIndex,
                                         'finish': true
                                       }).match({'from': widget.userId, 'to': context.read<MyInfo>().id})
                                       .then((_) {
                                         Navigator.pop(context);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id, deleteFromDB: false)));
                                       });
                                     }
                                   },
