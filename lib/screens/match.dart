@@ -44,6 +44,14 @@ class _MatchState extends State<Match> {
             },
             child: Text('CREATE_TEST_MATCH'),
           ),
+          ElevatedButton(
+            onPressed: () {
+              supabase.from('match').delete().not('respond', 'eq', 0).then((_) {
+                setState(() {});
+              });
+            },
+            child: Text('CLEAR_FINISH_MATCHES'),
+          ),
           const TabBar(
             indicatorColor: Colors.black,
             labelColor: Colors.black,
