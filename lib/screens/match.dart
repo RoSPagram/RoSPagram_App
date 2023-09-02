@@ -108,7 +108,7 @@ class _MatchState extends State<Match> {
                                 );
                               }
                               else {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: context.read<MyInfo>().id, to: matchDataTo?[index]['id'], deleteFromDB: true)));
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: context.read<MyInfo>().id, to: matchDataTo?[index]['id'])));
                               }
                             },
                           );
