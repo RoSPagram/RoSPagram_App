@@ -204,7 +204,7 @@ class _PlayState extends State<Play> {
                                       }).match({'from': widget.userId, 'to': context.read<MyInfo>().id})
                                       .then((_) {
                                         Navigator.pop(context);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id, deleteFromDB: false)));
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
                                       });
                                     }
                                   },
