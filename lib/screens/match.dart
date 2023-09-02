@@ -87,7 +87,7 @@ class _MatchState extends State<Match> {
                             userName: matchDataTo?[index]['username'],
                             imgUrl: matchDataTo?[index]['img_url'],
                             description: matchDataTo?[index]['respond'] == 0 ? 'Touch to Cancel' : 'Touch to show result',
-                            desciptionColor: matchDataTo?[index]['finish'] ? Colors.green : Colors.red,
+                            desciptionColor: matchDataTo?[index]['respond'] == 0 ? Colors.red : Colors.green,
                             onTap: () {
                               if (matchDataTo?[index]['respond'] == 0) {
                                 showAlertDialog(
