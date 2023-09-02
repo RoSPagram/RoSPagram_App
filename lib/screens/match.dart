@@ -36,6 +36,14 @@ class _MatchState extends State<Match> {
               ),
             ),
           ),
+          ElevatedButton(
+            onPressed: () {
+              supabase.rpc('create_test_match').then((_) {
+                setState(() {});
+              });
+            },
+            child: Text('CREATE_TEST_MATCH'),
+          ),
           const TabBar(
             indicatorColor: Colors.black,
             labelColor: Colors.black,
