@@ -6,10 +6,9 @@ import '../widgets/profile_image.dart';
 import '../widgets/win_loss_record.dart';
 
 class Result extends StatelessWidget {
-  const Result({super.key, required this.from, required this.to, required this.deleteFromDB});
+  const Result({super.key, required this.from, required this.to});
 
   final String from, to;
-  final bool deleteFromDB;
 
   Future<List<dynamic>> _fetch(bool isSender) async {
     final List<dynamic> resultData = await supabase.from('match').select().match({'from': this.from, 'to': this.to});
@@ -43,10 +42,22 @@ class Result extends StatelessWidget {
               final opponentData = snapshot.data?[1];
               final result = isSender ? getResult(resultData['send'], resultData['respond']) : getResult(resultData['respond'], resultData['send']);
 
-              if (this.deleteFromDB) supabase.from('match').delete().match({
+              if (isSender) supabase.from('match').delete().match({
                   'from': this.from,
                   'to': this.to
                 }).then((_) => null);
+              else {
+                switch(result) {
+                  case 'win':
+                    supabase.rpc('set_win_loss', params: {'winner_id': this.to, 'loser_id': this.from}).then((_) => null);
+                    break;
+                  case 'lose':
+                    supabase.rpc('set_win_loss', params: {'winner_id': this.from, 'loser_id': this.to}).then((_) => null);
+                    break;
+                  default:
+                    supabase.rpc('set_draw', params: {'id1': this.from, 'id2': this.to}).then((_) => null);
+                }
+              }
 
               return Container(
                 width: MediaQuery.of(context).size.width,
