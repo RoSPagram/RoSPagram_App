@@ -45,18 +45,16 @@ class Result extends StatelessWidget {
               if (isSender) supabase.from('match').delete().match({
                   'from': this.from,
                   'to': this.to
-                }).then((_) => null);
-              else {
-                switch(result) {
+                }).then((_) => _);
+              else switch(result) {
                   case 'win':
-                    supabase.rpc('set_win_loss', params: {'winner_id': this.to, 'loser_id': this.from}).then((_) => null);
+                    supabase.rpc('set_win_loss', params: {'winner_id': this.to, 'loser_id': this.from}).then((_) => _);
                     break;
                   case 'lose':
-                    supabase.rpc('set_win_loss', params: {'winner_id': this.from, 'loser_id': this.to}).then((_) => null);
+                    supabase.rpc('set_win_loss', params: {'winner_id': this.from, 'loser_id': this.to}).then((_) => _);
                     break;
                   default:
-                    supabase.rpc('set_draw', params: {'id1': this.from, 'id2': this.to}).then((_) => null);
-                }
+                    supabase.rpc('set_draw', params: {'id1': this.from, 'id2': this.to}).then((_) => _);
               }
 
               return Container(
