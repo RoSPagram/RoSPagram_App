@@ -201,7 +201,6 @@ class _PlayState extends State<Play> {
                                     else {
                                       supabase.from('match').update({
                                         'respond': handIndex,
-                                        'finish': true
                                       }).match({'from': widget.userId, 'to': context.read<MyInfo>().id})
                                       .then((_) {
                                         Navigator.pop(context);

@@ -86,13 +86,10 @@ class _MatchState extends State<Match> {
                           return MatchListItem(
                             userName: matchDataTo?[index]['username'],
                             imgUrl: matchDataTo?[index]['img_url'],
-                            description: matchDataTo?[index]['finish'] ? 'Touch to show result' : 'Touch to Cancel',
+                            description: matchDataTo?[index]['respond'] == 0 ? 'Touch to Cancel' : 'Touch to show result',
                             desciptionColor: matchDataTo?[index]['finish'] ? Colors.green : Colors.red,
                             onTap: () {
-                              if (matchDataTo?[index]['finish']) {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: context.read<MyInfo>().id, to: matchDataTo?[index]['id'], deleteFromDB: true)));
-                              }
-                              else {
+                              if (matchDataTo?[index]['respond'] == 0) {
                                 showAlertDialog(
                                   context,
                                   title: 'Cancel Match',
@@ -102,14 +99,16 @@ class _MatchState extends State<Match> {
                                   destructiveActionOnPressed: () {
                                     supabase.from('match').delete().match({
                                       'from': context.read<MyInfo>().id,
-                                      'to': matchDataTo?[index]['id'],
-                                      'finish': false
+                                      'to': matchDataTo?[index]['id']
                                     }).then((_) {
                                       setState(() {});
                                       Navigator.pop(context);
                                     });
                                   },
                                 );
+                              }
+                              else {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: context.read<MyInfo>().id, to: matchDataTo?[index]['id'], deleteFromDB: true)));
                               }
                             },
                           );
