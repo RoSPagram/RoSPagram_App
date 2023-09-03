@@ -5,6 +5,7 @@ import '../widgets/profile_image.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/alert_dialog.dart';
 import '../providers/my_info.dart';
+import '../providers/match_data_to.dart';
 import './result.dart';
 
 class Play extends StatefulWidget {
@@ -180,7 +181,10 @@ class _PlayState extends State<Play> {
                                         'from': context.read<MyInfo>().id,
                                         'to': userData['id'],
                                         'send': handIndex
-                                      }).then((_) => Navigator.pop(context)).onError((error, stackTrace) {
+                                      }).then((_) {
+                                        context.read<MatchDataTo>().fetch();
+                                        Navigator.pop(context);
+                                      }).onError((error, stackTrace) {
                                         showAlertDialog(
                                           context,
                                           title: 'Already in Progress',
