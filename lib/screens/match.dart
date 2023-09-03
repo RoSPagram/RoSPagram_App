@@ -1,41 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import '../widgets/match_list_item.dart';
 import '../utilities/supabase_util.dart';
+import '../utilities/alert_dialog.dart';
 import '../screens/play.dart';
+import '../screens/result.dart';
+import '../providers/my_info.dart';
 
-class Match extends StatelessWidget {
+class Match extends StatefulWidget {
   const Match({super.key});
 
-  void _showAlertDialog(BuildContext context) {
-    showCupertinoModalPopup<void>(
-      context: context,
-      builder: (BuildContext context) => CupertinoAlertDialog(
-        title: const Text('Cancel Match'),
-        content: const Text('Are you cancel this game?'),
-        actions: <CupertinoDialogAction>[
-          CupertinoDialogAction(
-            isDefaultAction: true,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('No'),
-          ),
-          CupertinoDialogAction(
-            isDestructiveAction: true,
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
-    );
-  }
+  @override
+  State<Match> createState() => _MatchState();
+}
 
-  Future<List<dynamic>> _fetch() async {
-    final List<dynamic> topTen = await supabase.from('top_ten').select('id, username, img_url, rank');
-    return topTen;
+class _MatchState extends State<Match> {
+  Future<List<dynamic>> _fetch(BuildContext context, String type) async {
+    final List<dynamic> matchData = await supabase.rpc('get_match_${type}', params: {'user_id': context.read<MyInfo>().id});
+    return matchData;
   }
 
   @override
@@ -54,6 +36,22 @@ class Match extends StatelessWidget {
               ),
             ),
           ),
+          ElevatedButton(
+            onPressed: () {
+              supabase.rpc('create_test_match').then((_) {
+                setState(() {});
+              });
+            },
+            child: Text('CREATE_TEST_MATCH'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              supabase.from('match').delete().not('respond', 'eq', 0).then((_) {
+                setState(() {});
+              });
+            },
+            child: Text('CLEAR_FINISH_MATCHES'),
+          ),
           const TabBar(
             indicatorColor: Colors.black,
             labelColor: Colors.black,
@@ -63,51 +61,83 @@ class Match extends StatelessWidget {
               Tab(text: 'To'),
             ],
           ),
-          FutureBuilder(
-            future: _fetch(),
-            builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-              if (snapshot.hasData) {
-                return Expanded(
-                  child: TabBarView(
-                    children: [
-                      ListView.builder(
-                        itemCount: snapshot.data?.length,
+          Expanded(
+            child: TabBarView(
+              children: [
+                FutureBuilder(
+                  future: _fetch(context, 'from'),
+                  builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+                    if (snapshot.hasData) {
+                      final List<dynamic>? matchDataFrom = snapshot.data;
+                      if (matchDataFrom?.length == 0) return Center(child: Text('No matches'));
+                      return ListView.builder(
+                        itemCount: matchDataFrom?.length,
                         itemBuilder: (BuildContext context, int index) {
                           return MatchListItem(
-                            userName: snapshot.data?[index]['username'],
-                            imgUrl: snapshot.data?[index]['img_url'],
+                            userName: matchDataFrom?[index]['username'],
+                            imgUrl: matchDataFrom?[index]['img_url'],
                             description: 'Touch to Accept',
+                            desciptionColor: Colors.red,
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => Play(userId: snapshot.data?[index]['id'], isRequest: false)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Play(userId: matchDataFrom?[index]['id'], isRequest: false)));
                             },
                           );
                         },
-                      ),
-                      ListView.builder(
-                        itemCount: snapshot.data?.length,
+                      );
+                    }
+                    else return Center(
+                      child: Text('Loading...'),
+                    );
+                  },
+                ),
+                FutureBuilder(
+                  future: _fetch(context, 'to'),
+                  builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+                    if (snapshot.hasData) {
+                      final List<dynamic>? matchDataTo = snapshot.data;
+                      if (matchDataTo?.length == 0) return Center(child: Text('No Matches'));
+                      return ListView.builder(
+                        itemCount: matchDataTo?.length,
                         itemBuilder: (BuildContext context, int index) {
                           return MatchListItem(
-                            userName: snapshot.data?[index]['username'],
-                            imgUrl: snapshot.data?[index]['img_url'],
-                            description: 'Touch to Cancel',
+                            userName: matchDataTo?[index]['username'],
+                            imgUrl: matchDataTo?[index]['img_url'],
+                            description: matchDataTo?[index]['respond'] == 0 ? 'Touch to Cancel' : 'Touch to show result',
+                            desciptionColor: matchDataTo?[index]['respond'] == 0 ? Colors.red : Colors.green,
                             onTap: () {
-                              _showAlertDialog(context);
+                              if (matchDataTo?[index]['respond'] == 0) {
+                                showAlertDialog(
+                                  context,
+                                  title: 'Cancel Match',
+                                  content: 'Are you cancel this game?',
+                                  defaultActionText: 'No',
+                                  destructiveActionText: 'Yes',
+                                  destructiveActionOnPressed: () {
+                                    supabase.from('match').delete().match({
+                                      'from': context.read<MyInfo>().id,
+                                      'to': matchDataTo?[index]['id']
+                                    }).then((_) {
+                                      setState(() {});
+                                      Navigator.pop(context);
+                                    });
+                                  },
+                                );
+                              }
+                              else {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: context.read<MyInfo>().id, to: matchDataTo?[index]['id'])));
+                              }
                             },
                           );
                         },
-                      ),
-                    ],
-                  ),
-                );
-              }
-              else {
-                return Center(
-                  child: Text(
-                    'Loading...',
-                  ),
-                );
-              }
-            },
+                      );
+                    }
+                    else return Center(
+                      child: Text('Loading...'),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
