@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/match_data_from.dart';
+import '../providers/match_data_to.dart';
 import './home.dart';
 import './match.dart';
 import './rank.dart';
@@ -25,6 +28,13 @@ class _MainScreenState extends State<MainScreen> {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  @override
+  initState() {
+    super.initState();
+    context.read<MatchDataFrom>().fetch();
+    context.read<MatchDataTo>().fetch();
   }
 
   @override
