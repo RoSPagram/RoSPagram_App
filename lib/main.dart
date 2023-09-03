@@ -4,6 +4,8 @@ import './utilities/shared_prefs.dart';
 import './utilities/supabase_util.dart';
 import './screens/sign_in.dart';
 import './providers/my_info.dart';
+import './providers/match_data_from.dart';
+import './providers/match_data_to.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,8 +20,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => MyInfo(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => MyInfo()),
+        ChangeNotifierProvider(create: (context) => MatchDataFrom(context: context)),
+        ChangeNotifierProvider(create: (context) => MatchDataTo(context: context)),
+      ],
       child: MaterialApp(
         title: 'RoSPagram',
         theme: ThemeData(
