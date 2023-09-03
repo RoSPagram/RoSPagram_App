@@ -42,6 +42,7 @@ class AuthWebView extends StatelessWidget {
               context.read<MyInfo>().id = userProfile['id'];
               context.read<MyInfo>().username = userProfile['username'];
               context.read<MyInfo>().img_url = userImgUrl;
+              context.read<MyInfo>().notifyListeners();
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
             }
             return NavigationDecision.navigate;
