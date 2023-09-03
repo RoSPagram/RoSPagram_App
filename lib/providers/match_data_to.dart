@@ -14,7 +14,7 @@ class MatchDataTo extends ChangeNotifier {
     super.notifyListeners();
   }
 
-  void fetch(String id) {
+  void fetch() {
     supabase.rpc('get_match_to', params: {'user_id': context.read<MyInfo>().id}).then((value) {
       list = value;
       notifyListeners();
