@@ -24,7 +24,7 @@ class _PlayState extends State<Play> {
   int userIndex = 0;
 
   Future<List<dynamic>> _fetchRandomUsers() async {
-    final List<dynamic> usersData = await supabase.rpc('get_random_users');
+    final List<dynamic> usersData = await supabase.rpc('find_users_to_match', params: {'sender_id': context.read<MyInfo>().id});
     return usersData;
   }
 
