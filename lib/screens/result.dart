@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/my_info.dart';
+import '../providers/match_data_from.dart';
 import '../utilities/supabase_util.dart';
 import '../widgets/profile_image.dart';
 import '../widgets/win_loss_record.dart';
@@ -30,6 +31,7 @@ class Result extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final myInfo = context.read<MyInfo>();
+    final matchFrom = context.read<MatchDataFrom>();
     final isSender = myInfo.id == this.from ? true : false;
 
     return Scaffold(
@@ -48,13 +50,22 @@ class Result extends StatelessWidget {
                 }).then((_) => _);
               else switch(result) {
                   case 'win':
-                    supabase.rpc('set_win_loss', params: {'winner_id': this.to, 'loser_id': this.from}).then((_) => myInfo.fetch());
+                    supabase.rpc('set_win_loss', params: {'winner_id': this.to, 'loser_id': this.from}).then((_) {
+                      myInfo.fetch();
+                      matchFrom.fetch();
+                    });
                     break;
                   case 'lose':
-                    supabase.rpc('set_win_loss', params: {'winner_id': this.from, 'loser_id': this.to}).then((_) => myInfo.fetch());
+                    supabase.rpc('set_win_loss', params: {'winner_id': this.from, 'loser_id': this.to}).then((_) {
+                      myInfo.fetch();
+                      matchFrom.fetch();
+                    });
                     break;
                   default:
-                    supabase.rpc('set_draw', params: {'id1': this.from, 'id2': this.to}).then((_) => myInfo.fetch());
+                    supabase.rpc('set_draw', params: {'id1': this.from, 'id2': this.to}).then((_) {
+                      myInfo.fetch();
+                      matchFrom.fetch();
+                    });
               }
 
               return Container(
