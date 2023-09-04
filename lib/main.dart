@@ -6,6 +6,7 @@ import './screens/sign_in.dart';
 import './providers/my_info.dart';
 import './providers/match_data_from.dart';
 import './providers/match_data_to.dart';
+import './providers/ranking_data.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MyInfo()),
         ChangeNotifierProvider(create: (context) => MatchDataFrom(context: context)),
         ChangeNotifierProvider(create: (context) => MatchDataTo(context: context)),
+        ChangeNotifierProvider(create: (context) => RankingData()),
       ],
       child: MaterialApp(
         title: 'RoSPagram',
