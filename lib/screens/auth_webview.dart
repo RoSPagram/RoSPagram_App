@@ -25,9 +25,9 @@ class AuthWebView extends StatelessWidget {
               final code = Uri.parse(request.url).queryParameters['code'];
               final token = await InstagramService().getUserToken(code);
               final userProfile = await InstagramService().getUserInfo(token);
-              String? userImgUrl = await InstagramService().getUserProfileImgUrl(userProfile['username']);
-              if (userImgUrl == null) userImgUrl = 'https://i.ibb.co/Cv5LdCb/img-profile-default.jpg';
+              String? userImgUrl = await InstagramService().getUserProfileImgUrl(userProfile['username']) ?? 'https://i.ibb.co/Cv5LdCb/img-profile-default.jpg';
               final userData = await supabase.rpc('get_user_data', params: {'user_id': userProfile['id']});
+              final myInfo = context.read<MyInfo>();
 
               SharedPrefs.instance.setString('user_token', token);
 
@@ -37,11 +37,21 @@ class AuthWebView extends StatelessWidget {
                   'username': userProfile['username'],
                   'img_url': userImgUrl
                 });
+                myInfo.id = userProfile['id'];
+                myInfo.username = userProfile['username'];
+                myInfo.img_url = userImgUrl;
               }
-
-              context.read<MyInfo>().id = userProfile['id'];
-              context.read<MyInfo>().username = userProfile['username'];
-              context.read<MyInfo>().img_url = userImgUrl;
+              else {
+                myInfo.id = userProfile['id'];
+                myInfo.username = userProfile['username'];
+                myInfo.img_url = userImgUrl;
+                myInfo.index = userData[0]['index'];
+                myInfo.rank = userData[0]['rank'];
+                myInfo.win = userData[0]['win'];
+                myInfo.loss = userData[0]['loss'];
+                myInfo.draw = userData[0]['draw'];
+              }
+              myInfo.notifyListeners();
               Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
             }
             return NavigationDecision.navigate;

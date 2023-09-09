@@ -6,22 +6,18 @@ import '../utilities/alert_dialog.dart';
 import '../screens/play.dart';
 import '../screens/result.dart';
 import '../providers/my_info.dart';
+import '../providers/match_data_from.dart';
+import '../providers/match_data_to.dart';
 
-class Match extends StatefulWidget {
+class Match extends StatelessWidget {
   const Match({super.key});
 
   @override
-  State<Match> createState() => _MatchState();
-}
-
-class _MatchState extends State<Match> {
-  Future<List<dynamic>> _fetch(BuildContext context, String type) async {
-    final List<dynamic> matchData = await supabase.rpc('get_match_${type}', params: {'user_id': context.read<MyInfo>().id});
-    return matchData;
-  }
-
-  @override
   Widget build(BuildContext context) {
+    final myInfo = context.read<MyInfo>();
+    final from = context.read<MatchDataFrom>();
+    final to = context.read<MatchDataTo>();
+
     return DefaultTabController(
       length: 2,
       child: Column(
@@ -39,7 +35,7 @@ class _MatchState extends State<Match> {
           ElevatedButton(
             onPressed: () {
               supabase.rpc('create_test_match').then((_) {
-                setState(() {});
+                from.fetch();
               });
             },
             child: Text('CREATE_TEST_MATCH'),
@@ -47,7 +43,7 @@ class _MatchState extends State<Match> {
           ElevatedButton(
             onPressed: () {
               supabase.from('match').delete().not('respond', 'eq', 0).then((_) {
-                setState(() {});
+                from.fetch();
               });
             },
             child: Text('CLEAR_FINISH_MATCHES'),
@@ -64,75 +60,51 @@ class _MatchState extends State<Match> {
           Expanded(
             child: TabBarView(
               children: [
-                FutureBuilder(
-                  future: _fetch(context, 'from'),
-                  builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-                    if (snapshot.hasData) {
-                      final List<dynamic>? matchDataFrom = snapshot.data;
-                      if (matchDataFrom?.length == 0) return Center(child: Text('No matches'));
-                      return ListView.builder(
-                        itemCount: matchDataFrom?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return MatchListItem(
-                            userName: matchDataFrom?[index]['username'],
-                            imgUrl: matchDataFrom?[index]['img_url'],
-                            description: 'Touch to Accept',
-                            desciptionColor: Colors.red,
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => Play(userId: matchDataFrom?[index]['id'], isRequest: false)));
-                            },
-                          );
-                        },
-                      );
-                    }
-                    else return Center(
-                      child: Text('Loading...'),
+                context.watch<MatchDataFrom>().list.isEmpty ? Center(child: Text('No Matches')) : ListView.builder(
+                  itemCount: context.watch<MatchDataFrom>().list.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return MatchListItem(
+                      userName: context.watch<MatchDataFrom>().list[index]['username'],
+                      imgUrl: context.watch<MatchDataFrom>().list[index]['img_url'],
+                      description: 'Touch to Accept',
+                      desciptionColor: Colors.red,
+                      onTap: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => Play(userId: from.list[index]['id'], isRequest: false)));
+                      },
                     );
                   },
                 ),
-                FutureBuilder(
-                  future: _fetch(context, 'to'),
-                  builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-                    if (snapshot.hasData) {
-                      final List<dynamic>? matchDataTo = snapshot.data;
-                      if (matchDataTo?.length == 0) return Center(child: Text('No Matches'));
-                      return ListView.builder(
-                        itemCount: matchDataTo?.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return MatchListItem(
-                            userName: matchDataTo?[index]['username'],
-                            imgUrl: matchDataTo?[index]['img_url'],
-                            description: matchDataTo?[index]['respond'] == 0 ? 'Touch to Cancel' : 'Touch to show result',
-                            desciptionColor: matchDataTo?[index]['respond'] == 0 ? Colors.red : Colors.green,
-                            onTap: () {
-                              if (matchDataTo?[index]['respond'] == 0) {
-                                showAlertDialog(
-                                  context,
-                                  title: 'Cancel Match',
-                                  content: 'Are you cancel this game?',
-                                  defaultActionText: 'No',
-                                  destructiveActionText: 'Yes',
-                                  destructiveActionOnPressed: () {
-                                    supabase.from('match').delete().match({
-                                      'from': context.read<MyInfo>().id,
-                                      'to': matchDataTo?[index]['id']
-                                    }).then((_) {
-                                      setState(() {});
-                                      Navigator.pop(context);
-                                    });
-                                  },
-                                );
-                              }
-                              else {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: context.read<MyInfo>().id, to: matchDataTo?[index]['id'])));
-                              }
+                context.watch<MatchDataTo>().list.isEmpty ? Center(child: Text('No Matches')) : ListView.builder(
+                  itemCount: context.watch<MatchDataTo>().list.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return MatchListItem(
+                      userName: context.watch<MatchDataTo>().list[index]['username'],
+                      imgUrl: context.watch<MatchDataTo>().list[index]['img_url'],
+                      description: context.watch<MatchDataTo>().list[index]['respond'] == 0 ? 'Touch to Cancel' : 'Touch to show result',
+                      desciptionColor: context.watch<MatchDataTo>().list[index]['respond'] == 0 ? Colors.red : Colors.green,
+                      onTap: () {
+                        if (context.read<MatchDataTo>().list[index]['respond'] == 0) {
+                          showAlertDialog(
+                            context,
+                            title: 'Cancel Match',
+                            content: 'Are you cancel this game?',
+                            defaultActionText: 'No',
+                            destructiveActionText: 'Yes',
+                            destructiveActionOnPressed: () {
+                              supabase.from('match').delete().match({
+                                'from': context.read<MyInfo>().id,
+                                'to': to.list[index]['id']
+                              }).then((_) {
+                                to.fetch();
+                                Navigator.pop(context);
+                              });
                             },
                           );
-                        },
-                      );
-                    }
-                    else return Center(
-                      child: Text('Loading...'),
+                        }
+                        else {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: myInfo.id, to: to.list[index]['id'])));
+                        }
+                      },
                     );
                   },
                 ),

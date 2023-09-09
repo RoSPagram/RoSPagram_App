@@ -1,49 +1,25 @@
 import 'package:flutter/material.dart';
 import '../models/user.dart';
+import '../utilities/supabase_util.dart';
 
 class MyInfo extends User with ChangeNotifier {
-  @override set id(String value) {
-    super.id = value;
-    notifyListeners();
+  @override
+  void notifyListeners() {
+    super.notifyListeners();
   }
 
-  @override set username(String value) {
-    super.username = value;
-    notifyListeners();
-  }
-
-  @override set img_url(String value) {
-    super.img_url = value;
-    notifyListeners();
-  }
-
-  @override set index(int value) {
-    super.index = value;
-    notifyListeners();
-  }
-
-  @override set rank(int value) {
-    super.rank = value;
-    notifyListeners();
-  }
-
-  @override set win(int value) {
-    super.win = value;
-    notifyListeners();
-  }
-
-  @override set loss(int value) {
-    super.loss = value;
-    notifyListeners();
-  }
-
-  @override set draw(int value) {
-    super.draw = value;
-    notifyListeners();
-  }
-
-  @override set score(double value) {
-    super.score = value;
-    notifyListeners();
+  void fetch() {
+    if (id.isEmpty) return;
+    supabase.rpc('get_user_data', params: {'user_id': id}).then((userData) {
+      id = userData[0]['id'];
+      username = userData[0]['username'];
+      img_url = userData[0]['img_url'];
+      index = userData[0]['index'];
+      rank = userData[0]['rank'];
+      win = userData[0]['win'];
+      loss = userData[0]['loss'];
+      draw = userData[0]['draw'];
+      notifyListeners();
+    });
   }
 }

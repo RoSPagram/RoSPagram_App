@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../screens/user_profile.dart';
-import '../utilities/supabase_util.dart';
 import '../providers/my_info.dart';
+import '../providers/ranking_data.dart';
 import '../widgets/rank_header.dart';
 import '../widgets/rank_list_item.dart';
 
 class Rank extends StatelessWidget {
   const Rank({super.key});
-
-  Future<List<dynamic>> _fetch() async {
-    final List<dynamic> ranking = await supabase.from('top_ten').select('index, id, username, img_url, rank');
-    return ranking;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,40 +33,26 @@ class Rank extends StatelessWidget {
             ),
           ),
         ),
-        FutureBuilder(
-          future: _fetch(),
-          builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-            if (snapshot.hasData) {
-              return Expanded(
-                child: ListView.builder(
-                  itemCount: snapshot.data?.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return RankListItem(
-                      index: index + 1,
-                      imgUrl: snapshot.data?[index]['img_url'],
-                      userName: snapshot.data?[index]['username'],
-                      userRank: snapshot.data?[index]['rank'],
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => UserProfile(userId: snapshot.data?[index]['id']),
-                            )
-                        );
-                      },
-                    );
-                  },
-                ),
+        context.watch<RankingData>().list.isEmpty ? Center(child: Text('No ranked users')) : Expanded(
+          child: ListView.builder(
+            itemCount: context.watch<RankingData>().list.length,
+            itemBuilder: (BuildContext context, int index) {
+              return RankListItem(
+                index: index + 1,
+                imgUrl: context.watch<RankingData>().list[index]['img_url'],
+                userName: context.watch<RankingData>().list[index]['username'],
+                userRank: context.watch<RankingData>().list[index]['rank'],
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => UserProfile(userId: context.read<RankingData>().list[index]['id']),
+                      )
+                  );
+                },
               );
-            }
-            else {
-              return Center(
-                child: Text(
-                  'Loading...',
-                ),
-              );
-            }
-          },
+            },
+          ),
         ),
       ],
     );

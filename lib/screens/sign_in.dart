@@ -35,6 +35,7 @@ class SignIn extends StatelessWidget {
     context.read<MyInfo>().win = userData[0]['win'];
     context.read<MyInfo>().loss = userData[0]['loss'];
     context.read<MyInfo>().draw = userData[0]['draw'];
+    context.read<MyInfo>().notifyListeners();
 
     return true;
   }
