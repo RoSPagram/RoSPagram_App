@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:postgrest/postgrest.dart';
+import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../utilities/supabase_util.dart';
+import '../providers/ranking_data.dart';
 import '../widgets/profile_image.dart';
 import '../widgets/win_loss_record.dart';
 
@@ -11,9 +12,8 @@ class UserProfile extends StatelessWidget {
   final String userId;
 
   Future<List<dynamic>> _fetch() async {
-    final totalUsers = await supabase.from('users').select('id', const FetchOptions(count: CountOption.exact));
     final userData = await supabase.rpc('get_user_data', params: {'user_id': this.userId});
-    return [userData[0], totalUsers.count];
+    return userData;
   }
 
   @override
@@ -25,15 +25,15 @@ class UserProfile extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
             if (snapshot.hasData) {
               final userData = snapshot.data?[0];
-              final totalUsers = snapshot.data?[1];
-              double topPercentage = (userData['index'] / totalUsers) * 100;
+              final top = getTopPercentage(context.read<RankingData>().rankedUsersCount, userData['index']);
+              final userRank = getUserRank(top);
 
               return Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: rankColorGradient(userData['rank']),
+                    colors: rankColorGradient(userRank),
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ),
@@ -71,7 +71,7 @@ class UserProfile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      getRankNameFromCode(userData['rank']),
+                      getRankNameFromCode(userRank),
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                         fontSize: 16,
@@ -113,7 +113,7 @@ class UserProfile extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                '${topPercentage.toStringAsFixed(2)}%',
+                                top == 0 ? '---' : '${top.toStringAsFixed(2)}%',
                                 style: TextStyle(
                                   color: Colors.black.withOpacity(0.5),
                                   fontWeight: FontWeight.w500,
