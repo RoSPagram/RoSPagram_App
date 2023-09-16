@@ -25,7 +25,7 @@ class UserProfile extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
             if (snapshot.hasData) {
               final userData = snapshot.data?[0];
-              final top = getTopPercentage(context.read<RankingData>().rankedUsersCount, userData['index']);
+              final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, userData['index']);
               final userRank = getUserRank(top);
 
               return Container(
