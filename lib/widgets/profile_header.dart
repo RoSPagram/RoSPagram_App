@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import './profile_image.dart';
 import '../constants.dart';
 import '../providers/my_info.dart';
+import '../providers/ranking_data.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({super.key, required this.onTap});
@@ -12,12 +13,14 @@ class ProfileHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MyInfo myInfo = context.read<MyInfo>();
+    final top = getTopPercentage(context.read<RankingData>().rankedUsersCount, context.read<MyInfo>().index);
+    final userRank = getUserRank(top);
 
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: rankColorGradient(myInfo.rank),
+            colors: rankColorGradient(userRank),
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -58,7 +61,7 @@ class ProfileHeader extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    getRankNameFromCode(myInfo.rank),
+                    getRankNameFromCode(userRank),
                     style: TextStyle(
                       color: Colors.black.withOpacity(0.5),
                       fontSize: 16,
