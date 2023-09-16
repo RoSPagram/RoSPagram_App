@@ -39,3 +39,27 @@ String getRankNameFromCode(int rankCode) {
     default: return 'Unranked';
   }
 }
+
+double getTopPercentage(int rankedUsersCount, int index) {
+  if (index == 0 || rankedUsersCount == 0) return 0;
+  return (index.toDouble() / rankedUsersCount.toDouble()) * 100;
+}
+
+int getUserRank(double top) {
+  switch (top) {
+    case > 0 && <= 2:
+      return 6;
+    case > 2 && <= 6:
+      return 5;
+    case > 6 && <= 14:
+      return 4;
+    case > 14 && <= 30:
+      return 3;
+    case > 30 && <= 62:
+      return 2;
+    case > 62:
+      return 1;
+    default:
+      return 0;
+  }
+}
