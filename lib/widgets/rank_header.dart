@@ -13,7 +13,7 @@ class RankHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final MyInfo myInfo = context.read<MyInfo>();
-    final top = getTopPercentage(context.read<RankingData>().rankedUsersCount, context.read<MyInfo>().index);
+    final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, context.watch<MyInfo>().index);
     final userRank = getUserRank(top);
 
     return Container(
