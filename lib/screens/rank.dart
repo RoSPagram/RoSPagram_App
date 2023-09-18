@@ -38,10 +38,9 @@ class Rank extends StatelessWidget {
             itemCount: context.watch<RankingData>().list.length,
             itemBuilder: (BuildContext context, int index) {
               return RankListItem(
-                index: index + 1,
+                index: context.watch<RankingData>().list[index]['index'],
                 imgUrl: context.watch<RankingData>().list[index]['img_url'],
                 userName: context.watch<RankingData>().list[index]['username'],
-                userRank: context.watch<RankingData>().list[index]['rank'],
                 onTap: () {
                   Navigator.push(
                       context,
