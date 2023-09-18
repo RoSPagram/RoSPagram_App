@@ -7,7 +7,7 @@ class Social extends StatelessWidget {
   const Social({super.key});
 
   Future<List<dynamic>> _fetch() async {
-    final List<dynamic> usersData = await supabase.from('top_ten').select('id, username, img_url, rank');
+    final List<dynamic> usersData = await supabase.from('top_ten').select('id, index, username, img_url');
     return usersData;
   }
 
@@ -41,9 +41,9 @@ class Social extends StatelessWidget {
                         itemCount: snapshot.data?.length,
                         itemBuilder: (BuildContext context, int index) {
                           return SocialFriendListItem(
+                            index: snapshot.data?[index]['index'],
                             userName: snapshot.data?[index]['username'],
                             imgUrl: snapshot.data?[index]['img_url'],
-                            userRank: snapshot.data?[index]['rank'],
                             onTap: () {
                               Navigator.push(
                                 context,
@@ -65,9 +65,9 @@ class Social extends StatelessWidget {
                         itemBuilder: (BuildContext context, int index) {
                           return SocialFriendListItem(
                             isRequest: true,
+                            index: snapshot.data?[index]['index'],
                             userName: snapshot.data?[index]['username'],
                             imgUrl: snapshot.data?[index]['img_url'],
-                            userRank: snapshot.data?[index]['rank'],
                             onTap: () {
                               Navigator.push(
                                 context,
