@@ -3,28 +3,24 @@ import 'package:provider/provider.dart';
 import '../constants.dart';
 import './profile_image.dart';
 import '../providers/my_info.dart';
-import '../utilities/supabase_util.dart';
+import '../providers/ranking_data.dart';
 
 class RankHeader extends StatelessWidget {
   const RankHeader({super.key, required this.onTap});
 
   final void Function() onTap;
 
-  Future<dynamic> _fetchRankIndex(BuildContext context) async {
-    if (context.read<MyInfo>().index != 0) return null;
-    final List<dynamic> rankingIndex = await supabase.from('ranking_view').select('index').eq('id', context.read<MyInfo>().id);
-    return rankingIndex;
-  }
-
   @override
   Widget build(BuildContext context) {
     final MyInfo myInfo = context.read<MyInfo>();
+    final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, context.watch<MyInfo>().index);
+    final userRank = getUserRank(top);
 
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: rankColorGradient(myInfo.rank),
+            colors: rankColorGradient(userRank),
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -51,39 +47,20 @@ class RankHeader extends StatelessWidget {
               children: [
                 Flexible(
                   flex: 1,
-                  child: FutureBuilder(
-                    future: _fetchRankIndex(context),
-                    builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-                      if (snapshot.hasData) {
-                        myInfo.index = snapshot.data?[0]['index'];
-                        return Text(
-                          '#${snapshot.data?[0]['index']}',
-                          style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        );
-                      }
-                      else {
-                        if (myInfo.index != 0) return Text(
-                          '#${myInfo.index}',
-                          style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        );
-                        else return Text(
-                          '...',
-                          style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        );
-                      }
-                    },
+                  child: context.watch<MyInfo>().index == 0 ? Text(
+                    '---',
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(0.5),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ) : Text(
+                    '#${context.watch<MyInfo>().index}',
+                    style: TextStyle(
+                      color: Colors.black.withOpacity(0.5),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
                 ),
                 Flexible(
@@ -96,13 +73,13 @@ class RankHeader extends StatelessWidget {
                           height: 32,
                         ),
                         Text(
-                          '@${myInfo.username}',
+                          '@${context.watch<MyInfo>().username}',
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.75),
                           ),
                         ),
                         Text(
-                          getRankNameFromCode(myInfo.rank),
+                          getRankNameFromCode(userRank),
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                           ),
@@ -122,7 +99,7 @@ class RankHeader extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '10%',
+                        top == 0 ? '---' : '${top.toStringAsFixed(2)}%',
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.5),
                         ),

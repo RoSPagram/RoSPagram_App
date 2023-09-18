@@ -6,6 +6,7 @@ import '../utilities/supabase_util.dart';
 import '../utilities/alert_dialog.dart';
 import '../providers/my_info.dart';
 import '../providers/match_data_to.dart';
+import '../providers/ranking_data.dart';
 import './result.dart';
 
 class Play extends StatefulWidget {
@@ -53,12 +54,14 @@ class _PlayState extends State<Play> {
             builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
               if (snapshot.hasData) {
                 final userData = snapshot.data?[userIndex];
+                final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, userData['index']);
+                final userRank = getUserRank(top);
                 return Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      colors: rankColorGradient(userData['rank']),
+                      colors: rankColorGradient(userRank),
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                     ),
@@ -83,7 +86,7 @@ class _PlayState extends State<Play> {
                         ),
                       ),
                       Text(
-                        getRankNameFromCode(userData['rank']),
+                        getRankNameFromCode(userRank),
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.5),
                           fontSize: 16,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/my_info.dart';
 import '../providers/match_data_from.dart';
+import '../providers/ranking_data.dart';
 import '../utilities/supabase_util.dart';
 import '../widgets/profile_image.dart';
 import '../widgets/win_loss_record.dart';
@@ -32,6 +33,7 @@ class Result extends StatelessWidget {
   Widget build(BuildContext context) {
     final myInfo = context.read<MyInfo>();
     final matchFrom = context.read<MatchDataFrom>();
+    final rankingData = context.read<RankingData>();
     final isSender = myInfo.id == this.from ? true : false;
 
     return Scaffold(
@@ -53,18 +55,21 @@ class Result extends StatelessWidget {
                     supabase.rpc('set_win_loss', params: {'winner_id': this.to, 'loser_id': this.from}).then((_) {
                       myInfo.fetch();
                       matchFrom.fetch();
+                      rankingData.fetch();
                     });
                     break;
                   case 'lose':
                     supabase.rpc('set_win_loss', params: {'winner_id': this.from, 'loser_id': this.to}).then((_) {
                       myInfo.fetch();
                       matchFrom.fetch();
+                      rankingData.fetch();
                     });
                     break;
                   default:
                     supabase.rpc('set_draw', params: {'id1': this.from, 'id2': this.to}).then((_) {
                       myInfo.fetch();
                       matchFrom.fetch();
+                      rankingData.fetch();
                     });
               }
 

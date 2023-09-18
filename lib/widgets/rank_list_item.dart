@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/ranking_data.dart';
 import '../constants.dart';
 import './profile_image.dart';
 
@@ -8,24 +10,24 @@ class RankListItem extends StatelessWidget {
     required this.index,
     required this.imgUrl,
     required this.userName,
-    required this.userRank,
     required this.onTap,
   });
 
   final int index;
   final String imgUrl;
   final String userName;
-  final int userRank;
   final void Function() onTap;
 
   @override
   Widget build(BuildContext context) {
+    final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, this.index);
+    final userRank = getUserRank(top);
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.all(8),
       decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: rankColorGradient(this.userRank),
+            colors: rankColorGradient(userRank),
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -73,7 +75,7 @@ class RankListItem extends StatelessWidget {
                   ],
                 ),
                 Text(
-                  getRankNameFromCode(this.userRank),
+                  getRankNameFromCode(userRank),
                   style: TextStyle(
                     color: Colors.black.withOpacity(0.5),
                   ),
