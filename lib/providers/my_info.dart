@@ -15,7 +15,6 @@ class MyInfo extends User with ChangeNotifier {
       username = userData[0]['username'];
       img_url = userData[0]['img_url'];
       index = userData[0]['index'];
-      rank = userData[0]['rank'];
       win = userData[0]['win'];
       loss = userData[0]['loss'];
       draw = userData[0]['draw'];
