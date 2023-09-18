@@ -46,7 +46,6 @@ class AuthWebView extends StatelessWidget {
                 myInfo.username = userProfile['username'];
                 myInfo.img_url = userImgUrl;
                 myInfo.index = userData[0]['index'];
-                myInfo.rank = userData[0]['rank'];
                 myInfo.win = userData[0]['win'];
                 myInfo.loss = userData[0]['loss'];
                 myInfo.draw = userData[0]['draw'];
