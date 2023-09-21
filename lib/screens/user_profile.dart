@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../utilities/supabase_util.dart';
+import '../providers/my_info.dart';
 import '../providers/ranking_data.dart';
 import '../widgets/profile_image.dart';
 import '../widgets/win_loss_record.dart';
@@ -27,6 +28,7 @@ class UserProfile extends StatelessWidget {
               final userData = snapshot.data?[0];
               final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, userData['index']);
               final userRank = getUserRank(top);
+              final bool isMe = context.read<MyInfo>().id == userData['id'];
 
               return Container(
                 width: MediaQuery.of(context).size.width,
@@ -139,7 +141,7 @@ class UserProfile extends StatelessWidget {
                       draw: userData['draw'],
                       margin: EdgeInsets.all(16),
                     ),
-                    Text(
+                    isMe ? SizedBox() : Text(
                       'Win-Loss Record with You',
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
@@ -147,7 +149,7 @@ class UserProfile extends StatelessWidget {
                         fontSize: 20,
                       ),
                     ),
-                    WinLossRecord(
+                    isMe ? SizedBox() : WinLossRecord(
                       win: 0,
                       loss: 0,
                       draw: 0,
