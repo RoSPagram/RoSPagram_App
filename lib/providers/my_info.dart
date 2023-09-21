@@ -3,9 +3,19 @@ import '../models/user.dart';
 import '../utilities/supabase_util.dart';
 
 class MyInfo extends User with ChangeNotifier {
+
+  List<dynamic> friendReq = [];
+
   @override
   void notifyListeners() {
     super.notifyListeners();
+  }
+
+  void fetchFriendReq() {
+    supabase.from('friend_request').select().eq('to', id).then((value) {
+      friendReq = value;
+      notifyListeners();
+    });
   }
 
   void fetch() {
@@ -18,6 +28,7 @@ class MyInfo extends User with ChangeNotifier {
       win = userData[0]['win'];
       loss = userData[0]['loss'];
       draw = userData[0]['draw'];
+      fetchFriendReq();
       notifyListeners();
     });
   }
