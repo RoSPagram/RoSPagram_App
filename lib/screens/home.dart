@@ -37,7 +37,7 @@ class Home extends StatelessWidget {
           },
           style: ElevatedButton.styleFrom(
             padding: EdgeInsets.all(32),
-            primary: Colors.deepOrange,
+            backgroundColor: Colors.deepOrange,
           ),
           child: Column(
             children: [
