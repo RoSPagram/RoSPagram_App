@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './utilities/shared_prefs.dart';
 import './utilities/supabase_util.dart';
 import './screens/sign_in.dart';
@@ -10,6 +11,7 @@ import './providers/ranking_data.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: 'env/.env');
   await SharedPrefs().init();
   initSupabase();
   runApp(const MyApp());
