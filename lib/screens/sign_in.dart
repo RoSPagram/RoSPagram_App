@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
+import 'package:ntp/ntp.dart';
+import 'package:intl/intl.dart';
 import '../providers/my_info.dart';
 import '../utilities/shared_prefs.dart';
 import '../utilities/instagram_service.dart';
@@ -37,6 +39,12 @@ class SignIn extends StatelessWidget {
     // context.read<MyInfo>().id = userProfile['id'];
     // context.read<MyInfo>().username = userProfile['username'];
     // context.read<MyInfo>().img_url = userImgUrl ?? userData[0]['img_url'];
+    NTP.now().then((time) async {
+      final date = DateFormat('yyyy-MM-dd').format(time);
+      if (userData[0]['last_login'] == date) return;
+      await supabase.rpc('set_last_login', params: {'user_id': storedUUID});
+    });
+
     context.read<MyInfo>().id = userData[0]['id'];
     context.read<MyInfo>().username = userData[0]['username'];
     context.read<MyInfo>().img_url = userData[0]['img_url'];
