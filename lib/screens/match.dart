@@ -34,7 +34,7 @@ class Match extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              supabase.rpc('create_test_match').then((_) {
+              supabase.rpc('create_test_match', params: {'user_id': myInfo.id}).then((_) {
                 from.fetch();
               });
             },
