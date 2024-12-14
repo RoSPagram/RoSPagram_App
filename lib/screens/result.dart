@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 import '../providers/my_info.dart';
 import '../providers/match_data_from.dart';
 import '../providers/ranking_data.dart';
@@ -36,6 +37,12 @@ class Result extends StatelessWidget {
     final rankingData = context.read<RankingData>();
     final isSender = myInfo.id == this.from ? true : false;
 
+    FutureOr<dynamic> updateProviders(dynamic _) {
+      myInfo.fetch();
+      matchFrom.fetch();
+      rankingData.fetch();
+    }
+
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
@@ -46,31 +53,17 @@ class Result extends StatelessWidget {
               final opponentData = snapshot.data?[1];
               final result = isSender ? getResult(resultData['send'], resultData['respond']) : getResult(resultData['respond'], resultData['send']);
 
-              if (isSender) supabase.from('match').delete().match({
-                  'from': this.from,
-                  'to': this.to
-                }).then((_) => _);
-              else switch(result) {
+              if (isSender) supabase.rpc('delete_finished_match', params: {'from_id': this.from, 'to_id': this.to}).then((_) {});
+
+              switch(result) {
                   case 'win':
-                    supabase.rpc('set_win_loss', params: {'winner_id': this.to, 'loser_id': this.from}).then((_) {
-                      myInfo.fetch();
-                      matchFrom.fetch();
-                      rankingData.fetch();
-                    });
+                    supabase.rpc('set_win_loss', params: {'winner_id': this.to, 'loser_id': this.from}).then(updateProviders);
                     break;
                   case 'lose':
-                    supabase.rpc('set_win_loss', params: {'winner_id': this.from, 'loser_id': this.to}).then((_) {
-                      myInfo.fetch();
-                      matchFrom.fetch();
-                      rankingData.fetch();
-                    });
+                    supabase.rpc('set_win_loss', params: {'winner_id': this.from, 'loser_id': this.to}).then(updateProviders);
                     break;
                   default:
-                    supabase.rpc('set_draw', params: {'id1': this.from, 'id2': this.to}).then((_) {
-                      myInfo.fetch();
-                      matchFrom.fetch();
-                      rankingData.fetch();
-                    });
+                    supabase.rpc('set_draw', params: {'id1': this.from, 'id2': this.to}).then(updateProviders);
               }
 
               return Container(
