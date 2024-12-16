@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:provider/provider.dart';
 import './utilities/shared_prefs.dart';
+import './utilities/firebase_util.dart';
 import './utilities/supabase_util.dart';
 import './screens/sign_in.dart';
 import './providers/my_info.dart';
@@ -14,6 +15,7 @@ Future<void> main() async {
   await dotenv.load(fileName: 'env/.env');
   await SharedPrefs().init();
   initSupabase();
+  initFirebase();
   runApp(const MyApp());
 }
 
