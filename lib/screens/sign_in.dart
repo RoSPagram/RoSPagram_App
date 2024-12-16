@@ -92,7 +92,8 @@ class SignIn extends StatelessWidget {
         await supabase.from('users').insert({
           'id': newUUID,
           'username': newUserName,
-          'img_url': newImgUrl
+          'img_url': newImgUrl,
+          'fcm_token': SharedPrefs.instance.getString('fcm_token')
         });
 
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
