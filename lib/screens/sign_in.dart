@@ -31,11 +31,12 @@ class SignIn extends StatelessWidget {
     final userData = await supabase.rpc('get_user_data', params: {'user_id': storedUUID});
     if (userData.length == 0) return false;
 
-    // await supabase.from('users').update({
-    //   'username': userProfile['username'],
-    //   'img_url': userImgUrl ?? userData[0]['img_url'],
-    // }).eq('id', userProfile['id']);
-
+    String? fcmToken = SharedPrefs.instance.getString('fcm_token');
+    if (userData[0]['fcm_token'] == null) {
+      await supabase.from('users').update({
+        'fcm_token': fcmToken,
+      }).eq('id', storedUUID);
+    }
     // context.read<MyInfo>().id = userProfile['id'];
     // context.read<MyInfo>().username = userProfile['username'];
     // context.read<MyInfo>().img_url = userImgUrl ?? userData[0]['img_url'];
@@ -52,6 +53,7 @@ class SignIn extends StatelessWidget {
     context.read<MyInfo>().win = userData[0]['win'];
     context.read<MyInfo>().loss = userData[0]['loss'];
     context.read<MyInfo>().draw = userData[0]['draw'];
+    context.read<MyInfo>().fcm_token = userData[0]['fcm_token'] ?? fcmToken;
     context.read<MyInfo>().notifyListeners();
 
     return true;
@@ -82,6 +84,7 @@ class SignIn extends StatelessWidget {
         final newUUID = Uuid().v4();
         final newUserName = getRandomName();
         //https://www.dicebear.com/styles/thumbs/
+        //https://github.com/Ivanmtta/anonymous-animals-api
         final newImgUrl = 'https://api.dicebear.com/9.x/thumbs/png?seed=$newUUID&scale=75';
         context.read<MyInfo>().id = newUUID;
         context.read<MyInfo>().username = newUserName;
