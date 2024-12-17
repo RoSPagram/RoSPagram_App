@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import '../providers/my_info.dart';
 import '../providers/match_data_from.dart';
 import '../providers/match_data_to.dart';
 import '../providers/ranking_data.dart';
@@ -41,6 +43,19 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseMessaging.onMessage.listen((message) {
+      switch (message.data['type']) {
+        case 'match_from':
+          context.read<MatchDataFrom>().fetch();
+          break;
+        case 'match_to':
+          context.read<MatchDataTo>().fetch();
+          context.read<MyInfo>().fetch();
+          context.read<RankingData>().fetch();
+          break;
+      }
+    });
+
     return Scaffold(
       body: SafeArea(
         child: Container(
