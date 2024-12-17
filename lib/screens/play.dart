@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../constants.dart';
 import '../widgets/profile_image.dart';
 import '../utilities/supabase_util.dart';
+import '../utilities/firebase_util.dart';
 import '../utilities/alert_dialog.dart';
 import '../providers/my_info.dart';
 import '../providers/match_data_to.dart';
@@ -185,6 +186,12 @@ class _PlayState extends State<Play> {
                                         'to': userData['id'],
                                         'send': handIndex
                                       }).then((_) {
+                                        sendPushMessage(
+                                            userData['fcm_token'],
+                                            'Match Request',
+                                            '${context.read<MyInfo>().username} requested a match',
+                                            'match_from'
+                                        );
                                         context.read<MatchDataTo>().fetch();
                                         Navigator.pop(context);
                                       }).onError((error, stackTrace) {
