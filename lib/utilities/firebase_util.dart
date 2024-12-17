@@ -21,22 +21,24 @@ Future<void> setupInteractedMessage() async {
   if (initialMessage != null) _handleMessage(initialMessage);
   FirebaseMessaging.onMessageOpenedApp.listen(_handleMessage);
   FirebaseMessaging.onBackgroundMessage(_handleMessage);
-  FirebaseMessaging.onMessage.listen(_handleMessage);
 }
 
 void initFirebase() async {
   await Firebase.initializeApp();
   setupInteractedMessage();
   final notificationSettings = await firebaseMessaging.requestPermission(alert: true, badge: true, sound: true);
+  final apnsToken = await firebaseMessaging.getAPNSToken();
   firebaseMessaging.getToken().then((fcmToken) {
+    print('==========GET_TOKEN: $fcmToken');
     SharedPrefs.instance.setString('fcm_token', fcmToken as String);
   });
   firebaseMessaging.onTokenRefresh.listen((fcmToken) {
+    print('==========REFRESH_TOKEN: $fcmToken');
     SharedPrefs.instance.setString('fcm_token', fcmToken as String);
   });
 }
 
-Future<void> sendPushMessage(String token, String title, String body) async {
+Future<void> sendPushMessage(String token, String title, String body, String type) async {
   // final String serverKey = 'YOUR_SERVER_KEY';
   final String fcmUrl = dotenv.env['FCM_URL'] as String;
   final accessToken = await getAccessToken();
@@ -52,6 +54,9 @@ Future<void> sendPushMessage(String token, String title, String body) async {
       "notification": {
         "body": body,
         "title": title
+      },
+      "data": {
+        "type": type
       },
     }
   };
