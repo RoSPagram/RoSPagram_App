@@ -3,8 +3,10 @@ import 'package:provider/provider.dart';
 import 'dart:async';
 import '../providers/my_info.dart';
 import '../providers/match_data_from.dart';
+import '../providers/match_data_to.dart';
 import '../providers/ranking_data.dart';
 import '../utilities/supabase_util.dart';
+import '../utilities/firebase_util.dart';
 import '../widgets/profile_image.dart';
 import '../widgets/win_loss_record.dart';
 
@@ -34,14 +36,9 @@ class Result extends StatelessWidget {
   Widget build(BuildContext context) {
     final myInfo = context.read<MyInfo>();
     final matchFrom = context.read<MatchDataFrom>();
+    final matchTo = context.read<MatchDataTo>();
     final rankingData = context.read<RankingData>();
     final isSender = myInfo.id == this.from ? true : false;
-
-    FutureOr<dynamic> updateProviders(dynamic _) {
-      myInfo.fetch();
-      matchFrom.fetch();
-      rankingData.fetch();
-    }
 
     return Scaffold(
       body: SafeArea(
@@ -53,17 +50,34 @@ class Result extends StatelessWidget {
               final opponentData = snapshot.data?[1];
               final result = isSender ? getResult(resultData['send'], resultData['respond']) : getResult(resultData['respond'], resultData['send']);
 
-              if (isSender) supabase.rpc('delete_finished_match', params: {'from_id': this.from, 'to_id': this.to}).then((_) {});
+              FutureOr<dynamic> updateResult(dynamic _) {
+                myInfo.fetch();
+                matchFrom.fetch();
+                rankingData.fetch();
+                sendPushMessage(
+                    opponentData['fcm_token'],
+                    'Match Result',
+                    result == 'win' ? 'You lost against ${myInfo.username} ☹️' : 'You won against ${myInfo.username} 🙂',
+                    'match_to'
+                );
+              }
 
-              switch(result) {
+              if (isSender) {
+                supabase.rpc('delete_finished_match', params: {'from_id': this.from, 'to_id': this.to}).then((_) {
+                  matchTo.fetch();
+                });
+              }
+              else {
+                switch(result) {
                   case 'win':
-                    supabase.rpc('set_win_loss', params: {'winner_id': this.to, 'loser_id': this.from}).then(updateProviders);
+                    supabase.rpc('set_win_loss', params: {'winner_id': this.to, 'loser_id': this.from}).then(updateResult);
                     break;
                   case 'lose':
-                    supabase.rpc('set_win_loss', params: {'winner_id': this.from, 'loser_id': this.to}).then(updateProviders);
+                    supabase.rpc('set_win_loss', params: {'winner_id': this.from, 'loser_id': this.to}).then(updateResult);
                     break;
                   default:
-                    supabase.rpc('set_draw', params: {'id1': this.from, 'id2': this.to}).then(updateProviders);
+                    supabase.rpc('set_draw', params: {'id1': this.from, 'id2': this.to}).then(updateResult);
+                }
               }
 
               return Container(
