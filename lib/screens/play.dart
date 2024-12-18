@@ -188,9 +188,9 @@ class _PlayState extends State<Play> {
                                       }).then((_) {
                                         sendPushMessage(
                                             userData['fcm_token'],
-                                            'Match Request',
-                                            '${context.read<MyInfo>().username} requested a match',
-                                            'match_from'
+                                            '${context.read<MyInfo>().username}',
+                                            '🚩 Match request',
+                                            {'type': 'match_from'}
                                         );
                                         context.read<MatchDataTo>().fetch();
                                         Navigator.pop(context);
