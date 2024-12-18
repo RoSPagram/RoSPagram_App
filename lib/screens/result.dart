@@ -56,15 +56,17 @@ class Result extends StatelessWidget {
                 rankingData.fetch();
                 sendPushMessage(
                     opponentData['fcm_token'],
-                    'Match Result',
-                    result == 'win' ? 'You lost against ${myInfo.username} ☹️' : 'You won against ${myInfo.username} 🙂',
-                    'match_to'
+                    '${myInfo.username}',
+                    result == 'win' ? '😭 You lost..' : result == 'lose' ? '🏆 You won!' : '😯 Draw',
+                    {'type': 'match_to', 'user_id': this.to}
                 );
               }
 
               if (isSender) {
                 supabase.rpc('delete_finished_match', params: {'from_id': this.from, 'to_id': this.to}).then((_) {
                   matchTo.fetch();
+                  myInfo.fetch();
+                  rankingData.fetch();
                 });
               }
               else {
