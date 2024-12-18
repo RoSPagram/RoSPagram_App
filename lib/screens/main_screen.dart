@@ -82,6 +82,8 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    int matchFromLen = context.watch<MatchDataFrom>().list.length;
+    int matchToLen = context.watch<MatchDataTo>().list.length;
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -90,20 +92,39 @@ class _MainScreenState extends State<MainScreen> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: const<BottomNavigationBarItem>[
-          BottomNavigationBarItem(
+        items: <BottomNavigationBarItem>[
+          const BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.flag),
+            icon: Stack(
+              children: [
+                Icon(Icons.flag),
+                if (matchFromLen != 0 || matchToLen != 0)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: SizedBox(
+                    width: 10,
+                    height: 10,
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
             label: 'Match',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.stacked_bar_chart),
             label: 'Rank',
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Icons.groups),
             label: 'Social',
           )
