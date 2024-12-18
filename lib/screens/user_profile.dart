@@ -162,8 +162,7 @@ class UserProfile extends StatelessWidget {
                           sendPushMessage(
                               userData['fcm_token'],
                               'Test Message',
-                              'Message received from ${myInfo.username}',
-                              'test'
+                              'Message received from ${myInfo.username}'
                           );
                         },
                         child: Text('SEND_TEST_NOTIFICATION'),
