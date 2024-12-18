@@ -52,6 +52,32 @@ class _MainScreenState extends State<MainScreen> {
           break;
       }
     });
+
+    void _handleMessageFromBackground(RemoteMessage message) {
+      switch (message.data['type']) {
+        case 'match_from':
+          context.read<MatchDataFrom>().fetch();
+          setState(() {
+            _selectedIndex = 1;
+          });
+          break;
+        case 'match_to':
+          setState(() {
+            _selectedIndex = 1;
+          });
+          context.read<MatchDataTo>().fetch(() {
+            context.read<MatchDataTo>().list.forEach((matchDataTo) {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: context.read<MyInfo>().id, to: matchDataTo['id'])));
+            });
+          });
+          break;
+      }
+    }
+
+    FirebaseMessaging.onMessageOpenedApp.listen(_handleMessageFromBackground);
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) _handleMessageFromBackground(message);
+    });
   }
 
   @override
