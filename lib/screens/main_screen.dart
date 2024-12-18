@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import '../utilities/firebase_util.dart';
 import '../providers/my_info.dart';
 import '../providers/match_data_from.dart';
 import '../providers/match_data_to.dart';
@@ -9,6 +10,7 @@ import './home.dart';
 import './match.dart';
 import './rank.dart';
 import './social.dart';
+import './result.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -39,23 +41,21 @@ class _MainScreenState extends State<MainScreen> {
     context.read<MatchDataFrom>().fetch();
     context.read<MatchDataTo>().fetch();
     context.read<RankingData>().fetch();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    FirebaseMessaging.onMessage.listen((message) {
+    FirebaseMessaging.onMessage.listen((message) async {
+      showFlutterNotification(message);
       switch (message.data['type']) {
         case 'match_from':
           context.read<MatchDataFrom>().fetch();
           break;
         case 'match_to':
-          context.read<MatchDataTo>().fetch();
-          context.read<MyInfo>().fetch();
-          context.read<RankingData>().fetch();
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: context.read<MyInfo>().id, to: message.data['user_id'])));
           break;
       }
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
         child: Container(
