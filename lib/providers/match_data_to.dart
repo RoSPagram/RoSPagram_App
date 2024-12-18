@@ -14,10 +14,12 @@ class MatchDataTo extends ChangeNotifier {
     super.notifyListeners();
   }
 
-  void fetch() {
+  void fetch([Function? afterFetch]) {
     supabase.rpc('get_match_to', params: {'user_id': context.read<MyInfo>().id}).then((value) {
       list = value;
       notifyListeners();
+      if (afterFetch == null) return;
+      afterFetch();
     });
   }
 }

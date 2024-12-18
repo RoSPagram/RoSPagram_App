@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/match_list_item.dart';
+import '../widgets/counter_badge.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/alert_dialog.dart';
 import '../screens/play.dart';
@@ -17,6 +18,9 @@ class Match extends StatelessWidget {
     final myInfo = context.read<MyInfo>();
     final from = context.read<MatchDataFrom>();
     final to = context.read<MatchDataTo>();
+
+    int matchFromLen = context.watch<MatchDataFrom>().list.length;
+    int matchToLen = context.watch<MatchDataTo>().list.length;
 
     return DefaultTabController(
       length: 2,
@@ -48,13 +52,19 @@ class Match extends StatelessWidget {
             },
             child: Text('CLEAR_FINISH_MATCHES'),
           ),
-          const TabBar(
+          TabBar(
             indicatorColor: Colors.black,
             labelColor: Colors.black,
             unselectedLabelColor: Colors.grey,
             tabs: <Tab>[
-              Tab(text: 'From'),
-              Tab(text: 'To'),
+              Tab(
+                text: 'From',
+                icon: matchFromLen > 0 ? CounterBadge(value: matchFromLen) : SizedBox.shrink(),
+              ),
+              Tab(
+                text: 'To',
+                icon: matchToLen > 0 ? CounterBadge(value: matchToLen) : SizedBox.shrink(),
+              ),
             ],
           ),
           Expanded(
