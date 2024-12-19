@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './profile_image.dart';
+import './win_loss_record.dart';
 import '../constants.dart';
 import '../providers/my_info.dart';
 import '../providers/ranking_data.dart';
@@ -41,7 +42,7 @@ class ProfileHeader extends StatelessWidget {
           borderRadius: BorderRadius.only(bottomLeft: Radius.circular(64), bottomRight: Radius.circular(64)),
           child: Center(
             child: Container(
-              padding: EdgeInsets.only(top: 32, bottom: 32),
+              padding: EdgeInsets.only(top: 32, bottom: 8),
               child: Column(
                 children: [
                   ProfileImage(
@@ -66,6 +67,12 @@ class ProfileHeader extends StatelessWidget {
                       color: Colors.black.withOpacity(0.5),
                       fontSize: 16,
                     ),
+                  ),
+                  WinLossRecord(
+                    win: context.watch<MyInfo>().win,
+                    loss: context.watch<MyInfo>().loss,
+                    draw: context.watch<MyInfo>().draw,
+                    padding: EdgeInsets.only(top: 8, left: 16, right: 16),
                   ),
                 ],
               ),
