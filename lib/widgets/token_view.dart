@@ -75,16 +75,22 @@ class _TokenViewState extends State<TokenView> {
 
   Future<void> _useToken() async {
     bool success = await tokenManager.useToken();
+    Navigator.pop(context); // Close alert dialog
     if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('No tokens!')),
       );
+      return;
     }
     setState(() {
       remaining = tokenManager.timeUntilNextToken();
       if (remaining != null && _timer == null) {
         _startTimer();
       }
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Play(isRequest: true))
+      );
     });
   }
 
@@ -142,14 +148,7 @@ class _TokenViewState extends State<TokenView> {
                 content: 'Start with a token?\n🪙 -1',
                 defaultActionText: 'No',
                 destructiveActionText: 'Yes',
-                destructiveActionOnPressed: () {
-                  _useToken();
-                  Navigator.pop(context);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Play(isRequest: true))
-                  );
-                },
+                destructiveActionOnPressed: _useToken,
               );
             },
             style: ElevatedButton.styleFrom(
