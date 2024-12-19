@@ -42,7 +42,15 @@ class _MainScreenState extends State<MainScreen> {
     context.read<MatchDataTo>().fetch();
     context.read<RankingData>().fetch();
     FirebaseMessaging.onMessage.listen((message) async {
-      showFlutterNotification(message);
+      // showFlutterNotification(message);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Column(
+          children: [
+            Text('${message.notification?.title}',style: TextStyle(fontWeight: FontWeight.bold)),
+            Text('${message.notification?.body}'),
+          ],
+        )),
+      );
       switch (message.data['type']) {
         case 'match_from':
           context.read<MatchDataFrom>().fetch();
