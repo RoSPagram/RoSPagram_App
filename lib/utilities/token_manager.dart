@@ -3,7 +3,7 @@ import 'supabase_util.dart';
 
 class TokenManager {
   static const int MAX_TOKENS = 5;
-  static const Duration RECHARGE_INTERVAL = Duration(minutes: 10, seconds: 1);
+  static const Duration RECHARGE_INTERVAL = Duration(minutes: 10, milliseconds: 500);
 
   final String userId;
 
@@ -52,24 +52,6 @@ class TokenManager {
     await rechargeTokensIfNeeded();
   }
 
-  Future<void> _rechargeTokens(Duration diff) async {
-    int tokensToAdd = diff.inMinutes ~/ 10;
-    int newTokenCount = _tokenCount + tokensToAdd;
-    if (newTokenCount > MAX_TOKENS) {
-      newTokenCount = MAX_TOKENS;
-    }
-
-    if (newTokenCount != _tokenCount) {
-      _tokenCount = newTokenCount;
-      _lastUpdated = _currentTime!;
-
-      await supabase.from('user_tokens').update({
-        'count': _tokenCount,
-        'last_updated': _lastUpdated!.toIso8601String()
-      }).eq('id', userId);
-    }
-  }
-
   /// 토큰 충전 로직
   Future<void> rechargeTokensIfNeeded() async {
     if (_currentTime == null || _lastUpdated == null) return;
@@ -78,6 +60,24 @@ class TokenManager {
     final diff = _currentTime!.difference(_lastUpdated!);
     if (diff.inMinutes >= 10 && _tokenCount < MAX_TOKENS) {
       _rechargeTokens(diff);
+    }
+  }
+
+  void _rechargeTokens(Duration diff) {
+    int tokensToAdd = diff.inMinutes ~/ 10;
+    int newTokenCount = _tokenCount + tokensToAdd;
+    if (newTokenCount > MAX_TOKENS) {
+      newTokenCount = MAX_TOKENS;
+    }
+
+    if (newTokenCount != _tokenCount) {
+      _tokenCount = newTokenCount;
+      _lastUpdated = _lastUpdated!.add(Duration(minutes: tokensToAdd * 10));
+
+      supabase.from('user_tokens').update({
+        'count': _tokenCount,
+        'last_updated': _lastUpdated!.toIso8601String()
+      }).eq('id', userId).then((_) {});
     }
   }
 
