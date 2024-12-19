@@ -127,7 +127,6 @@ class _TokenViewState extends State<TokenView> {
                 tokenWidget(4),
               ],
             ),
-            // child: Text('현재 토큰 수: ${tokenManager.tokenCount}'),
           ),
           if (remaining != null)
             Row(
@@ -142,6 +141,7 @@ class _TokenViewState extends State<TokenView> {
             ),
           ElevatedButton(
             onPressed: () {
+              if (_isLoading) return;
               showAlertDialog(
                 context,
                 title: 'Play',
