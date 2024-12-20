@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../widgets/match_list_item.dart';
 import '../widgets/counter_badge.dart';
 import '../utilities/supabase_util.dart';
@@ -15,6 +16,8 @@ class Match extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localText = AppLocalizations.of(context)!;
+
     final myInfo = context.read<MyInfo>();
     final from = context.read<MatchDataFrom>();
     final to = context.read<MatchDataTo>();
@@ -26,10 +29,10 @@ class Match extends StatelessWidget {
       length: 2,
       child: Column(
         children: [
-          const Padding(
+          Padding(
             padding: EdgeInsets.all(8),
             child: Text(
-              '🚩 Game Request',
+              '🚩 ${localText.match_title}',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 24,
@@ -58,11 +61,11 @@ class Match extends StatelessWidget {
             unselectedLabelColor: Colors.grey,
             tabs: <Tab>[
               Tab(
-                text: 'From',
+                text: '${localText.match_tab_from}',
                 icon: matchFromLen > 0 ? CounterBadge(value: matchFromLen) : SizedBox.shrink(),
               ),
               Tab(
-                text: 'To',
+                text: '${localText.match_tab_to}',
                 icon: matchToLen > 0 ? CounterBadge(value: matchToLen) : SizedBox.shrink(),
               ),
             ],
@@ -70,13 +73,13 @@ class Match extends StatelessWidget {
           Expanded(
             child: TabBarView(
               children: [
-                context.watch<MatchDataFrom>().list.isEmpty ? Center(child: Text('No Matches')) : ListView.builder(
+                context.watch<MatchDataFrom>().list.isEmpty ? Center(child: Text('${localText.match_no}')) : ListView.builder(
                   itemCount: context.watch<MatchDataFrom>().list.length,
                   itemBuilder: (BuildContext context, int index) {
                     return MatchListItem(
                       userName: context.watch<MatchDataFrom>().list[index]['username'],
                       imgUrl: context.watch<MatchDataFrom>().list[index]['img_url'],
-                      description: 'Touch to Accept',
+                      description: '${localText.match_item_from_desc}',
                       desciptionColor: Colors.red,
                       onTap: () {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => Play(userId: from.list[index]['id'], isRequest: false)));
@@ -84,22 +87,22 @@ class Match extends StatelessWidget {
                     );
                   },
                 ),
-                context.watch<MatchDataTo>().list.isEmpty ? Center(child: Text('No Matches')) : ListView.builder(
+                context.watch<MatchDataTo>().list.isEmpty ? Center(child: Text('${localText.match_no}')) : ListView.builder(
                   itemCount: context.watch<MatchDataTo>().list.length,
                   itemBuilder: (BuildContext context, int index) {
                     return MatchListItem(
                       userName: context.watch<MatchDataTo>().list[index]['username'],
                       imgUrl: context.watch<MatchDataTo>().list[index]['img_url'],
-                      description: context.watch<MatchDataTo>().list[index]['respond'] == 0 ? 'Touch to Cancel' : 'Touch to show result',
+                      description: context.watch<MatchDataTo>().list[index]['respond'] == 0 ? '${localText.match_item_to_desc_cancel}' : '${localText.match_item_to_desc_show}',
                       desciptionColor: context.watch<MatchDataTo>().list[index]['respond'] == 0 ? Colors.red : Colors.green,
                       onTap: () {
                         if (context.read<MatchDataTo>().list[index]['respond'] == 0) {
                           showAlertDialog(
                             context,
-                            title: 'Cancel Match',
-                            content: 'Are you cancel this game?',
-                            defaultActionText: 'No',
-                            destructiveActionText: 'Yes',
+                            title: '${localText.match_dialog_cancel_title}',
+                            content: '${localText.match_dialog_cancel_content}',
+                            defaultActionText: '${localText.no}',
+                            destructiveActionText: '${localText.yes}',
                             destructiveActionOnPressed: () {
                               supabase.from('match').delete().match({
                                 'from': context.read<MyInfo>().id,

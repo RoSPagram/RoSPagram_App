@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utilities/firebase_util.dart';
 import '../providers/my_info.dart';
 import '../providers/match_data_from.dart';
@@ -92,6 +93,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     int matchFromLen = context.watch<MatchDataFrom>().list.length;
     int matchToLen = context.watch<MatchDataTo>().list.length;
+    final localText = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -101,9 +103,9 @@ class _MainScreenState extends State<MainScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: <BottomNavigationBarItem>[
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: '${localText.main_screen_navbar_home}',
           ),
           BottomNavigationBarItem(
             icon: Stack(
@@ -126,15 +128,15 @@ class _MainScreenState extends State<MainScreen> {
                 )
               ],
             ),
-            label: 'Match',
+            label: '${localText.main_screen_navbar_match}',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.stacked_bar_chart),
-            label: 'Rank',
+            label: '${localText.main_screen_navbar_rank}',
           ),
-          const BottomNavigationBarItem(
+          BottomNavigationBarItem(
             icon: Icon(Icons.groups),
-            label: 'Social',
+            label: '${localText.main_screen_navbar_social}',
           )
         ],
         currentIndex: _selectedIndex,

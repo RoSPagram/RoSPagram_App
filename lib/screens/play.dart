@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 import '../widgets/profile_image.dart';
 import '../utilities/supabase_util.dart';
@@ -44,6 +45,7 @@ class _PlayState extends State<Play> {
 
   @override
   Widget build(BuildContext context) {
+    final localText = AppLocalizations.of(context)!;
     return WillPopScope(
       onWillPop: () {
         return Future(() => false);
@@ -98,7 +100,7 @@ class _PlayState extends State<Play> {
                         child: isStart ? Column(
                           children: [
                             Text(
-                              'Choose your hand',
+                              '${localText.play_select}',
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.black.withOpacity(0.75),
@@ -171,7 +173,7 @@ class _PlayState extends State<Play> {
                                       Icon(
                                         Icons.arrow_back,
                                       ),
-                                      Text('Back'),
+                                      Text('${localText.back}'),
                                     ],
                                   ),
                                   style: ElevatedButton.styleFrom(
@@ -189,7 +191,7 @@ class _PlayState extends State<Play> {
                                         sendPushMessage(
                                             userData['fcm_token'],
                                             '${context.read<MyInfo>().username}',
-                                            '🚩 Match request',
+                                            '🚩 ${lookupAppLocalizations(Locale(userData['lang'] ?? 'en')).push_msg_body_match_req}',
                                             {'type': 'match_from'}
                                         );
                                         context.read<MatchDataTo>().fetch();
@@ -197,10 +199,10 @@ class _PlayState extends State<Play> {
                                       }).onError((error, stackTrace) {
                                         showAlertDialog(
                                           context,
-                                          title: 'Already in Progress',
-                                          content: 'You are already playing with this user',
-                                          defaultActionText: 'Cancel',
-                                          destructiveActionText: 'Find others',
+                                          title: '${localText.play_dialog_already_title}',
+                                          content: '${localText.play_dialog_already_content}',
+                                          defaultActionText: '${localText.cancel}',
+                                          destructiveActionText: '${localText.play_dialog_already_action}',
                                           destructiveActionOnPressed: () {
                                             setState(() {
                                               isStart = false;
@@ -227,7 +229,7 @@ class _PlayState extends State<Play> {
                                       Icon(
                                         Icons.check,
                                       ),
-                                      Text('Confirm'),
+                                      Text('${localText.confirm}'),
                                     ],
                                   ),
                                   style: ElevatedButton.styleFrom(
@@ -253,7 +255,7 @@ class _PlayState extends State<Play> {
                                     Icons.flag,
                                     size: 64,
                                   ),
-                                  Text('Start Game'),
+                                  Text('${localText.play_btn_start}'),
                                 ],
                               ),
                               style: ElevatedButton.styleFrom(
@@ -273,7 +275,7 @@ class _PlayState extends State<Play> {
                                     Icons.refresh,
                                     size: 64,
                                   ),
-                                  Text('Find Again'),
+                                  Text('${localText.play_btn_reload}'),
                                 ],
                               ),
                               style: ElevatedButton.styleFrom(
@@ -291,10 +293,10 @@ class _PlayState extends State<Play> {
                               onPressed: () {
                                 showAlertDialog(
                                   context,
-                                  title: 'Exit',
-                                  content: 'Are you exit this game?',
-                                  defaultActionText: 'No',
-                                  destructiveActionText: 'Yes',
+                                  title: '${localText.play_dialog_exit_title}',
+                                  content: '${localText.play_dialog_exit_content}',
+                                  defaultActionText: '${localText.no}',
+                                  destructiveActionText: '${localText.yes}',
                                   destructiveActionOnPressed: () {
                                     Navigator.pop(context);
                                     Navigator.pop(context);
@@ -306,7 +308,7 @@ class _PlayState extends State<Play> {
                               color: Colors.black.withOpacity(0.5),
                             ),
                             Text(
-                              'Cancel Match',
+                              '${localText.cancel}',
                               style: TextStyle(
                                 color: Colors.black.withOpacity(0.5),
                               ),

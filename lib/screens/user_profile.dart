@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/firebase_util.dart';
@@ -161,8 +162,8 @@ class UserProfile extends StatelessWidget {
                         onPressed: () {
                           sendPushMessage(
                               userData['fcm_token'],
-                              'Test Message',
-                              'Message received from ${myInfo.username}'
+                              '${myInfo.username}',
+                              '${lookupAppLocalizations(Locale(userData['lang'] ?? 'en')).test_msg}'
                           );
                         },
                         child: Text('SEND_TEST_NOTIFICATION'),

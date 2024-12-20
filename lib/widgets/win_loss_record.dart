@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class WinLossRecord extends StatelessWidget {
   WinLossRecord({
@@ -18,6 +19,7 @@ class WinLossRecord extends StatelessWidget {
 
   @override
   build(BuildContext context) {
+    final localText = AppLocalizations.of(context)!;
     return Container(
       margin: this.margin,
       padding: this.padding,
@@ -36,7 +38,7 @@ class WinLossRecord extends StatelessWidget {
           TableRow(
             children: <Center>[
               Center(child: Text(
-                'WIN',
+                '${localText.win_loss_record_win}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -44,7 +46,7 @@ class WinLossRecord extends StatelessWidget {
                 ),
               )),
               Center(child: Text(
-                'LOSE',
+                '${localText.win_loss_record_lose}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -52,7 +54,7 @@ class WinLossRecord extends StatelessWidget {
                 ),
               )),
               Center(child: Text(
-                'DRAW',
+                '${localText.win_loss_record_draw}',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

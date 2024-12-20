@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../screens/play.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/token_manager.dart';
@@ -111,6 +112,7 @@ class _TokenViewState extends State<TokenView> {
 
   @override
   Widget build(BuildContext context) {
+    final localText = AppLocalizations.of(context)!;
     return Container(
       padding: EdgeInsets.only(top: 8, bottom: 8),
       child: Column(
@@ -144,10 +146,10 @@ class _TokenViewState extends State<TokenView> {
               if (_isLoading) return;
               showAlertDialog(
                 context,
-                title: 'Play',
-                content: 'Start with a token?\n🪙 -1',
-                defaultActionText: 'No',
-                destructiveActionText: 'Yes',
+                title: '${localText.play_btn_dialog_title}',
+                content: '${localText.play_btn_dialog_content}\n🪙 -1',
+                defaultActionText: '${localText.no}',
+                destructiveActionText: '${localText.yes}',
                 destructiveActionOnPressed: _useToken,
               );
             },
@@ -159,7 +161,7 @@ class _TokenViewState extends State<TokenView> {
             child: Column(
               children: [
                 Text(
-                  'Play',
+                  '${localText.play_btn_text}',
                   style: TextStyle(
                     fontSize: 32,
                   ),
