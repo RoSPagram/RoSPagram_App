@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'dart:async';
 import '../providers/my_info.dart';
 import '../providers/match_data_from.dart';
@@ -34,6 +35,7 @@ class Result extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localText = AppLocalizations.of(context)!;
     final myInfo = context.read<MyInfo>();
     final matchFrom = context.read<MatchDataFrom>();
     final matchTo = context.read<MatchDataTo>();
@@ -57,7 +59,7 @@ class Result extends StatelessWidget {
                 sendPushMessage(
                     opponentData['fcm_token'],
                     '${myInfo.username}',
-                    result == 'win' ? '😭 You lost..' : result == 'lose' ? '🏆 You won!' : '😯 Draw',
+                    result == 'win' ? '😭 ${lookupAppLocalizations(Locale(opponentData['lang'] ?? 'en')).push_msg_body_result_loss}' : result == 'lose' ? '🏆 ${lookupAppLocalizations(Locale(opponentData['lang'] ?? 'en')).push_msg_body_result_win}' : '😯 ${lookupAppLocalizations(Locale(opponentData['lang'] ?? 'en')).push_msg_body_result_draw}',
                     {'type': 'match_to', 'user_id': this.to}
                 );
               }
@@ -126,7 +128,7 @@ class Result extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 32),
                       child: Text(
-                        result == 'win'? 'YOU WIN' : result == 'lose' ? 'YOU LOSE' : 'DRAW',
+                        result == 'win'? '${localText.result_text_win}' : result == 'lose' ? '${localText.result_text_lose }' : '${localText.result_text_draw}',
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.5),
                           fontSize: 48,

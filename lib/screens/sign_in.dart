@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ntp/ntp.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../providers/my_info.dart';
 import '../utilities/shared_prefs.dart';
 import '../utilities/instagram_service.dart';
@@ -15,36 +16,33 @@ class SignIn extends StatelessWidget {
   const SignIn({super.key});
 
   Future<bool> _fetch(BuildContext context) async {
-    // String? oldToken = SharedPrefs.instance.getString('user_token');
-    // if (oldToken == null) return false;
-    //
-    // final newToken = await InstagramService().refreshUserToken(oldToken);
-    // final userProfile = await InstagramService().getUserInfo(newToken);
-    // if (userProfile['id'] == null) return false;
-    //
-    // final String? userImgUrl = await InstagramService().getUserProfileImgUrl(userProfile['username']);
 
     String? storedUUID = SharedPrefs.instance.getString('uuid');
     if (storedUUID == null) return false;
-
-    // final userData = await supabase.rpc('get_user_data', params: {'user_id': userProfile['id']});
     final userData = await supabase.rpc('get_user_data', params: {'user_id': storedUUID});
     if (userData.length == 0) return false;
 
+    final Map<String, dynamic> updates = {};
+
     String? fcmToken = SharedPrefs.instance.getString('fcm_token');
     if (userData[0]['fcm_token'] == null) {
-      await supabase.from('users').update({
-        'fcm_token': fcmToken,
-      }).eq('id', storedUUID);
+      updates['fcm_token'] = fcmToken;
     }
-    // context.read<MyInfo>().id = userProfile['id'];
-    // context.read<MyInfo>().username = userProfile['username'];
-    // context.read<MyInfo>().img_url = userImgUrl ?? userData[0]['img_url'];
+
+    final currentLang = Localizations.localeOf(context).languageCode;
+    if (userData[0]['lang'] != currentLang) {
+      updates['lang'] = currentLang;
+    }
+
     NTP.now().then((time) async {
       final date = DateFormat('yyyy-MM-dd').format(time);
       if (userData[0]['last_login'] == date) return;
-      await supabase.rpc('set_last_login', params: {'user_id': storedUUID});
+      updates['last_login'] = date;
     });
+
+    if (updates.isNotEmpty) {
+      await supabase.from('users').update(updates).eq('id', storedUUID);
+    }
 
     context.read<MyInfo>().id = userData[0]['id'];
     context.read<MyInfo>().username = userData[0]['username'];
@@ -61,6 +59,7 @@ class SignIn extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localText = AppLocalizations.of(context)!;
     Text loadingText = Text(
       'Loading...',
       textAlign: TextAlign.center,
@@ -79,7 +78,7 @@ class SignIn extends StatelessWidget {
 
     FilledButton guestButton = FilledButton(
       style: FilledButton.styleFrom(backgroundColor: Color(0xffdfdfdf), foregroundColor: Color(0xff000000)),
-      child: Text('Start as Guest'),
+      child: Text('${localText.sign_in_start}'),
       onPressed: () async {
         final newUUID = Uuid().v4();
         final newUserName = getRandomName();
