@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 import '../widgets/profile_image.dart';
+import '../widgets/profile_avatar.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/firebase_util.dart';
 import '../utilities/alert_dialog.dart';
@@ -72,10 +73,15 @@ class _PlayState extends State<Play> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ProfileImage(
-                        url: userData['img_url'],
-                        width: 64,
-                        height: 64,
+                      // ProfileImage(
+                      //   url: userData['img_url'],
+                      //   width: 64,
+                      //   height: 64,
+                      // ),
+                      ProfileAvatar(
+                        avatarData: userData['avatar'],
+                        width: 128,
+                        height: 128,
                       ),
                       Padding(
                         padding: EdgeInsets.only(top: 16, bottom: 16),

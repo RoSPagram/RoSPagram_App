@@ -9,6 +9,7 @@ import '../providers/ranking_data.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/firebase_util.dart';
 import '../widgets/profile_image.dart';
+import '../widgets/profile_avatar.dart';
 import '../widgets/win_loss_record.dart';
 
 class Result extends StatelessWidget {
@@ -103,10 +104,15 @@ class Result extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ProfileImage(
-                      url: opponentData['img_url'],
-                      width: 64,
-                      height: 64,
+                    // ProfileImage(
+                    //   url: opponentData['img_url'],
+                    //   width: 64,
+                    //   height: 64,
+                    // ),
+                    ProfileAvatar(
+                      avatarData: opponentData['avatar'],
+                      width: 128,
+                      height: 128,
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 16),
