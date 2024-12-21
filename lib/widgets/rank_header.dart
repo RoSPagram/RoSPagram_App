@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../constants.dart';
 import './profile_image.dart';
+import './profile_avatar.dart';
 import '../providers/my_info.dart';
 import '../providers/ranking_data.dart';
 
@@ -67,8 +68,13 @@ class RankHeader extends StatelessWidget {
                     flex: 1,
                     child: Column(
                       children: [
-                        ProfileImage(
-                          url: myInfo.img_url,
+                        // ProfileImage(
+                        //   url: myInfo.img_url,
+                        //   width: 32,
+                        //   height: 32,
+                        // ),
+                        ProfileAvatar(
+                          avatarData: myInfo.avatarData,
                           width: 32,
                           height: 32,
                         ),
