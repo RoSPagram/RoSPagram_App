@@ -53,13 +53,13 @@ class Avatar {
     this.cheekColor = rgbToHex(128 + Random().nextInt(128), 128 + Random().nextInt(128), 128 + Random().nextInt(128));
     // this.avatarTx = -20 + Random().nextInt(41);
     // this.avatarTy = -20 + Random().nextInt(41);
-    // this.avatarRotate = -20 + Random().nextInt(41);
-    // this.bodyTx = -20 + Random().nextInt(41);
-    // this.bodyTy = -20 + Random().nextInt(41);
-    this.bodyRotate = -30 + Random().nextInt(61);
+    this.avatarRotate = -30 + Random().nextInt(61);
+    this.bodyTx = -5 + Random().nextInt(11);
+    this.bodyTy = -10 + Random().nextInt(21);
+    // this.bodyRotate = -30 + Random().nextInt(61);
     this.faceTx = -10 + Random().nextInt(21);
     this.faceTy = -10 + Random().nextInt(21);
-    this.faceRotate = -(this.bodyRotate) - 20 + Random().nextInt(41);
+    this.faceRotate = -20 + Random().nextInt(41);
   }
 
   String getSVG() {
