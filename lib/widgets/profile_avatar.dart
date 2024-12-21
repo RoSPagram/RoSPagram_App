@@ -1,33 +1,21 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../utilities/avatar_util.dart';
 
-class ProfileAvatar extends StatefulWidget {
-  ProfileAvatar({super.key, required this.avatar});
+class ProfileAvatar extends StatelessWidget {
+  ProfileAvatar({super.key, required this.avatarData, required this.width, required this.height});
 
-  Avatar avatar;
+  String? avatarData;
+  double width, height;
 
-  @override
-  State<ProfileAvatar> createState() => _ProfileAvatarState();
-}
-class _ProfileAvatarState extends State<ProfileAvatar> {
   @override
   Widget build(BuildContext context) {
-    widget.avatar.applyRandom();
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            widget.avatar.applyRandom();
-          });
-        },
-        child: SvgPicture.string(
-          widget.avatar.getSVG(),
-          width: 150,
-          height: 150,
-        ),
-      ),
+    Avatar avatar = avatarData == null ? new Avatar() : Avatar.fromJSON(jsonDecode(avatarData!));
+    return SvgPicture.string(
+      avatar.getSVG(),
+      width: this.width,
+      height: this.height,
     );
   }
 }
