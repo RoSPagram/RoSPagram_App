@@ -11,7 +11,7 @@ class RankingData extends ChangeNotifier {
   }
 
   void fetchTopten() {
-    supabase.from('top_ten').select('index, id, username, img_url').then((value) {
+    supabase.from('top_ten').select('index, id, username, avatar').then((value) {
       list = value;
       notifyListeners();
     });
