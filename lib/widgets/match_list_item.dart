@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import './profile_image.dart';
+import 'profile_avatar.dart';
 
 class MatchListItem extends StatelessWidget {
-  const MatchListItem({super.key, required this.userName, required this.imgUrl, required this.description, this.desciptionColor = Colors.red, required this.onTap});
+  const MatchListItem({super.key, required this.userName, required this.avatarData, required this.description, this.desciptionColor = Colors.red, required this.onTap});
 
   final String userName;
-  final String imgUrl;
+  final String avatarData;
   final String description;
   final Color desciptionColor;
   final void Function() onTap;
@@ -36,8 +37,13 @@ class MatchListItem extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                ProfileImage(
-                  url: this.imgUrl,
+                // ProfileImage(
+                //   url: this.imgUrl,
+                //   width: 48,
+                //   height: 48,
+                // ),
+                ProfileAvatar(
+                  avatarData: this.avatarData,
                   width: 48,
                   height: 48,
                 ),
