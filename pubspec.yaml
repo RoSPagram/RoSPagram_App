@@ -51,6 +51,7 @@ dependencies:
   googleapis: ^13.2.0
   googleapis_auth: ^1.6.0
   flutter_local_notifications: ^18.0.1
+  flutter_svg: ^2.0.16
 
 dev_dependencies:
   flutter_test:

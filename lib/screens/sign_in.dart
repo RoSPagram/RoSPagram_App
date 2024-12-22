@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
@@ -5,6 +6,7 @@ import 'package:ntp/ntp.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../providers/my_info.dart';
+import '../utilities/avatar_util.dart';
 import '../utilities/shared_prefs.dart';
 import '../utilities/instagram_service.dart';
 import '../utilities/supabase_util.dart';
@@ -29,6 +31,12 @@ class SignIn extends StatelessWidget {
       updates['fcm_token'] = fcmToken;
     }
 
+    if (userData[0]['avatar'] == null) {
+      Avatar avatar = new Avatar();
+      avatar.applyRandom();
+      updates['avatar'] = jsonEncode(avatar.toJSON());
+    }
+
     final currentLang = Localizations.localeOf(context).languageCode;
     if (userData[0]['lang'] != currentLang) {
       updates['lang'] = currentLang;
@@ -47,6 +55,7 @@ class SignIn extends StatelessWidget {
     context.read<MyInfo>().id = userData[0]['id'];
     context.read<MyInfo>().username = userData[0]['username'];
     context.read<MyInfo>().img_url = userData[0]['img_url'];
+    context.read<MyInfo>().avatarData = userData[0]['avatar'] ?? updates['avatar'];
     context.read<MyInfo>().index = userData[0]['index'];
     context.read<MyInfo>().win = userData[0]['win'];
     context.read<MyInfo>().loss = userData[0]['loss'];

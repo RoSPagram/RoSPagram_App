@@ -1,20 +1,23 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/ranking_data.dart';
 import '../constants.dart';
 import './profile_image.dart';
+import '../utilities/avatar_util.dart';
+import '../widgets/profile_avatar.dart';
 
 class RankListItem extends StatelessWidget {
   const RankListItem({
     super.key,
     required this.index,
-    required this.imgUrl,
+    required this.avatarData,
     required this.userName,
     required this.onTap,
   });
 
   final int index;
-  final String imgUrl;
+  final String? avatarData;
   final String userName;
   final void Function() onTap;
 
@@ -61,10 +64,15 @@ class RankListItem extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    ProfileImage(
-                      url: this.imgUrl,
-                      width: 32,
-                      height: 32,
+                    // ProfileImage(
+                    //   url: this.imgUrl,
+                    //   width: 32,
+                    //   height: 32,
+                    // ),
+                    ProfileAvatar(
+                      avatarData: avatarData,
+                      width: 48,
+                      height: 48,
                     ),
                     Text(
                       '@${this.userName}',

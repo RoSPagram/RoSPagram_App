@@ -78,7 +78,7 @@ class Match extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     return MatchListItem(
                       userName: context.watch<MatchDataFrom>().list[index]['username'],
-                      imgUrl: context.watch<MatchDataFrom>().list[index]['img_url'],
+                      avatarData: context.watch<MatchDataFrom>().list[index]['avatar'],
                       description: '${localText.match_item_from_desc}',
                       desciptionColor: Colors.red,
                       onTap: () {
@@ -92,7 +92,7 @@ class Match extends StatelessWidget {
                   itemBuilder: (BuildContext context, int index) {
                     return MatchListItem(
                       userName: context.watch<MatchDataTo>().list[index]['username'],
-                      imgUrl: context.watch<MatchDataTo>().list[index]['img_url'],
+                      avatarData: context.watch<MatchDataTo>().list[index]['avatar'],
                       description: context.watch<MatchDataTo>().list[index]['respond'] == 0 ? '${localText.match_item_to_desc_cancel}' : '${localText.match_item_to_desc_show}',
                       desciptionColor: context.watch<MatchDataTo>().list[index]['respond'] == 0 ? Colors.red : Colors.green,
                       onTap: () {
