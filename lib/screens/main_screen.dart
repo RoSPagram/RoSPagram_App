@@ -10,7 +10,7 @@ import '../providers/ranking_data.dart';
 import './home.dart';
 import './match.dart';
 import './rank.dart';
-import './social.dart';
+import './shop.dart';
 import './result.dart';
 
 class MainScreen extends StatefulWidget {
@@ -27,7 +27,7 @@ class _MainScreenState extends State<MainScreen> {
     const Home(),
     const Match(),
     const Rank(),
-    const Social(),
+    const Shop(),
   ];
 
   void _onItemTapped(int index) {
@@ -135,8 +135,8 @@ class _MainScreenState extends State<MainScreen> {
             label: '${localText.main_screen_navbar_rank}',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.groups),
-            label: '${localText.main_screen_navbar_social}',
+            icon: Icon(Icons.shopping_basket_rounded),
+            label: '${localText.main_screen_navbar_shop}',
           )
         ],
         currentIndex: _selectedIndex,
