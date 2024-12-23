@@ -7,6 +7,7 @@ import '../providers/my_info.dart';
 import '../providers/match_data_from.dart';
 import '../providers/match_data_to.dart';
 import '../providers/ranking_data.dart';
+import '../providers/gem_data.dart';
 import './home.dart';
 import './match.dart';
 import './rank.dart';
@@ -42,6 +43,7 @@ class _MainScreenState extends State<MainScreen> {
     context.read<MatchDataFrom>().fetch();
     context.read<MatchDataTo>().fetch();
     context.read<RankingData>().fetch();
+    context.read<GemData>().fetch();
     FirebaseMessaging.onMessage.listen((message) async {
       // showFlutterNotification(message);
       ScaffoldMessenger.of(context).showSnackBar(
