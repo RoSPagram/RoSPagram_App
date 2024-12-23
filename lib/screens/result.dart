@@ -6,6 +6,7 @@ import '../providers/my_info.dart';
 import '../providers/match_data_from.dart';
 import '../providers/match_data_to.dart';
 import '../providers/ranking_data.dart';
+import '../providers/gem_data.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/firebase_util.dart';
 import '../widgets/profile_image.dart';
@@ -41,6 +42,7 @@ class Result extends StatelessWidget {
     final matchFrom = context.read<MatchDataFrom>();
     final matchTo = context.read<MatchDataTo>();
     final rankingData = context.read<RankingData>();
+    final gemData = context.read<GemData>();
     final isSender = myInfo.id == this.from ? true : false;
 
     return Scaffold(
@@ -57,6 +59,7 @@ class Result extends StatelessWidget {
                 myInfo.fetch();
                 matchFrom.fetch();
                 rankingData.fetch();
+                gemData.fetch();
                 sendPushMessage(
                     opponentData['fcm_token'],
                     '${myInfo.username}',
@@ -70,6 +73,7 @@ class Result extends StatelessWidget {
                   matchTo.fetch();
                   myInfo.fetch();
                   rankingData.fetch();
+                  gemData.fetch();
                 });
               }
               else {
