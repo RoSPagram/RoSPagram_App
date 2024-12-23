@@ -1,7 +1,6 @@
 class User {
   String id;
   String username;
-  String img_url;
   String avatarData;
   int index;
   int win;
@@ -14,7 +13,6 @@ class User {
   User({
     this.id = '',
     this.username = '',
-    this.img_url = '',
     this.avatarData = '',
     this.index = 0,
     this.win = 0,
