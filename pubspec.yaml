@@ -71,7 +71,7 @@ dev_dependencies:
 flutter:
   generate: true
   assets:
-    - assets/img_profile_default.jpg
+    - assets/default_avatar.svg
     - env/.env
     - env/service-account-key.json
 
