@@ -29,10 +29,10 @@ class Rank extends StatelessWidget {
         ElevatedButton(
           onPressed: () async {
             final newUUID = Uuid().v4();
+            final newUserName = await getRandomName(context);
             await supabase.from('users').insert({
               'id': newUUID,
-              'username': getRandomName(),
-              'img_url': 'https://api.dicebear.com/9.x/thumbs/png?seed=$newUUID&scale=75'
+              'username': newUserName,
             });
             context.read<RankingData>().fetchTopten();
           },
