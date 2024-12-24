@@ -156,12 +156,6 @@ class _TokenViewState extends State<TokenView> {
                     fontSize: 24,
                   ),
                 ),
-                Text(
-                  'with a random user',
-                  style: TextStyle(
-                    fontSize: 18,
-                  ),
-                ),
               ],
             ),
           ),

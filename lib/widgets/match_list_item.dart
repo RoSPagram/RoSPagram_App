@@ -54,7 +54,7 @@ class MatchListItem extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(bottom: 8),
                         child: Text(
-                          '@${this.userName}',
+                          '${this.userName}',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                           ),

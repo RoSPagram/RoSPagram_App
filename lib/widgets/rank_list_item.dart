@@ -75,7 +75,7 @@ class RankListItem extends StatelessWidget {
                       height: 48,
                     ),
                     Text(
-                      '@${this.userName}',
+                      '${this.userName}',
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.75),
                       ),
