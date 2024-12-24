@@ -73,11 +73,6 @@ class _PlayState extends State<Play> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // ProfileImage(
-                      //   url: userData['img_url'],
-                      //   width: 64,
-                      //   height: 64,
-                      // ),
                       ProfileAvatar(
                         avatarData: userData['avatar'],
                         width: 128,
@@ -86,7 +81,7 @@ class _PlayState extends State<Play> {
                       Padding(
                         padding: EdgeInsets.only(top: 16, bottom: 16),
                         child: Text(
-                          '@${userData['username']}',
+                          '${userData['username']}',
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 20,
@@ -178,12 +173,14 @@ class _PlayState extends State<Play> {
                                     children: [
                                       Icon(
                                         Icons.arrow_back,
+                                        color: Colors.white,
                                       ),
                                       Text('${localText.back}'),
                                     ],
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.grey,
+                                    foregroundColor: Colors.white,
                                   ),
                                 ),
                                 ElevatedButton(
@@ -234,12 +231,14 @@ class _PlayState extends State<Play> {
                                     children: [
                                       Icon(
                                         Icons.check,
+                                        color: Colors.white,
                                       ),
                                       Text('${localText.confirm}'),
                                     ],
                                   ),
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.green,
+                                    foregroundColor: Colors.white,
                                   ),
                                 ),
                               ],
@@ -260,12 +259,14 @@ class _PlayState extends State<Play> {
                                   Icon(
                                     Icons.flag,
                                     size: 64,
+                                    color: Colors.white,
                                   ),
                                   Text('${localText.play_btn_start}'),
                                 ],
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
                               ),
                             ),
                             ElevatedButton(
@@ -280,19 +281,21 @@ class _PlayState extends State<Play> {
                                   Icon(
                                     Icons.refresh,
                                     size: 64,
+                                    color: Colors.white,
                                   ),
                                   Text('${localText.play_btn_reload}'),
                                 ],
                               ),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.blue,
+                                foregroundColor: Colors.white,
                               ),
                             ),
                           ],
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 64),
+                        padding: EdgeInsets.only(top: 8),
                         child: Column(
                           children: [
                             IconButton(

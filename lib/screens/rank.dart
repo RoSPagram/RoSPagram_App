@@ -26,18 +26,18 @@ class Rank extends StatelessWidget {
             );
           },
         ),
-        ElevatedButton(
-          onPressed: () async {
-            final newUUID = Uuid().v4();
-            final newUserName = await getRandomName(context);
-            await supabase.from('users').insert({
-              'id': newUUID,
-              'username': newUserName,
-            });
-            context.read<RankingData>().fetchTopten();
-          },
-          child: Text('CREATE_TEST_USER'),
-        ),
+        // ElevatedButton(
+        //   onPressed: () async {
+        //     final newUUID = Uuid().v4();
+        //     final newUserName = await getRandomName(context);
+        //     await supabase.from('users').insert({
+        //       'id': newUUID,
+        //       'username': newUserName,
+        //     });
+        //     context.read<RankingData>().fetchTopten();
+        //   },
+        //   child: Text('CREATE_TEST_USER'),
+        // ),
         Padding(
           padding: EdgeInsets.all(8),
           child: Text(

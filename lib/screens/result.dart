@@ -108,11 +108,6 @@ class Result extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // ProfileImage(
-                    //   url: opponentData['img_url'],
-                    //   width: 64,
-                    //   height: 64,
-                    // ),
                     ProfileAvatar(
                       avatarData: opponentData['avatar'],
                       width: 128,
@@ -121,7 +116,7 @@ class Result extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(top: 16),
                       child: Text(
-                        '@${opponentData['username']}',
+                        '${opponentData['username']}',
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.5),
                           fontSize: 20,
@@ -136,7 +131,7 @@ class Result extends StatelessWidget {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 32),
+                      padding: EdgeInsets.only(top: 8),
                       child: Text(
                         result == 'win'? '${localText.result_text_win}' : result == 'lose' ? '${localText.result_text_lose }' : '${localText.result_text_draw}',
                         style: TextStyle(
@@ -152,26 +147,14 @@ class Result extends StatelessWidget {
                         fontSize: 48,
                       ),
                     ),
-                    WinLossRecord(
-                      win: 0,
-                      loss: 0,
-                      draw: 0,
-                      padding: EdgeInsets.all(16),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: Icon(Icons.person_add, size: 48, color: Colors.black.withOpacity(0.5)),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.exit_to_app_rounded, size: 48, color: Colors.black.withOpacity(0.5)),
-                        ),
-                      ],
+                    Padding(
+                      padding: EdgeInsets.only(top: 8),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: Icon(Icons.exit_to_app_rounded, size: 48, color: Colors.black.withOpacity(0.5)),
+                      ),
                     ),
                   ],
                 ),

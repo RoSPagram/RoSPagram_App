@@ -10,21 +10,23 @@ class Home extends StatelessWidget {
   const Home({super.key});
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ProfileHeader(
-          onTap: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          ProfileHeader(
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
                     builder: (context) => UserProfile(userId: context.read<MyInfo>().id),
-                )
-            );
-          },
-        ),
-        TokenView(),
-        Text('Your ID : ${context.watch<MyInfo>().id}'),
-      ],
+                  )
+              );
+            },
+          ),
+          TokenView(),
+          // Text('Your ID : ${context.watch<MyInfo>().id}'),
+        ],
+      ),
     );
   }
 }
