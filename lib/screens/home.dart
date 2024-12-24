@@ -22,7 +22,7 @@ class Home extends StatelessWidget {
             );
           },
         ),
-        TokenView(userId: context.read<MyInfo>().id),
+        TokenView(),
         Text('Your ID : ${context.watch<MyInfo>().id}'),
       ],
     );
