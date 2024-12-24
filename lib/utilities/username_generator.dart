@@ -1,28 +1,22 @@
 import 'dart:math';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'supabase_util.dart';
 
-List<String> adjectives = [
-  '빠른', '느린', '강한', '약한', '큰', '작은', '높은', '낮은', '밝은', '어두운',
-  '뜨거운', '차가운', '무거운', '가벼운', '긴', '짧은', '넓은', '좁은', '두꺼운', '얇은',
-  '예쁜', '못생긴', '똑똑한', '어리석은', '친절한', '불친절한', '행복한', '슬픈', '건강한', '아픈',
-  '부드러운', '거친', '깨끗한', '더러운', '조용한', '시끄러운', '달콤한', '따뜻한', '서늘한',
-  '젖은', '마른', '단단한', '유연한', '딱딱한', '향기로운', '냄새나는',
-  '귀여운', '무서운', '용감한', '겁많은', '성실한', '게으른', '정직한', '거짓말하는', '재미있는', '지루한',
-  '풍부한', '부족한', '화려한', '소박한', '현명한', '우둔한', '차분한', '흥분한', '따뜻한', '차가운',
-  '매운', '순한', '신선한', '오래된', '튼튼한', '약한', '활발한', '조용한', '유명한', '무명의',
-  '사랑스러운', '미운', '친근한', '냉담한', '열정적인', '무관심한', '창의적인', '평범한', '독특한', '일반적인'
-];
+Future<String> getRandomName(BuildContext context) async {
+  final currentLang = Localizations.localeOf(context).languageCode;
+  final localText = AppLocalizations.of(context)!;
 
-List<String> nouns = [
-  '사자', '호랑이', '코끼리', '기린', '원숭이', '토끼', '여우', '늑대', '곰', '다람쥐',
-  '고양이', '강아지', '말', '소', '양', '염소', '돼지', '닭', '오리', '거위',
-  '독수리', '매', '참새', '비둘기', '펭귄', '물고기', '상어', '고래', '돌고래', '해파리',
-  '문어', '게', '새우', '개구리', '뱀', '도마뱀', '거북이', '악어', '코알라', '캥거루',
-  '판다', '하마', '코뿔소', '치타', '표범', '재규어', '스컹크', '너구리', '오소리', '수달',
-  '고슴도치', '두더지', '박쥐', '부엉이', '올빼미', '까마귀', '까치', '앵무새', '공작', '타조',
-  '낙타', '라마', '알파카', '사슴', '노루', '고라니', '멧돼지', '여우원숭이', '침팬지', '오랑우탄',
-  '고릴라', '바다사자', '물개', '바다코끼리', '북극곰', '펭귄', '이구아나', '카멜레온', '앵무새', '코뿔새'
-];
+  bool isNameExist = true;
+  String name;
 
-String getRandomName() {
-  return '${adjectives[Random().nextInt(adjectives.length)]}${nouns[Random().nextInt(nouns.length)]}${Random().nextInt(10000).toString().padLeft(4, '0')}';
+  do {
+    final res = await supabase.rpc('get_random_adjective');
+    name = '${res[0][currentLang]}${localText.finger}${Random().nextInt(10000).toString().padLeft(4, '0')}';
+    isNameExist = await supabase.rpc('username_exist', params: {'name': name});
+  }
+  while(isNameExist);
+
+  return name; 
 }

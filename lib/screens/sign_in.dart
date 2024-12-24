@@ -87,7 +87,7 @@ class SignIn extends StatelessWidget {
       child: Text('${localText.sign_in_start}'),
       onPressed: () async {
         final newUUID = Uuid().v4();
-        final newUserName = getRandomName();
+        final newUserName = await getRandomName(context);
         Avatar avatar = new Avatar();
         avatar.applyRandom();
         context.read<MyInfo>().id = newUUID;
