@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../utilities/firebase_util.dart';
 import '../providers/my_info.dart';
+import '../providers/token_data.dart';
 import '../providers/match_data_from.dart';
 import '../providers/match_data_to.dart';
 import '../providers/ranking_data.dart';
@@ -40,10 +41,12 @@ class _MainScreenState extends State<MainScreen> {
   @override
   initState() {
     super.initState();
+    context.read<TokenData>().fetch();
     context.read<MatchDataFrom>().fetch();
     context.read<MatchDataTo>().fetch();
     context.read<RankingData>().fetch();
     context.read<GemData>().fetch();
+
     FirebaseMessaging.onMessage.listen((message) async {
       // showFlutterNotification(message);
       ScaffoldMessenger.of(context).showSnackBar(

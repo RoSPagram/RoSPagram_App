@@ -8,6 +8,7 @@ import './utilities/firebase_util.dart';
 import './utilities/supabase_util.dart';
 import './screens/sign_in.dart';
 import './providers/my_info.dart';
+import './providers/token_data.dart';
 import './providers/match_data_from.dart';
 import './providers/match_data_to.dart';
 import './providers/ranking_data.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => MyInfo()),
+        ChangeNotifierProvider(create: (context) => TokenData(context: context)),
         ChangeNotifierProvider(create: (context) => MatchDataFrom(context: context)),
         ChangeNotifierProvider(create: (context) => MatchDataTo(context: context)),
         ChangeNotifierProvider(create: (context) => RankingData()),
