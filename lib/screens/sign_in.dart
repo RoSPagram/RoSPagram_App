@@ -123,6 +123,7 @@ class SignIn extends StatelessWidget {
                   fontSize: 64,
                   fontWeight: FontWeight.bold,
                 ),
+                textAlign: TextAlign.center,
               ),
               Container(
                 padding: EdgeInsets.only(top: 32),
