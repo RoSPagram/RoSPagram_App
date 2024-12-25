@@ -1,14 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 import '../utilities/supabase_util.dart';
-import '../utilities/firebase_util.dart';
-import '../utilities/avatar_util.dart';
 import '../providers/ranking_data.dart';
-import '../providers/my_info.dart';
-import '../widgets/profile_image.dart';
 import '../widgets/profile_avatar.dart';
 import '../widgets/win_loss_record.dart';
 
@@ -25,8 +20,6 @@ class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localText = AppLocalizations.of(context)!;
-    final myInfo = context.read<MyInfo>();
-    Avatar avatar = new Avatar();
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(

@@ -4,7 +4,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../screens/play.dart';
 import '../providers/token_data.dart';
-import '../utilities/supabase_util.dart';
 import '../utilities/alert_dialog.dart';
 
 class TokenView extends StatefulWidget {

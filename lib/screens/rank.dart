@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 import '../screens/user_profile.dart';
 import '../providers/my_info.dart';
 import '../providers/ranking_data.dart';
 import '../widgets/rank_header.dart';
 import '../widgets/rank_list_item.dart';
-import '../utilities/supabase_util.dart';
-import '../utilities/username_generator.dart';
 
 class Rank extends StatelessWidget {
   const Rank({super.key});

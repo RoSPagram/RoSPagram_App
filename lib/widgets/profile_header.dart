@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './profile_image.dart';
 import './profile_avatar.dart';
 import './win_loss_record.dart';
 import '../constants.dart';

@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/ranking_data.dart';
 import '../constants.dart';
-import './profile_image.dart';
-import '../utilities/avatar_util.dart';
 import '../widgets/profile_avatar.dart';
 
 class RankListItem extends StatelessWidget {

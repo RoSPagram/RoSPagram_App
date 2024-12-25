@@ -1,13 +1,5 @@
 import 'package:flutter/material.dart';
 
-// Instagram api
-const String INSTAGRAM_API_CLIENT_ID = "";
-const String INSTAGRAM_API_APP_SECRET = "";
-const String INSTAGRAM_API_REDIRECT_URL = "";
-const String INSTAGRAM_API_SCOPE = "user_profile";
-const String INSTAGRAM_API_RESPONSE_TYPE = "code";
-const String INSTAGRAM_API_URL = "https://api.instagram.com/oauth/authorize?client_id=$INSTAGRAM_API_CLIENT_ID&redirect_uri=$INSTAGRAM_API_REDIRECT_URL&scope=$INSTAGRAM_API_SCOPE&response_type=$INSTAGRAM_API_RESPONSE_TYPE";
-
 // Gradient colors by rank
 List<Color> rankColorGradient(int userRank) {
   switch(userRank) {

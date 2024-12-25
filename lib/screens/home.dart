@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/token_view.dart';
-import '../widgets/win_loss_record.dart';
 import '../providers/my_info.dart';
 import './user_profile.dart';
 

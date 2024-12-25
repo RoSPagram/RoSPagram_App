@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import './profile_image.dart';
 import 'profile_avatar.dart';
 
 class MatchListItem extends StatelessWidget {

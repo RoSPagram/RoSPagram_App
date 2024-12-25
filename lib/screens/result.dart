@@ -9,9 +9,7 @@ import '../providers/ranking_data.dart';
 import '../providers/gem_data.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/firebase_util.dart';
-import '../widgets/profile_image.dart';
 import '../widgets/profile_avatar.dart';
-import '../widgets/win_loss_record.dart';
 
 class Result extends StatelessWidget {
   const Result({super.key, required this.from, required this.to});
