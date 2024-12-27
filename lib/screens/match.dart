@@ -39,22 +39,22 @@ class Match extends StatelessWidget {
               ),
             ),
           ),
-          ElevatedButton(
-            onPressed: () {
-              supabase.rpc('create_test_match', params: {'user_id': myInfo.id}).then((_) {
-                from.fetch();
-              });
-            },
-            child: Text('CREATE_TEST_MATCH'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              supabase.from('match').delete().not('respond', 'eq', 0).then((_) {
-                from.fetch();
-              });
-            },
-            child: Text('CLEAR_FINISH_MATCHES'),
-          ),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     supabase.rpc('create_test_match', params: {'user_id': myInfo.id}).then((_) {
+          //       from.fetch();
+          //     });
+          //   },
+          //   child: Text('CREATE_TEST_MATCH'),
+          // ),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     supabase.from('match').delete().not('respond', 'eq', 0).then((_) {
+          //       from.fetch();
+          //     });
+          //   },
+          //   child: Text('CLEAR_FINISH_MATCHES'),
+          // ),
           TabBar(
             indicatorColor: Colors.black,
             labelColor: Colors.black,

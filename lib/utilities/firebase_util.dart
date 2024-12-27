@@ -97,7 +97,7 @@ void initFirebase() async {
   });
   firebaseMessaging.onTokenRefresh.listen((fcmToken) {
     print('==========REFRESH_TOKEN: $fcmToken');
-    SharedPrefs.instance.setString('fcm_token', fcmToken as String);
+    SharedPrefs.instance.setString('fcm_token', fcmToken);
   });
 }
 

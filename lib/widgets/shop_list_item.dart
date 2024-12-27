@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/ranking_data.dart';
-import '../constants.dart';
-import './profile_image.dart';
 
 class ShopListItem extends StatelessWidget {
   const ShopListItem({

@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
 import '../screens/user_profile.dart';
 import '../providers/my_info.dart';
 import '../providers/ranking_data.dart';
 import '../widgets/rank_header.dart';
 import '../widgets/rank_list_item.dart';
-import '../utilities/supabase_util.dart';
-import '../utilities/username_generator.dart';
 
 class Rank extends StatelessWidget {
   const Rank({super.key});
@@ -26,18 +23,18 @@ class Rank extends StatelessWidget {
             );
           },
         ),
-        ElevatedButton(
-          onPressed: () async {
-            final newUUID = Uuid().v4();
-            final newUserName = await getRandomName(context);
-            await supabase.from('users').insert({
-              'id': newUUID,
-              'username': newUserName,
-            });
-            context.read<RankingData>().fetchTopten();
-          },
-          child: Text('CREATE_TEST_USER'),
-        ),
+        // ElevatedButton(
+        //   onPressed: () async {
+        //     final newUUID = Uuid().v4();
+        //     final newUserName = await getRandomName(context);
+        //     await supabase.from('users').insert({
+        //       'id': newUUID,
+        //       'username': newUserName,
+        //     });
+        //     context.read<RankingData>().fetchTopten();
+        //   },
+        //   child: Text('CREATE_TEST_USER'),
+        // ),
         Padding(
           padding: EdgeInsets.all(8),
           child: Text(

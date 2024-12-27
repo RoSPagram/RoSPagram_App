@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import '../utilities/firebase_util.dart';
 import '../providers/my_info.dart';
 import '../providers/token_data.dart';
 import '../providers/match_data_from.dart';

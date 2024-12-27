@@ -1,14 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 import '../utilities/supabase_util.dart';
-import '../utilities/firebase_util.dart';
-import '../utilities/avatar_util.dart';
 import '../providers/ranking_data.dart';
-import '../providers/my_info.dart';
-import '../widgets/profile_image.dart';
 import '../widgets/profile_avatar.dart';
 import '../widgets/win_loss_record.dart';
 
@@ -24,8 +19,7 @@ class UserProfile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final myInfo = context.read<MyInfo>();
-    Avatar avatar = new Avatar();
+    final localText = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: FutureBuilder(
@@ -76,7 +70,7 @@ class UserProfile extends StatelessWidget {
                       Padding(
                         padding: EdgeInsets.only(top: 16, bottom: 16),
                         child: Text(
-                          '@${userData['username']}',
+                          '${userData['username']}',
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
                             fontSize: 20,
@@ -99,7 +93,7 @@ class UserProfile extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  'RANKING',
+                                  localText.ranking,
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.5),
                                     fontWeight: FontWeight.bold,
@@ -119,7 +113,7 @@ class UserProfile extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  'TOP',
+                                  localText.top,
                                   style: TextStyle(
                                     color: Colors.black.withOpacity(0.5),
                                     fontWeight: FontWeight.bold,
@@ -139,44 +133,30 @@ class UserProfile extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Text(
-                        'Win-Loss Record',
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                        ),
-                      ),
+                      // Text(
+                      //   'Win-Loss Record',
+                      //   style: TextStyle(
+                      //     color: Colors.black.withOpacity(0.5),
+                      //     fontWeight: FontWeight.w500,
+                      //     fontSize: 20,
+                      //   ),
+                      // ),
                       WinLossRecord(
                         win: userData['win'],
                         loss: userData['loss'],
                         draw: userData['draw'],
                         margin: EdgeInsets.all(16),
                       ),
-                      Text(
-                        'Win-Loss Record with You',
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                        ),
-                      ),
-                      WinLossRecord(
-                        win: 0,
-                        loss: 0,
-                        draw: 0,
-                        margin: EdgeInsets.all(16),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          sendPushMessage(
-                              userData['fcm_token'],
-                              '${myInfo.username}',
-                              '${lookupAppLocalizations(Locale(userData['lang'] ?? 'en')).test_msg}'
-                          );
-                        },
-                        child: Text('SEND_TEST_NOTIFICATION'),
-                      ),
+                      // ElevatedButton(
+                      //   onPressed: () {
+                      //     sendPushMessage(
+                      //         userData['fcm_token'],
+                      //         '${myInfo.username}',
+                      //         '${lookupAppLocalizations(Locale(userData['lang'] ?? 'en')).test_msg}'
+                      //     );
+                      //   },
+                      //   child: Text('SEND_TEST_NOTIFICATION'),
+                      // ),
                     ],
                   ),
                 ),

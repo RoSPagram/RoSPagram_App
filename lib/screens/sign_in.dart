@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import 'package:ntp/ntp.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import '../providers/my_info.dart';
 import '../utilities/avatar_util.dart';
 import '../utilities/shared_prefs.dart';
@@ -74,16 +75,8 @@ class SignIn extends StatelessWidget {
       ),
     );
 
-    FilledButton signInButton = FilledButton(
-      style: FilledButton.styleFrom(backgroundColor: Color(0xff000000)),
-      child: Text('Sign in'),
-      onPressed: () {
-        // Navigator.push(context, MaterialPageRoute(builder: (context) => AuthWebView()));
-      },
-    );
-
     FilledButton guestButton = FilledButton(
-      style: FilledButton.styleFrom(backgroundColor: Color(0xffdfdfdf), foregroundColor: Color(0xff000000)),
+      style: FilledButton.styleFrom(backgroundColor: Color(0xff000000), foregroundColor: Color(0xffffffff)),
       child: Text('${localText.sign_in_start}'),
       onPressed: () async {
         final newUUID = Uuid().v4();
@@ -124,60 +117,22 @@ class SignIn extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                children: [
-                  Text(
-                    'Ro',
-                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.w900),
-                  ),
-                  Text(
-                    'ck ✊',
-                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.w300),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    'S',
-                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.w900),
-                  ),
-                  Text(
-                    'cissors ✌️',
-                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.w300),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    'Pa',
-                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.w900),
-                  ),
-                  Text(
-                    'per 🖐️',
-                    style: TextStyle(fontSize: 48, fontWeight: FontWeight.w300),
-                  ),
-                ],
+              Text(
+                localText.sign_in_title,
+                style: TextStyle(
+                  fontSize: 64,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
               Container(
-                padding: EdgeInsets.only(top: 64),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      '✉️ tele',
-                      style: TextStyle(fontSize: 32, fontWeight: FontWeight.w300),
-                    ),
-                    Text(
-                      'gram',
-                      style: TextStyle(fontSize: 32, fontWeight: FontWeight.w900),
-                    ),
-                  ],
+                padding: EdgeInsets.only(top: 32),
+                child: SvgPicture.asset(
+                  'assets/default_avatar.svg',
                 ),
               ),
               Container(
-                padding: EdgeInsets.only(top: 128),
+                padding: EdgeInsets.only(top: 32),
                 child: FutureBuilder(
                   future: _fetch(context),
                   builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
-import './profile_image.dart';
 import './profile_avatar.dart';
 import '../providers/my_info.dart';
 import '../providers/ranking_data.dart';
@@ -13,6 +13,7 @@ class RankHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localText = AppLocalizations.of(context)!;
     final MyInfo myInfo = context.read<MyInfo>();
     final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, context.watch<MyInfo>().index);
     final userRank = getUserRank(top);
@@ -68,18 +69,13 @@ class RankHeader extends StatelessWidget {
                     flex: 1,
                     child: Column(
                       children: [
-                        // ProfileImage(
-                        //   url: myInfo.img_url,
-                        //   width: 32,
-                        //   height: 32,
-                        // ),
                         ProfileAvatar(
                           avatarData: myInfo.avatarData,
                           width: 32,
                           height: 32,
                         ),
                         Text(
-                          '@${context.watch<MyInfo>().username}',
+                          '${context.watch<MyInfo>().username}',
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.75),
                           ),
@@ -98,7 +94,7 @@ class RankHeader extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        'TOP',
+                        localText.top,
                         style: TextStyle(
                           color: Colors.black.withOpacity(0.5),
                           fontWeight: FontWeight.bold,

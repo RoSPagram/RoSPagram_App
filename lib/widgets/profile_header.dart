@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './profile_image.dart';
 import './profile_avatar.dart';
 import './win_loss_record.dart';
 import '../constants.dart';
@@ -46,11 +45,6 @@ class ProfileHeader extends StatelessWidget {
               padding: EdgeInsets.only(top: 32, bottom: 8),
               child: Column(
                 children: [
-                  // ProfileImage(
-                  //   url: myInfo.img_url,
-                  //   width: 64,
-                  //   height: 64,
-                  // ),
                   ProfileAvatar(
                     avatarData: myInfo.avatarData,
                     width: 100,
@@ -59,7 +53,7 @@ class ProfileHeader extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.only(top: 8, bottom: 8),
                     child: Text(
-                      '@${myInfo.username}',
+                      '${myInfo.username}',
                       style: TextStyle(
                         color: Colors.black.withOpacity(0.5),
                         fontSize: 20,
