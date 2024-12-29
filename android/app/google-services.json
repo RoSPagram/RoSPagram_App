@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "883229672137",
+    "project_id": "rospagram",
+    "storage_bucket": "rospagram.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883229672137:android:67ac45751e561778e48318",
+        "android_client_info": {
+          "package_name": "org.rospagram.rospagram"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBKCHv1JWg8Xx6oLJz-fW7X1kRrWTsh6Vs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
