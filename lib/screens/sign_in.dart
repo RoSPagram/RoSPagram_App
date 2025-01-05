@@ -13,6 +13,61 @@ import '../utilities/supabase_util.dart';
 import '../utilities/username_generator.dart';
 import './main_screen.dart';
 
+LinearProgressIndicator loadingIndicator = LinearProgressIndicator(
+  color: Colors.black12,
+);
+
+class StartButton extends StatefulWidget {
+  const StartButton({super.key});
+
+  @override
+  State<StartButton> createState() => _StarButtonState();
+}
+
+class _StarButtonState extends State<StartButton> {
+  bool _isLoading = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final localText = AppLocalizations.of(context)!;
+    return _isLoading ? loadingIndicator : FilledButton(
+      style: FilledButton.styleFrom(backgroundColor: Color(0xff000000), foregroundColor: Color(0xffffffff)),
+      child: Text('${localText.sign_in_start}'),
+      onPressed: () async {
+        setState(() {
+          _isLoading = true;
+        });
+        final newUUID = Uuid().v4();
+        final newUserName = await getRandomName(context);
+        Avatar avatar = new Avatar();
+        avatar.applyRandom();
+        context.read<MyInfo>().id = newUUID;
+        context.read<MyInfo>().username = newUserName;
+        context.read<MyInfo>().avatarData = jsonEncode(avatar.toJSON());
+        context.read<MyInfo>().fcm_token = SharedPrefs.instance.getString('fcm_token')!;
+
+        SharedPrefs.instance.setString('uuid', newUUID);
+
+        final time = await NTP.now();
+        final date = DateFormat('yyyy-MM-dd').format(time);
+
+        await supabase.from('users').insert({
+          'id': newUUID,
+          'username': newUserName,
+          'avatar': context.read<MyInfo>().avatarData,
+          'fcm_token': context.read<MyInfo>().fcm_token,
+          'last_login': date,
+          'lang': Localizations.localeOf(context).languageCode,
+        });
+
+        context.read<MyInfo>().notifyListeners();
+
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
+      },
+    );
+  }
+}
+
 class SignIn extends StatelessWidget {
   const SignIn({super.key});
 
@@ -67,46 +122,6 @@ class SignIn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localText = AppLocalizations.of(context)!;
-    Text loadingText = Text(
-      'Loading...',
-      textAlign: TextAlign.center,
-      style: TextStyle(
-        fontSize: 24,
-      ),
-    );
-
-    FilledButton guestButton = FilledButton(
-      style: FilledButton.styleFrom(backgroundColor: Color(0xff000000), foregroundColor: Color(0xffffffff)),
-      child: Text('${localText.sign_in_start}'),
-      onPressed: () async {
-        final newUUID = Uuid().v4();
-        final newUserName = await getRandomName(context);
-        Avatar avatar = new Avatar();
-        avatar.applyRandom();
-        context.read<MyInfo>().id = newUUID;
-        context.read<MyInfo>().username = newUserName;
-        context.read<MyInfo>().avatarData = jsonEncode(avatar.toJSON());
-        context.read<MyInfo>().fcm_token = SharedPrefs.instance.getString('fcm_token')!;
-
-        SharedPrefs.instance.setString('uuid', newUUID);
-
-        final time = await NTP.now();
-        final date = DateFormat('yyyy-MM-dd').format(time);
-
-        await supabase.from('users').insert({
-          'id': newUUID,
-          'username': newUserName,
-          'avatar': context.read<MyInfo>().avatarData,
-          'fcm_token': context.read<MyInfo>().fcm_token,
-          'last_login': date,
-          'lang': Localizations.localeOf(context).languageCode,
-        });
-
-        context.read<MyInfo>().notifyListeners();
-
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false);
-      },
-    );
 
     return Scaffold(
       body: SafeArea(
@@ -139,12 +154,12 @@ class SignIn extends StatelessWidget {
                     if (snapshot.hasData) {
                       if(snapshot.data ?? false) {
                         Future.microtask(() => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => MainScreen()), (route) => false));
-                        return loadingText;
+                        return loadingIndicator;
                       }
-                      else return guestButton;
+                      else return StartButton();
                       // else return signInButton;
                     }
-                    else return loadingText;
+                    else return loadingIndicator;
                   },
                 ),
               ),
