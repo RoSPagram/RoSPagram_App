@@ -11,7 +11,6 @@ import '../widgets/reward_ad_button.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/alert_dialog.dart';
 import '../utilities/avatar_util.dart';
-import '../utilities/ad_util.dart';
 
 const PRICE_RANDOM_AVATAR = 20;
 
