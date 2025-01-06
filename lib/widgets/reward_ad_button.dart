@@ -43,6 +43,17 @@ class _RewardAdButtonState extends State<RewardAdButton> {
     });
   }
 
+  void _adDisposeCallback(RewardedInterstitialAd ad) {
+    ad.dispose();
+    rewardAd = null;
+    loadRewardAd();
+    setState(() {
+      _buttonState = 1;
+      _remaining = rewardAdTime!.add(rewardAdDuration).difference(DateTime.now());
+      _timer = Timer.periodic(Duration(seconds: 1), _updateRemainingTime);
+    });
+  }
+
   @override
   void initState() {
     setState(() {
@@ -86,19 +97,10 @@ class _RewardAdButtonState extends State<RewardAdButton> {
               rewardAd,
               contentCallBack: FullScreenContentCallback(
                 onAdDismissedFullScreenContent: (ad) {
-                  ad.dispose();
-                  rewardAd = null;
-                  loadRewardAd();
+                  _adDisposeCallback(ad);
                 },
                 onAdFailedToShowFullScreenContent: (ad, err) {
-                  ad.dispose();
-                  rewardAd = null;
-                  loadRewardAd();
-                },
-                onAdWillDismissFullScreenContent: (ad) {
-                  ad.dispose();
-                  rewardAd = null;
-                  loadRewardAd();
+                  _adDisposeCallback(ad);
                 },
                 onAdClicked: (ad) {
                   bonus++;
