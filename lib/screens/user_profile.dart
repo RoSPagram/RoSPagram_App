@@ -14,7 +14,7 @@ class UserProfile extends StatelessWidget {
   final String userId;
 
   Future<List<dynamic>> _fetch() async {
-    loadInterstitialAd();
+    showInterstitialAd();
     final userData = await supabase.rpc('get_user_data', params: {'user_id': this.userId});
     return userData;
   }
