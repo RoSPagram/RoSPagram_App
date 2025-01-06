@@ -70,7 +70,7 @@ class _PlayState extends State<Play> {
                               defaultActionText: '${localText.no}',
                               destructiveActionText: '${localText.yes}',
                               destructiveActionOnPressed: () {
-                                loadInterstitialAd();
+                                showInterstitialAd();
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },
@@ -259,7 +259,7 @@ class _PlayState extends State<Play> {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
                                       });
                                     }
-                                    loadInterstitialAd();
+                                    showInterstitialAd();
                                   },
                                   child: Column(
                                     children: [
