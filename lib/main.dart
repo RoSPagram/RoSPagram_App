@@ -3,8 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import 'package:google_mobile_ads/google_mobile_ads.dart';
 import './utilities/shared_prefs.dart';
+import './utilities/ad_util.dart';
 import './utilities/firebase_util.dart';
 import './utilities/supabase_util.dart';
 import './screens/sign_in.dart';
@@ -21,7 +21,7 @@ Future<void> main() async {
   await SharedPrefs().init();
   initSupabase();
   initFirebase();
-  MobileAds.instance.initialize();
+  initAdmob();
   runApp(const MyApp());
 }
 
