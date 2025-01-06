@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 import '../utilities/supabase_util.dart';
+import '../utilities/ad_util.dart';
 import '../providers/ranking_data.dart';
 import '../widgets/profile_avatar.dart';
 import '../widgets/win_loss_record.dart';
@@ -13,6 +14,7 @@ class UserProfile extends StatelessWidget {
   final String userId;
 
   Future<List<dynamic>> _fetch() async {
+    loadInterstitialAd();
     final userData = await supabase.rpc('get_user_data', params: {'user_id': this.userId});
     return userData;
   }
