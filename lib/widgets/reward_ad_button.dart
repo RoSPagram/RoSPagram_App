@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../utilities/shared_prefs.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import '../utilities/ad_util.dart';
 import '../utilities/alert_dialog.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -45,10 +45,8 @@ class _RewardAdButtonState extends State<RewardAdButton> {
 
   @override
   void initState() {
-    String? storedRewardTime = SharedPrefs.instance.getString('reward_time');
     setState(() {
-      if (storedRewardTime != null) {
-        rewardAdTime = DateTime.parse(storedRewardTime);
+      if (rewardAdTime != null) {
         DateTime now = DateTime.now();
         if (now.isAfter(rewardAdTime!.add(rewardAdDuration))) {
           _buttonState = 0;
@@ -75,25 +73,49 @@ class _RewardAdButtonState extends State<RewardAdButton> {
     return FilledButton(
       onPressed: () {
         if (_buttonState != 0) return;
+        int bonus = 0;
         showAlertDialog(
           context,
-          title: 'Watch Ad',
-          content: 'Watch ad to get 💎 +2',
+          title: 'Earn Gem',
+          content: 'Watch Ad = 💎 +1\nClick Ad = Bonus 💎 +1',
           defaultActionText: localText.no,
           destructiveActionText: localText.yes,
           destructiveActionOnPressed: () {
             Navigator.pop(context);
-            loadRewardAd((ad, rewardItem) {
-              _buttonState = 1;
-              _remaining = rewardAdTime!.add(rewardAdDuration).difference(DateTime.now());
-              _timer = Timer.periodic(Duration(seconds: 1), _updateRemainingTime);
-              showAlertDialog(
-                context,
-                title: 'Earned',
-                content: 'You got 💎 +2',
-                defaultActionText: localText.confirm,
-              );
-            });
+            showRewardAd(
+              rewardAd,
+              contentCallBack: FullScreenContentCallback(
+                onAdDismissedFullScreenContent: (ad) {
+                  ad.dispose();
+                  rewardAd = null;
+                  loadRewardAd();
+                },
+                onAdFailedToShowFullScreenContent: (ad, err) {
+                  ad.dispose();
+                  rewardAd = null;
+                  loadRewardAd();
+                },
+                onAdWillDismissFullScreenContent: (ad) {
+                  ad.dispose();
+                  rewardAd = null;
+                  loadRewardAd();
+                },
+                onAdClicked: (ad) {
+                  bonus++;
+                }
+              ),
+              onUserEarnedReward: (ad, rewardItem) {
+                _buttonState = 1;
+                _remaining = rewardAdTime!.add(rewardAdDuration).difference(DateTime.now());
+                _timer = Timer.periodic(Duration(seconds: 1), _updateRemainingTime);
+                showAlertDialog(
+                  context,
+                  title: 'Earned',
+                  content: 'You got 💎 +${rewardItem.amount+bonus}',
+                  defaultActionText: localText.confirm,
+                );
+              },
+            );
             setState(() {
               _buttonState = 2;
             });
