@@ -9,15 +9,6 @@ import '../utilities/supabase_util.dart';
 import '../providers/my_info.dart';
 import '../providers/gem_data.dart';
 
-const text = Text(
-  '💎 Get Gems by Watching Ads',
-  style: TextStyle(
-    color: Colors.deepPurpleAccent,
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-  ),
-);
-
 class RewardAdButton extends StatefulWidget {
   const RewardAdButton({Key? key}) : super(key: key);
 
@@ -85,16 +76,25 @@ class _RewardAdButtonState extends State<RewardAdButton> {
   @override
   Widget build(BuildContext context) {
     final localText = AppLocalizations.of(context)!;
+    Text text = Text(
+      '💎 ${localText.reward_btn_text}',
+      style: TextStyle(
+        color: Colors.deepPurpleAccent,
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+    );
     return FilledButton(
       onPressed: () {
         if (_buttonState != 0) return;
         showAlertDialog(
           context,
-          title: 'Get Gems',
-          content: '\nWatch Ad → 💎 +1\n\nClick Ad → Bonus 💎 +1',
+          title: localText.reward_dialog_title,
+          content: '\n${localText.reward_dialog_content_watch} → 💎 +1\n\n${localText.reward_dialog_content_click} → 💎 +1',
           defaultActionText: localText.no,
           destructiveActionText: localText.yes,
           destructiveActionOnPressed: () {
+            bool isAdClicked = false;
             Navigator.pop(context);
             showRewardAd(
               rewardAd,
@@ -106,10 +106,12 @@ class _RewardAdButtonState extends State<RewardAdButton> {
                   _adDisposeCallback(ad);
                 },
                 onAdClicked: (ad) {
+                  if (isAdClicked) return;
+                  isAdClicked = true;
                   supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
                     showAlertDialog(
                       context,
-                      title: 'Ad Click Bonus',
+                      title: localText.reward_dialog_click_title,
                       content: '💎 +1',
                       defaultActionText: localText.confirm,
                     );
@@ -124,8 +126,8 @@ class _RewardAdButtonState extends State<RewardAdButton> {
                 supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
                   showAlertDialog(
                     context,
-                    title: 'Earned',
-                    content: '💎 +${rewardItem.amount.toInt()}',
+                    title: localText.reward_dialog_watch_title,
+                    content: '💎 +1',
                     defaultActionText: localText.confirm,
                   );
                   context.read<GemData>().fetch();
