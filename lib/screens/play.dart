@@ -231,6 +231,7 @@ class _PlayState extends State<Play> {
                                             {'type': 'match_from'}
                                         );
                                         context.read<MatchDataTo>().fetch();
+                                        showInterstitialAd();
                                         Navigator.pop(context);
                                       }).onError((error, stackTrace) {
                                         showAlertDialog(
@@ -259,7 +260,6 @@ class _PlayState extends State<Play> {
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
                                       });
                                     }
-                                    showInterstitialAd();
                                   },
                                   child: Column(
                                     children: [
