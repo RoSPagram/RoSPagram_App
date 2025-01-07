@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../utilities/shared_prefs.dart';
 
 InterstitialAd? _interstitialAd;
 RewardedInterstitialAd? rewardAd;
 
-const interstitialAdDuration = Duration(minutes: 1);
+const interstitialAdDuration = Duration(minutes: 2);
 const rewardAdDuration = Duration(minutes: 30);
 
 DateTime? interstitialAdTime;
@@ -18,7 +19,9 @@ Future<InterstitialAd> loadInterstitialAd() {
     completer.complete(_interstitialAd);
     return completer.future;
   }
-  final adUnitId = Platform.isAndroid ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-3940256099942544/4411468910';
+  // TEST ID
+  // final adUnitId = Platform.isAndroid ? 'ca-app-pub-3940256099942544/1033173712' : 'ca-app-pub-3940256099942544/4411468910';
+  final adUnitId = Platform.isAndroid ? dotenv.env['INTERSTITIAL_AD_ID_ANDROID'] as String : dotenv.env['INTERSTITIAL_AD_ID_IOS'] as String;
   InterstitialAd.load(
     adUnitId: adUnitId,
     request: const AdRequest(),
@@ -67,7 +70,9 @@ Future<RewardedInterstitialAd> loadRewardAd() {
     completer.complete(rewardAd);
     return completer.future;
   }
-  final adUnitId = Platform.isAndroid ? 'ca-app-pub-3940256099942544/5354046379' : 'ca-app-pub-3940256099942544/6978759866';
+  // TEST ID
+  // final adUnitId = Platform.isAndroid ? 'ca-app-pub-3940256099942544/5354046379' : 'ca-app-pub-3940256099942544/6978759866';
+  final adUnitId = Platform.isAndroid ? dotenv.env['REWARD_INTERSTITIAL_AD_ID_ANDROID'] as String : dotenv.env['REWARD_INTERSTITIAL_AD_ID_IOS'] as String;
   RewardedInterstitialAd.load(
     adUnitId: adUnitId,
     request: const AdRequest(),
