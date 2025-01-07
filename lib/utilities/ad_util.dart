@@ -6,8 +6,8 @@ import '../utilities/shared_prefs.dart';
 InterstitialAd? _interstitialAd;
 RewardedInterstitialAd? rewardAd;
 
-const interstitialAdDuration = Duration(seconds: 30);
-const rewardAdDuration = Duration(minutes: 1);
+const interstitialAdDuration = Duration(minutes: 1);
+const rewardAdDuration = Duration(minutes: 30);
 
 DateTime? interstitialAdTime;
 DateTime? rewardAdTime;
