@@ -7,6 +7,7 @@ import '../providers/gem_data.dart';
 import '../providers/ranking_data.dart';
 import '../widgets/shop_list_item.dart';
 import '../widgets/profile_avatar.dart';
+import '../widgets/reward_ad_button.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/alert_dialog.dart';
 import '../utilities/avatar_util.dart';
@@ -22,11 +23,13 @@ class Shop extends StatelessWidget {
     Avatar avatar = new Avatar();
     avatar.applyRandom();
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Padding(
           padding: EdgeInsets.all(8),
           child: Text(
             '💎 x${context.watch<GemData>().count}',
+            textAlign: TextAlign.center,
             style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18,
@@ -84,6 +87,10 @@ class Shop extends StatelessWidget {
               ),
             ],
           ),
+        ),
+        Padding(
+          padding: EdgeInsets.all(8),
+          child: RewardAdButton(),
         ),
       ],
     );

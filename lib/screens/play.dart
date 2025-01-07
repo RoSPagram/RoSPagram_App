@@ -6,6 +6,7 @@ import '../widgets/profile_avatar.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/firebase_util.dart';
 import '../utilities/alert_dialog.dart';
+import '../utilities/ad_util.dart';
 import '../providers/my_info.dart';
 import '../providers/match_data_to.dart';
 import '../providers/ranking_data.dart';
@@ -46,10 +47,8 @@ class _PlayState extends State<Play> {
   @override
   Widget build(BuildContext context) {
     final localText = AppLocalizations.of(context)!;
-    return WillPopScope(
-      onWillPop: () {
-        return Future(() => false);
-      },
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         body: SafeArea(
           child: FutureBuilder(
@@ -71,6 +70,7 @@ class _PlayState extends State<Play> {
                               defaultActionText: '${localText.no}',
                               destructiveActionText: '${localText.yes}',
                               destructiveActionOnPressed: () {
+                                showInterstitialAd();
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },
@@ -231,6 +231,7 @@ class _PlayState extends State<Play> {
                                             {'type': 'match_from'}
                                         );
                                         context.read<MatchDataTo>().fetch();
+                                        showInterstitialAd();
                                         Navigator.pop(context);
                                       }).onError((error, stackTrace) {
                                         showAlertDialog(

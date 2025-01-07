@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../constants.dart';
 import '../utilities/supabase_util.dart';
+import '../utilities/ad_util.dart';
 import '../providers/ranking_data.dart';
 import '../widgets/profile_avatar.dart';
 import '../widgets/win_loss_record.dart';
@@ -20,154 +21,160 @@ class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localText = AppLocalizations.of(context)!;
-    return Scaffold(
-      body: SafeArea(
-        child: FutureBuilder(
-          future: _fetch(),
-          builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
-            if (snapshot.hasData) {
-              final userData = snapshot.data?[0];
-              final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, userData['index']);
-              final userRank = getUserRank(top);
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        showInterstitialAd();
+      },
+      child: Scaffold(
+        body: SafeArea(
+          child: FutureBuilder(
+            future: _fetch(),
+            builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
+              if (snapshot.hasData) {
+                final userData = snapshot.data?[0];
+                final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, userData['index']);
+                final userRank = getUserRank(top);
 
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: rankColorGradient(userRank),
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: rankColorGradient(userRank),
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
                   ),
-                ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Container(
-                        alignment: Alignment.centerRight,
-                        padding: EdgeInsets.all(16),
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Icon(
-                            Icons.close,
-                            color: Colors.black.withOpacity(0.5),
-                            size: 32,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerRight,
+                          padding: EdgeInsets.all(16),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: Icon(
+                              Icons.close,
+                              color: Colors.black.withOpacity(0.5),
+                              size: 32,
+                            ),
                           ),
                         ),
-                      ),
-                      // ProfileImage(
-                      //   url: userData['img_url'],
-                      //   width: 64,
-                      //   height: 64,
-                      // ),
-                      ProfileAvatar(
-                        avatarData: userData['avatar'],
-                        width: 150,
-                        height: 150,
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 16, bottom: 16),
-                        child: Text(
-                          '${userData['username']}',
+                        // ProfileImage(
+                        //   url: userData['img_url'],
+                        //   width: 64,
+                        //   height: 64,
+                        // ),
+                        ProfileAvatar(
+                          avatarData: userData['avatar'],
+                          width: 150,
+                          height: 150,
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16, bottom: 16),
+                          child: Text(
+                            '${userData['username']}',
+                            style: TextStyle(
+                              color: Colors.black.withOpacity(0.5),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          getRankNameFromCode(userRank),
                           style: TextStyle(
                             color: Colors.black.withOpacity(0.5),
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
                           ),
                         ),
-                      ),
-                      Text(
-                        getRankNameFromCode(userRank),
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                          fontSize: 16,
+                        Container(
+                          padding: EdgeInsets.only(top: 32, bottom: 32),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    localText.ranking,
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.5),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Text(
+                                    '#${userData['index']}',
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.5),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  Text(
+                                    localText.top,
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.5),
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  Text(
+                                    top == 0 ? '---' : '${top.toStringAsFixed(2)}%',
+                                    style: TextStyle(
+                                      color: Colors.black.withOpacity(0.5),
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(top: 32, bottom: 32),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Column(
-                              children: [
-                                Text(
-                                  localText.ranking,
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(0.5),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  '#${userData['index']}',
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(0.5),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Column(
-                              children: [
-                                Text(
-                                  localText.top,
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(0.5),
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                Text(
-                                  top == 0 ? '---' : '${top.toStringAsFixed(2)}%',
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(0.5),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                        // Text(
+                        //   'Win-Loss Record',
+                        //   style: TextStyle(
+                        //     color: Colors.black.withOpacity(0.5),
+                        //     fontWeight: FontWeight.w500,
+                        //     fontSize: 20,
+                        //   ),
+                        // ),
+                        WinLossRecord(
+                          win: userData['win'],
+                          loss: userData['loss'],
+                          draw: userData['draw'],
+                          margin: EdgeInsets.all(16),
                         ),
-                      ),
-                      // Text(
-                      //   'Win-Loss Record',
-                      //   style: TextStyle(
-                      //     color: Colors.black.withOpacity(0.5),
-                      //     fontWeight: FontWeight.w500,
-                      //     fontSize: 20,
-                      //   ),
-                      // ),
-                      WinLossRecord(
-                        win: userData['win'],
-                        loss: userData['loss'],
-                        draw: userData['draw'],
-                        margin: EdgeInsets.all(16),
-                      ),
-                      // ElevatedButton(
-                      //   onPressed: () {
-                      //     sendPushMessage(
-                      //         userData['fcm_token'],
-                      //         '${myInfo.username}',
-                      //         '${lookupAppLocalizations(Locale(userData['lang'] ?? 'en')).test_msg}'
-                      //     );
-                      //   },
-                      //   child: Text('SEND_TEST_NOTIFICATION'),
-                      // ),
-                    ],
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     sendPushMessage(
+                        //         userData['fcm_token'],
+                        //         '${myInfo.username}',
+                        //         '${lookupAppLocalizations(Locale(userData['lang'] ?? 'en')).test_msg}'
+                        //     );
+                        //   },
+                        //   child: Text('SEND_TEST_NOTIFICATION'),
+                        // ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            }
-            else {
-              return Center(
-                child: Text('Loading...'),
-              );
-            }
-          },
+                );
+              }
+              else {
+                return Center(
+                  child: Text('Loading...'),
+                );
+              }
+            },
+          ),
         ),
       ),
     );
