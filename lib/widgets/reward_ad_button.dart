@@ -1,16 +1,20 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
 import '../utilities/ad_util.dart';
 import '../utilities/alert_dialog.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../utilities/supabase_util.dart';
+import '../providers/my_info.dart';
+import '../providers/gem_data.dart';
 
 const text = Text(
-  '💎 +2',
+  '💎 Get Gems by Watching Ads',
   style: TextStyle(
     color: Colors.deepPurpleAccent,
     fontWeight: FontWeight.bold,
-    fontSize: 18,
+    fontSize: 16,
   ),
 );
 
@@ -84,11 +88,10 @@ class _RewardAdButtonState extends State<RewardAdButton> {
     return FilledButton(
       onPressed: () {
         if (_buttonState != 0) return;
-        int bonus = 0;
         showAlertDialog(
           context,
-          title: 'Earn Gem',
-          content: 'Watch Ad = 💎 +1\nClick Ad = Bonus 💎 +1',
+          title: 'Get Gems',
+          content: '\nWatch Ad → 💎 +1\n\nClick Ad → Bonus 💎 +1',
           defaultActionText: localText.no,
           destructiveActionText: localText.yes,
           destructiveActionOnPressed: () {
@@ -103,19 +106,30 @@ class _RewardAdButtonState extends State<RewardAdButton> {
                   _adDisposeCallback(ad);
                 },
                 onAdClicked: (ad) {
-                  bonus++;
+                  supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
+                    showAlertDialog(
+                      context,
+                      title: 'Ad Click Bonus',
+                      content: '💎 +1',
+                      defaultActionText: localText.confirm,
+                    );
+                    context.read<GemData>().fetch();
+                  });
                 }
               ),
               onUserEarnedReward: (ad, rewardItem) {
                 _buttonState = 1;
                 _remaining = rewardAdTime!.add(rewardAdDuration).difference(DateTime.now());
                 _timer = Timer.periodic(Duration(seconds: 1), _updateRemainingTime);
-                showAlertDialog(
-                  context,
-                  title: 'Earned',
-                  content: 'You got 💎 +${rewardItem.amount+bonus}',
-                  defaultActionText: localText.confirm,
-                );
+                supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
+                  showAlertDialog(
+                    context,
+                    title: 'Earned',
+                    content: '💎 +${rewardItem.amount.toInt()}',
+                    defaultActionText: localText.confirm,
+                  );
+                  context.read<GemData>().fetch();
+                });
               },
             );
             setState(() {
