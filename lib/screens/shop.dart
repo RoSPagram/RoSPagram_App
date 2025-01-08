@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../screens/avatar_editor.dart';
+import '../screens/name_editor.dart';
 import '../providers/my_info.dart';
 import '../providers/gem_data.dart';
 import '../providers/ranking_data.dart';
@@ -60,7 +61,7 @@ class Shop extends StatelessWidget {
                 itemName: localText.shop_item_change_name,
                 price: PRICE_CHANGE_NAME,
                 onTap: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => NameEditor(price: PRICE_CHANGE_NAME)));
                 },
               ),
               ShopListItem(
