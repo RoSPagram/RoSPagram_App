@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import './profile_avatar.dart';
@@ -46,7 +47,7 @@ class ProfileHeader extends StatelessWidget {
               child: Column(
                 children: [
                   ProfileAvatar(
-                    avatarData: myInfo.avatarData,
+                    avatarData: jsonDecode(myInfo.avatarData),
                     width: 100,
                     height: 100,
                   ),
