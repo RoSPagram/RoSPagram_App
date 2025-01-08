@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'profile_avatar.dart';
 
@@ -42,7 +43,7 @@ class MatchListItem extends StatelessWidget {
                 //   height: 48,
                 // ),
                 ProfileAvatar(
-                  avatarData: this.avatarData,
+                  avatarData: jsonDecode(this.avatarData),
                   width: 48,
                   height: 48,
                 ),
