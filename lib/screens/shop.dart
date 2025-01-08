@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../screens/avatar_editor.dart';
 import '../providers/my_info.dart';
 import '../providers/gem_data.dart';
 import '../providers/ranking_data.dart';
@@ -56,7 +57,7 @@ class Shop extends StatelessWidget {
                   '🏷️',
                   style: TextStyle(fontSize: 48),
                 ),
-                itemName: 'Change Name',
+                itemName: localText.shop_item_change_name,
                 price: PRICE_CHANGE_NAME,
                 onTap: () {
 
@@ -68,7 +69,7 @@ class Shop extends StatelessWidget {
                   width: 64,
                   height: 64,
                 ),
-                itemName: '${localText.shop_item_change_random_avatar}',
+                itemName: localText.shop_item_change_random_avatar,
                 price: PRICE_RANDOM_AVATAR,
                 onTap: () {
                   showAlertDialog(
@@ -110,10 +111,10 @@ class Shop extends StatelessWidget {
                   width: 64,
                   height: 64,
                 ),
-                itemName: 'Face Position',
+                itemName: localText.shop_item_face_position,
                 price: PRICE_FACE_POSITION,
                 onTap: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'face_pos', price: PRICE_FACE_POSITION)));
                 },
               ),
               ShopListItem(
@@ -122,10 +123,10 @@ class Shop extends StatelessWidget {
                   width: 64,
                   height: 64,
                 ),
-                itemName: 'Body Position',
+                itemName: localText.shop_item_body_position,
                 price: PRICE_BODY_POSITION,
                 onTap: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'body_pos', price: PRICE_BODY_POSITION)));
                 },
               ),
               ShopListItem(
@@ -134,10 +135,10 @@ class Shop extends StatelessWidget {
                   width: 64,
                   height: 64,
                 ),
-                itemName: 'Background Color',
+                itemName: localText.shop_item_background_color,
                 price: PRICE_BACKGROUND_COLOR,
                 onTap: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'bg_color', price: PRICE_BACKGROUND_COLOR)));
                 },
               ),
               ShopListItem(
@@ -146,10 +147,10 @@ class Shop extends StatelessWidget {
                   width: 64,
                   height: 64,
                 ),
-                itemName: 'Body Color',
+                itemName: localText.shop_item_body_color,
                 price: PRICE_BODY_COLOR,
                 onTap: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'body_color', price: PRICE_BODY_COLOR)));
                 },
               ),
               ShopListItem(
@@ -162,10 +163,10 @@ class Shop extends StatelessWidget {
                   width: 64,
                   height: 64,
                 ),
-                itemName: 'Cheek Color',
+                itemName: localText.shop_item_cheek_color,
                 price: PRICE_CHEEK_COLOR,
                 onTap: () {
-
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'cheek_color', price: PRICE_CHEEK_COLOR)));
                 },
               ),
             ],
