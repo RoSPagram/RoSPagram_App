@@ -204,11 +204,6 @@ class _AvatarEditorState extends State<AvatarEditor> {
       body: SafeArea(
         child: PopScope(
           canPop: false,
-          onPopInvokedWithResult: (didPop, result) {
-            if (didPop) {
-              showInterstitialAd();
-            }
-          },
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -235,6 +230,7 @@ class _AvatarEditorState extends State<AvatarEditor> {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
+                        showInterstitialAd();
                       },
                       child: Text(localText.cancel),
                     ),
