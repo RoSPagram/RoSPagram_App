@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -107,7 +108,7 @@ class _PlayState extends State<Play> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ProfileAvatar(
-                        avatarData: userData['avatar'],
+                        avatarData: jsonDecode(userData['avatar']),
                         width: 128,
                         height: 128,
                       ),
