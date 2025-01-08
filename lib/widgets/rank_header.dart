@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -70,7 +71,7 @@ class RankHeader extends StatelessWidget {
                     child: Column(
                       children: [
                         ProfileAvatar(
-                          avatarData: myInfo.avatarData,
+                          avatarData: jsonDecode(myInfo.avatarData),
                           width: 32,
                           height: 32,
                         ),
