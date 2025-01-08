@@ -150,7 +150,6 @@ class _NameEditorState extends State<NameEditor> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text(localText.shop_not_enough_msg)),
                                   );
-                                  return;
                                 }
                                 else {
                                   formKeyState.save();
