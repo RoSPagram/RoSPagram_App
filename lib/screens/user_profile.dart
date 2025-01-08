@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -69,7 +70,7 @@ class UserProfile extends StatelessWidget {
                         //   height: 64,
                         // ),
                         ProfileAvatar(
-                          avatarData: userData['avatar'],
+                          avatarData: jsonDecode(userData['avatar']),
                           width: 150,
                           height: 150,
                         ),

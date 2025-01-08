@@ -1,13 +1,5 @@
 import 'dart:math';
-
-String rgbToHex(int r, int g, int b) {
-  assert(0 <= r && r <= 255);
-  assert(0 <= g && g <= 255);
-  assert(0 <= b && b <= 255);
-  return '#${r.toRadixString(16).padLeft(2, '0')}'
-      '${g.toRadixString(16).padLeft(2, '0')}'
-      '${b.toRadixString(16).padLeft(2, '0')}';
-}
+import '../constants.dart';
 
 class Avatar {
   String backgroundColor = '#ffffff';

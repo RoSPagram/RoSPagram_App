@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/ranking_data.dart';
@@ -14,7 +15,7 @@ class RankListItem extends StatelessWidget {
   });
 
   final int index;
-  final String? avatarData;
+  final String avatarData;
   final String userName;
   final void Function() onTap;
 
@@ -67,7 +68,7 @@ class RankListItem extends StatelessWidget {
                     //   height: 32,
                     // ),
                     ProfileAvatar(
-                      avatarData: avatarData,
+                      avatarData: jsonDecode(avatarData),
                       width: 48,
                       height: 48,
                     ),

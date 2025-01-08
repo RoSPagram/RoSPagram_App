@@ -1,7 +1,8 @@
+import 'dart:async';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'dart:async';
 import '../providers/my_info.dart';
 import '../providers/match_data_from.dart';
 import '../providers/match_data_to.dart';
@@ -110,7 +111,7 @@ class Result extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ProfileAvatar(
-                        avatarData: opponentData['avatar'],
+                        avatarData: jsonDecode(opponentData['avatar']),
                         width: 128,
                         height: 128,
                       ),
