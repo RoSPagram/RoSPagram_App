@@ -64,7 +64,7 @@ class Shop extends StatelessWidget {
               ),
               ShopListItem(
                 itemWidget: ProfileAvatar(
-                  avatarData: jsonEncode(avatar.toJSON()),
+                  avatarData: avatar.toJSON(),
                   width: 64,
                   height: 64,
                 ),
