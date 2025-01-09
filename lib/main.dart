@@ -15,6 +15,8 @@ import './providers/match_data_to.dart';
 import './providers/ranking_data.dart';
 import './providers/gem_data.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: 'env/.env');
@@ -56,6 +58,7 @@ class MyApp extends StatelessWidget {
           // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           // useMaterial3: true,
         ),
+        navigatorKey: navigatorKey,
         home: SignIn(),
         debugShowCheckedModeBanner: false,
       ),

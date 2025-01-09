@@ -7,7 +7,6 @@ import '../providers/gem_data.dart';
 import '../providers/ranking_data.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/alert_dialog.dart';
-import '../utilities/ad_util.dart';
 
 const MAX_STR_WEIGHT = 18;
 
@@ -49,10 +48,6 @@ class _NameEditorState extends State<NameEditor> {
   // 정규식: 모든 언어(유니코드) 문자(\p{L})와 숫자(\p{N})만 허용
   final RegExp nameRegExp = RegExp(r'[\p{L}\p{N}]+', unicode: true);
 
-  @override
-  void initState() {
-    super.initState();
-  }
   @override
   Widget build(BuildContext context) {
     final localText = AppLocalizations.of(context)!;
@@ -130,7 +125,6 @@ class _NameEditorState extends State<NameEditor> {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
-                        showInterstitialAd();
                       },
                       child: Text(localText.cancel),
                     ),

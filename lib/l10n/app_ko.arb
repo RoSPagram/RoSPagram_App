@@ -53,6 +53,8 @@
   "editor_name_invalid_short_1": "알파벳, 숫자: 최소 3자",
   "editor_name_invalid_short_2": "그 외: 최소 2자",
   "reward_btn_text": "광고 보고 보석 얻기",
+  "reward_snackbar_msg": "지금 바로 광고 보면",
+  "reward_snackbar_action": "광고 보기",
   "reward_dialog_title": "보석 얻기",
   "reward_dialog_content_watch": "광고 시청",
   "reward_dialog_content_click": "광고 클릭",

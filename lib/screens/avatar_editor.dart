@@ -8,7 +8,6 @@ import '../providers/ranking_data.dart';
 import '../utilities/supabase_util.dart';
 import '../widgets/profile_avatar.dart';
 import '../utilities/alert_dialog.dart';
-import '../utilities/ad_util.dart';
 
 class AvatarEditor extends StatefulWidget {
   const AvatarEditor({super.key, required this.avatarData, required this.mode, required this.price});
@@ -230,7 +229,6 @@ class _AvatarEditorState extends State<AvatarEditor> {
                       ),
                       onPressed: () {
                         Navigator.pop(context);
-                        showInterstitialAd();
                       },
                       child: Text(localText.cancel),
                     ),

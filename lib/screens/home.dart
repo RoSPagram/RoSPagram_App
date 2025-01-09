@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../widgets/profile_header.dart';
 import '../widgets/token_view.dart';
 import '../providers/my_info.dart';
+import '../utilities/ad_util.dart';
 import './user_profile.dart';
 
 class Home extends StatelessWidget {
@@ -14,6 +15,7 @@ class Home extends StatelessWidget {
         children: [
           ProfileHeader(
             onTap: () {
+              requestRewardedInterstitialAd();
               Navigator.push(
                   context,
                   MaterialPageRoute(

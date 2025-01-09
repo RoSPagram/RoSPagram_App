@@ -14,6 +14,7 @@ import '../widgets/reward_ad_button.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/alert_dialog.dart';
 import '../utilities/avatar_util.dart';
+import '../utilities/ad_util.dart';
 import '../constants.dart';
 
 const PRICE_CHANGE_NAME = 50;
@@ -32,6 +33,24 @@ class Shop extends StatelessWidget {
     final localText = AppLocalizations.of(context)!;
     Avatar avatar = new Avatar();
     avatar.applyRandom();
+    // void requestRewardedInterstitialAd() {
+    //   showRewardedInterstitialAd(
+    //     context,
+    //     msg: 'Watch ad now, get 💎 +1',
+    //     actionText: 'Watch Ad',
+    //     onUserEarnedReward: (ad, reward) {
+    //       supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
+    //         showAlertDialog(
+    //           context,
+    //           title: localText.reward_dialog_watch_title,
+    //           content: '💎 +1',
+    //           defaultActionText: localText.confirm,
+    //         );
+    //         context.read<GemData>().fetch();
+    //       });
+    //     },
+    //   );
+    // }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -61,6 +80,7 @@ class Shop extends StatelessWidget {
                 itemName: localText.shop_item_change_name,
                 price: PRICE_CHANGE_NAME,
                 onTap: () {
+                  requestRewardedInterstitialAd();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => NameEditor(price: PRICE_CHANGE_NAME)));
                 },
               ),
@@ -115,6 +135,7 @@ class Shop extends StatelessWidget {
                 itemName: localText.shop_item_face_position,
                 price: PRICE_FACE_POSITION,
                 onTap: () {
+                  requestRewardedInterstitialAd();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'face_pos', price: PRICE_FACE_POSITION)));
                 },
               ),
@@ -127,6 +148,7 @@ class Shop extends StatelessWidget {
                 itemName: localText.shop_item_body_position,
                 price: PRICE_BODY_POSITION,
                 onTap: () {
+                  requestRewardedInterstitialAd();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'body_pos', price: PRICE_BODY_POSITION)));
                 },
               ),
@@ -139,6 +161,7 @@ class Shop extends StatelessWidget {
                 itemName: localText.shop_item_background_color,
                 price: PRICE_BACKGROUND_COLOR,
                 onTap: () {
+                  requestRewardedInterstitialAd();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'bg_color', price: PRICE_BACKGROUND_COLOR)));
                 },
               ),
@@ -151,6 +174,7 @@ class Shop extends StatelessWidget {
                 itemName: localText.shop_item_body_color,
                 price: PRICE_BODY_COLOR,
                 onTap: () {
+                  requestRewardedInterstitialAd();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'body_color', price: PRICE_BODY_COLOR)));
                 },
               ),
@@ -167,6 +191,7 @@ class Shop extends StatelessWidget {
                 itemName: localText.shop_item_cheek_color,
                 price: PRICE_CHEEK_COLOR,
                 onTap: () {
+                  requestRewardedInterstitialAd();
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'cheek_color', price: PRICE_CHEEK_COLOR)));
                 },
               ),
