@@ -17,7 +17,7 @@ RewardedInterstitialAd? _rewardedInterstitialAd;
 RewardedAd? rewardedAd;
 
 Duration interstitialAdDuration = Duration(minutes: 10);
-Duration rewardedAdDuration = Duration(minutes: 30);
+Duration rewardedAdDuration = Duration(hours: 1);
 
 DateTime? rewardedInterstitialAdTime;
 DateTime? rewardedAdTime;
