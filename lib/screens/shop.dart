@@ -7,6 +7,7 @@ import '../screens/avatar_editor.dart';
 import '../screens/name_editor.dart';
 import '../providers/my_info.dart';
 import '../providers/gem_data.dart';
+import '../providers/price_data.dart';
 import '../providers/ranking_data.dart';
 import '../widgets/shop_list_item.dart';
 import '../widgets/profile_avatar.dart';
@@ -17,13 +18,13 @@ import '../utilities/avatar_util.dart';
 import '../utilities/ad_util.dart';
 import '../constants.dart';
 
-const PRICE_CHANGE_NAME = 50;
-const PRICE_RANDOM_AVATAR = 20;
-const PRICE_FACE_POSITION = 20;
-const PRICE_BODY_POSITION = 20;
-const PRICE_BODY_COLOR = 20;
-const PRICE_BACKGROUND_COLOR = 20;
-const PRICE_CHEEK_COLOR = 10;
+// const PRICE_CHANGE_NAME = 50;
+// const PRICE_RANDOM_AVATAR = 20;
+// const PRICE_FACE_POSITION = 20;
+// const PRICE_BODY_POSITION = 20;
+// const PRICE_BODY_COLOR = 20;
+// const PRICE_BACKGROUND_COLOR = 20;
+// const PRICE_CHEEK_COLOR = 10;
 
 class Shop extends StatelessWidget {
   const Shop({super.key});
@@ -33,24 +34,6 @@ class Shop extends StatelessWidget {
     final localText = AppLocalizations.of(context)!;
     Avatar avatar = new Avatar();
     avatar.applyRandom();
-    // void requestRewardedInterstitialAd() {
-    //   showRewardedInterstitialAd(
-    //     context,
-    //     msg: 'Watch ad now, get 💎 +1',
-    //     actionText: 'Watch Ad',
-    //     onUserEarnedReward: (ad, reward) {
-    //       supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
-    //         showAlertDialog(
-    //           context,
-    //           title: localText.reward_dialog_watch_title,
-    //           content: '💎 +1',
-    //           defaultActionText: localText.confirm,
-    //         );
-    //         context.read<GemData>().fetch();
-    //       });
-    //     },
-    //   );
-    // }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -66,136 +49,151 @@ class Shop extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: GridView(
-            shrinkWrap: true,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-            ),
-            children: [
-              ShopListItem(
-                itemWidget: Text(
-                  '🏷️',
-                  style: TextStyle(fontSize: 48),
+          child: Consumer<PriceData>(
+            builder: (context, provider, child) {
+              return GridView.builder(
+                shrinkWrap: true,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
                 ),
-                itemName: localText.shop_item_change_name,
-                price: PRICE_CHANGE_NAME,
-                onTap: () {
-                  requestRewardedInterstitialAd();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => NameEditor(price: PRICE_CHANGE_NAME)));
+                itemCount: provider.items.length,
+                itemBuilder: (context, index) {
+                  final items = provider.items;
+                  switch(items[index]['id']) {
+                    case 'change_name':
+                      return ShopListItem(
+                        itemWidget: Text(
+                          '🏷️',
+                          style: TextStyle(fontSize: 48),
+                        ),
+                        itemName: localText.shop_item_change_name,
+                        price: items[index]['price'],
+                        onTap: () {
+                          requestRewardedInterstitialAd();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => NameEditor(price: items[index]['price'])));
+                        },
+                      );
+                    case 'random_avatar':
+                      return ShopListItem(
+                        itemWidget: ProfileAvatar(
+                          avatarData: avatar.toJSON(),
+                          width: 64,
+                          height: 64,
+                        ),
+                        itemName: localText.shop_item_change_random_avatar,
+                        price: items[index]['price'],
+                        onTap: () {
+                          showAlertDialog(
+                            context,
+                            title: localText.shop_item_change_random_avatar,
+                            content: '${localText.shop_buy_alert_msg}\n💎 -${items[index]['price']}',
+                            defaultActionText: localText.no,
+                            destructiveActionText: localText.yes,
+                            destructiveActionOnPressed: () {
+                              if (context.read<GemData>().count < items[index]['price']) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(localText.shop_not_enough_msg)),
+                                );
+                              }
+                              else {
+                                supabase.rpc('use_user_gems', params: {'user_id': context.read<MyInfo>().id, 'price': items[index]['price']}).then((_) {
+                                  avatar.applyRandom();
+                                  context.read<MyInfo>().avatarData = jsonEncode(avatar.toJSON());
+                                  supabase.from('users').update({
+                                    'avatar': context.read<MyInfo>().avatarData,
+                                  }).eq('id', context.read<MyInfo>().id).then((_) {
+                                    context.read<GemData>().fetch();
+                                    context.read<RankingData>().fetchTopten();
+                                    context.read<MyInfo>().notifyListeners();
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text(localText.shop_avatar_change_msg)),
+                                    );
+                                  });
+                                });
+                              }
+                              Navigator.pop(context);
+                            },
+                          );
+                        },
+                      );
+                    case 'face_pos':
+                      return ShopListItem(
+                        itemWidget: SvgPicture.string(
+                          getAvatarFaceSVG(faceRotate: -20),
+                          width: 64,
+                          height: 64,
+                        ),
+                        itemName: localText.shop_item_face_position,
+                        price: items[index]['price'],
+                        onTap: () {
+                          requestRewardedInterstitialAd();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'face_pos', price: items[index]['price'])));
+                        },
+                      );
+                    case 'body_pos':
+                      return ShopListItem(
+                        itemWidget: SvgPicture.string(
+                          getAvatarBodySVG(bodyRotate: 30),
+                          width: 64,
+                          height: 64,
+                        ),
+                        itemName: localText.shop_item_body_position,
+                        price: items[index]['price'],
+                        onTap: () {
+                          requestRewardedInterstitialAd();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'body_pos', price: items[index]['price'])));
+                        },
+                      );
+                    case 'bg_color':
+                      return ShopListItem(
+                        itemWidget: SvgPicture.string(
+                          getAvatarBackgroundSVG(color: '#8080ff'),
+                          width: 64,
+                          height: 64,
+                        ),
+                        itemName: localText.shop_item_background_color,
+                        price: items[index]['price'],
+                        onTap: () {
+                          requestRewardedInterstitialAd();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'bg_color', price: items[index]['price'])));
+                        },
+                      );
+                    case 'body_color':
+                      return ShopListItem(
+                        itemWidget: SvgPicture.string(
+                          getAvatarBodySVG(backgroundColor: '#80ff80'),
+                          width: 64,
+                          height: 64,
+                        ),
+                        itemName: localText.shop_item_body_color,
+                        price: items[index]['price'],
+                        onTap: () {
+                          requestRewardedInterstitialAd();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'body_color', price: items[index]['price'])));
+                        },
+                      );
+                    case 'cheek_color':
+                      return ShopListItem(
+                        itemWidget: SvgPicture.string(
+                          getAvatarFaceSVG(
+                            cheekColor: '#ff8080',
+                            eyesOpacity: 0.25,
+                            mouthOpacity: 0.25,
+                          ),
+                          width: 64,
+                          height: 64,
+                        ),
+                        itemName: localText.shop_item_cheek_color,
+                        price: items[index]['price'],
+                        onTap: () {
+                          requestRewardedInterstitialAd();
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'cheek_color', price: items[index]['price'])));
+                        },
+                      );
+                  }
                 },
-              ),
-              ShopListItem(
-                itemWidget: ProfileAvatar(
-                  avatarData: avatar.toJSON(),
-                  width: 64,
-                  height: 64,
-                ),
-                itemName: localText.shop_item_change_random_avatar,
-                price: PRICE_RANDOM_AVATAR,
-                onTap: () {
-                  showAlertDialog(
-                    context,
-                    title: localText.shop_item_change_random_avatar,
-                    content: '${localText.shop_buy_alert_msg}\n💎 -$PRICE_RANDOM_AVATAR',
-                    defaultActionText: localText.no,
-                    destructiveActionText: localText.yes,
-                    destructiveActionOnPressed: () {
-                      if (context.read<GemData>().count < PRICE_RANDOM_AVATAR) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(localText.shop_not_enough_msg)),
-                        );
-                      }
-                      else {
-                        supabase.rpc('use_user_gems', params: {'user_id': context.read<MyInfo>().id, 'price': PRICE_RANDOM_AVATAR}).then((_) {
-                          avatar.applyRandom();
-                          context.read<MyInfo>().avatarData = jsonEncode(avatar.toJSON());
-                          supabase.from('users').update({
-                            'avatar': context.read<MyInfo>().avatarData,
-                          }).eq('id', context.read<MyInfo>().id).then((_) {
-                            context.read<GemData>().fetch();
-                            context.read<RankingData>().fetchTopten();
-                            context.read<MyInfo>().notifyListeners();
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text(localText.shop_avatar_change_msg)),
-                            );
-                          });
-                        });
-                      }
-                      Navigator.pop(context);
-                    },
-                  );
-                },
-              ),
-              ShopListItem(
-                itemWidget: SvgPicture.string(
-                  getAvatarFaceSVG(faceRotate: -20),
-                  width: 64,
-                  height: 64,
-                ),
-                itemName: localText.shop_item_face_position,
-                price: PRICE_FACE_POSITION,
-                onTap: () {
-                  requestRewardedInterstitialAd();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'face_pos', price: PRICE_FACE_POSITION)));
-                },
-              ),
-              ShopListItem(
-                itemWidget: SvgPicture.string(
-                  getAvatarBodySVG(bodyRotate: 30),
-                  width: 64,
-                  height: 64,
-                ),
-                itemName: localText.shop_item_body_position,
-                price: PRICE_BODY_POSITION,
-                onTap: () {
-                  requestRewardedInterstitialAd();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'body_pos', price: PRICE_BODY_POSITION)));
-                },
-              ),
-              ShopListItem(
-                itemWidget: SvgPicture.string(
-                  getAvatarBackgroundSVG(color: '#8080ff'),
-                  width: 64,
-                  height: 64,
-                ),
-                itemName: localText.shop_item_background_color,
-                price: PRICE_BACKGROUND_COLOR,
-                onTap: () {
-                  requestRewardedInterstitialAd();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'bg_color', price: PRICE_BACKGROUND_COLOR)));
-                },
-              ),
-              ShopListItem(
-                itemWidget: SvgPicture.string(
-                  getAvatarBodySVG(backgroundColor: '#80ff80'),
-                  width: 64,
-                  height: 64,
-                ),
-                itemName: localText.shop_item_body_color,
-                price: PRICE_BODY_COLOR,
-                onTap: () {
-                  requestRewardedInterstitialAd();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'body_color', price: PRICE_BODY_COLOR)));
-                },
-              ),
-              ShopListItem(
-                itemWidget: SvgPicture.string(
-                  getAvatarFaceSVG(
-                    cheekColor: '#ff8080',
-                    eyesOpacity: 0.25,
-                    mouthOpacity: 0.25,
-                  ),
-                  width: 64,
-                  height: 64,
-                ),
-                itemName: localText.shop_item_cheek_color,
-                price: PRICE_CHEEK_COLOR,
-                onTap: () {
-                  requestRewardedInterstitialAd();
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AvatarEditor(avatarData: context.read<MyInfo>().avatarData, mode: 'cheek_color', price: PRICE_CHEEK_COLOR)));
-                },
-              ),
-            ],
+              );
+            },
           ),
         ),
         Padding(
