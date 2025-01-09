@@ -53,6 +53,8 @@
   "editor_name_invalid_short_1": "Alphabet, Number: 3 or more characters",
   "editor_name_invalid_short_2": "Others: 2 or more characters",
   "reward_btn_text": "Get Gems by Watching Ads",
+  "reward_snackbar_msg": "Watch Ad now & Get",
+  "reward_snackbar_action": "Watch Ad",
   "reward_dialog_title": "Get Gems",
   "reward_dialog_content_watch": "Watch Ad",
   "reward_dialog_content_click": "Click Ad",
