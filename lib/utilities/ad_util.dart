@@ -91,7 +91,7 @@ void requestRewardedInterstitialAd() {
     SnackBar(
       backgroundColor: Colors.amber,
       content: Text(
-        'Watch Ad now, get 💎 +1',
+        '${localText.reward_snackbar_msg} 💎 +1',
         style: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
@@ -102,7 +102,7 @@ void requestRewardedInterstitialAd() {
       action: SnackBarAction(
         backgroundColor: Colors.deepPurpleAccent,
         textColor: Colors.white,
-        label: 'Watch Ad',
+        label: localText.reward_snackbar_action,
         onPressed: () {
           showRewardedInterstitialAd();
         },
