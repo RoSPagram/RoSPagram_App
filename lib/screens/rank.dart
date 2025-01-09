@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../utilities/ad_util.dart';
 import '../screens/user_profile.dart';
 import '../providers/my_info.dart';
 import '../providers/ranking_data.dart';
@@ -15,6 +16,7 @@ class Rank extends StatelessWidget {
       children: [
         RankHeader(
           onTap: () {
+            requestRewardedInterstitialAd();
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -54,6 +56,7 @@ class Rank extends StatelessWidget {
                 avatarData: context.watch<RankingData>().list[index]['avatar'],
                 userName: context.watch<RankingData>().list[index]['username'],
                 onTap: () {
+                  requestRewardedInterstitialAd();
                   Navigator.push(
                       context,
                       MaterialPageRoute(

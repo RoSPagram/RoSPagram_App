@@ -153,7 +153,7 @@ class Result extends StatelessWidget {
                         padding: EdgeInsets.only(top: 8),
                         child: IconButton(
                           onPressed: () {
-                            showInterstitialAd();
+                            requestRewardedInterstitialAd();
                             Navigator.pop(context);
                           },
                           icon: Icon(Icons.exit_to_app_rounded, size: 48, color: Colors.black.withOpacity(0.5)),

@@ -48,6 +48,24 @@ class _PlayState extends State<Play> {
   @override
   Widget build(BuildContext context) {
     final localText = AppLocalizations.of(context)!;
+    // void requestRewardedInterstitialAd() {
+    //   showRewardedInterstitialAd(
+    //     context,
+    //     msg: 'Watch ad now, get 💎 +1',
+    //     actionText: 'Watch Ad',
+    //     onUserEarnedReward: (ad, reward) {
+    //       supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
+    //         showAlertDialog(
+    //           context,
+    //           title: localText.reward_dialog_watch_title,
+    //           content: '💎 +1',
+    //           defaultActionText: localText.confirm,
+    //         );
+    //         context.read<GemData>().fetch();
+    //       });
+    //     },
+    //   );
+    // }
     return PopScope(
       canPop: false,
       child: Scaffold(
@@ -71,7 +89,7 @@ class _PlayState extends State<Play> {
                               defaultActionText: '${localText.no}',
                               destructiveActionText: '${localText.yes}',
                               destructiveActionOnPressed: () {
-                                showInterstitialAd();
+                                requestRewardedInterstitialAd();
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },
@@ -232,7 +250,7 @@ class _PlayState extends State<Play> {
                                             {'type': 'match_from'}
                                         );
                                         context.read<MatchDataTo>().fetch();
-                                        showInterstitialAd();
+                                        requestRewardedInterstitialAd();
                                         Navigator.pop(context);
                                       }).onError((error, stackTrace) {
                                         showAlertDialog(
