@@ -16,8 +16,8 @@ import '../utilities/alert_dialog.dart';
 RewardedInterstitialAd? _rewardedInterstitialAd;
 RewardedAd? rewardedAd;
 
-Duration interstitialAdDuration = Duration(seconds: 20);
-Duration rewardedAdDuration = Duration(seconds: 30);
+Duration interstitialAdDuration = Duration(minutes: 10);
+Duration rewardedAdDuration = Duration(minutes: 30);
 
 DateTime? rewardedInterstitialAdTime;
 DateTime? rewardedAdTime;
@@ -119,7 +119,7 @@ Future<RewardedAd> loadRewardedAd() {
   }
   // TEST ID
   final adUnitId = Platform.isAndroid ? 'ca-app-pub-3940256099942544/5224354917' : 'ca-app-pub-3940256099942544/1712485313';
-
+  // final adUnitId = Platform.isAndroid ? dotenv.env['REWARD_AD_ID_ANDROID'] as String : dotenv.env['REWARD_AD_ID_IOS'] as String;
   RewardedAd.load(
     adUnitId: adUnitId,
     request: const AdRequest(),
