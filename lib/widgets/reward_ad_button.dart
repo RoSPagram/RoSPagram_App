@@ -27,24 +27,24 @@ class _RewardAdButtonState extends State<RewardAdButton> {
 
     DateTime now = DateTime.now();
     setState(() {
-      if (now.isAfter(rewardAdTime!.add(rewardAdDuration))) {
+      if (now.isAfter(rewardedAdTime!.add(rewardedAdDuration))) {
         _buttonState = 0;
         _timer?.cancel();
         _timer = null;
       }
       else {
-        _remaining = rewardAdTime!.add(rewardAdDuration).difference(now);
+        _remaining = rewardedAdTime!.add(rewardedAdDuration).difference(now);
       }
     });
   }
 
-  void _adDisposeCallback(RewardedInterstitialAd ad) {
+  void _adDisposeCallback(RewardedAd ad) {
     ad.dispose();
-    rewardAd = null;
-    loadRewardAd();
+    rewardedAd = null;
+    loadRewardedAd();
     setState(() {
       _buttonState = 1;
-      _remaining = rewardAdTime!.add(rewardAdDuration).difference(DateTime.now());
+      _remaining = rewardedAdTime!.add(rewardedAdDuration).difference(DateTime.now());
       _timer = Timer.periodic(Duration(seconds: 1), _updateRemainingTime);
     });
   }
@@ -52,14 +52,14 @@ class _RewardAdButtonState extends State<RewardAdButton> {
   @override
   void initState() {
     setState(() {
-      if (rewardAdTime != null) {
+      if (rewardedAdTime != null) {
         DateTime now = DateTime.now();
-        if (now.isAfter(rewardAdTime!.add(rewardAdDuration))) {
+        if (now.isAfter(rewardedAdTime!.add(rewardedAdDuration))) {
           _buttonState = 0;
         }
         else {
           _buttonState = 1;
-          _remaining = rewardAdTime!.add(rewardAdDuration).difference(now);
+          _remaining = rewardedAdTime!.add(rewardedAdDuration).difference(now);
           _timer = Timer.periodic(Duration(seconds: 1), _updateRemainingTime);
         }
       }
@@ -90,14 +90,13 @@ class _RewardAdButtonState extends State<RewardAdButton> {
         showAlertDialog(
           context,
           title: localText.reward_dialog_title,
-          content: '\n${localText.reward_dialog_content_watch} → 💎 +1\n\n${localText.reward_dialog_content_click} → 💎 +1',
+          content: '\n${localText.reward_dialog_content_watch} → 💎 +1',
           defaultActionText: localText.no,
           destructiveActionText: localText.yes,
           destructiveActionOnPressed: () {
-            bool isAdClicked = false;
             Navigator.pop(context);
-            showRewardAd(
-              rewardAd,
+            showRewardedAd(
+              rewardedAd,
               contentCallBack: FullScreenContentCallback(
                 onAdDismissedFullScreenContent: (ad) {
                   _adDisposeCallback(ad);
@@ -105,23 +104,10 @@ class _RewardAdButtonState extends State<RewardAdButton> {
                 onAdFailedToShowFullScreenContent: (ad, err) {
                   _adDisposeCallback(ad);
                 },
-                onAdClicked: (ad) {
-                  if (isAdClicked) return;
-                  isAdClicked = true;
-                  supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
-                    showAlertDialog(
-                      context,
-                      title: localText.reward_dialog_click_title,
-                      content: '💎 +1',
-                      defaultActionText: localText.confirm,
-                    );
-                    context.read<GemData>().fetch();
-                  });
-                }
               ),
               onUserEarnedReward: (ad, rewardItem) {
                 _buttonState = 1;
-                _remaining = rewardAdTime!.add(rewardAdDuration).difference(DateTime.now());
+                _remaining = rewardedAdTime!.add(rewardedAdDuration).difference(DateTime.now());
                 _timer = Timer.periodic(Duration(seconds: 1), _updateRemainingTime);
                 supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
                   showAlertDialog(
