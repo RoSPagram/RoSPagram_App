@@ -14,6 +14,7 @@ import './providers/match_data_from.dart';
 import './providers/match_data_to.dart';
 import './providers/ranking_data.dart';
 import './providers/gem_data.dart';
+import './providers/price_data.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MatchDataTo(context: context)),
         ChangeNotifierProvider(create: (context) => RankingData()),
         ChangeNotifierProvider(create: (context) => GemData(context: context)),
+        ChangeNotifierProvider(create: (context) => PriceData()),
       ],
       child: MaterialApp(
         localizationsDelegates: const [
