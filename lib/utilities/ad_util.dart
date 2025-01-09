@@ -65,7 +65,7 @@ void showRewardedInterstitialAd() {
   );
   _rewardedInterstitialAd?.show(onUserEarnedReward: (ad, reward) {
     final localText = AppLocalizations.of(navigatorKey.currentState!.context)!;
-    supabase.rpc('add_user_gems', params: {'user_id': navigatorKey.currentState!.context.read<MyInfo>().id}).then((_) {
+    supabase.rpc('add_user_gems', params: {'user_id': navigatorKey.currentState!.context.read<MyInfo>().id, 'amount': 1}).then((_) {
       showAlertDialog(
         navigatorKey.currentState!.context,
         title: localText.reward_dialog_watch_title,

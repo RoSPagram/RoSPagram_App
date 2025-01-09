@@ -90,7 +90,7 @@ class _RewardAdButtonState extends State<RewardAdButton> {
         showAlertDialog(
           context,
           title: localText.reward_dialog_title,
-          content: '\n${localText.reward_dialog_content_watch} → 💎 +1',
+          content: '\n${localText.reward_dialog_content_watch} → 💎 +3',
           defaultActionText: localText.no,
           destructiveActionText: localText.yes,
           destructiveActionOnPressed: () {
@@ -109,11 +109,11 @@ class _RewardAdButtonState extends State<RewardAdButton> {
                 _buttonState = 1;
                 _remaining = rewardedAdTime!.add(rewardedAdDuration).difference(DateTime.now());
                 _timer = Timer.periodic(Duration(seconds: 1), _updateRemainingTime);
-                supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
+                supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id, 'amount': 3}).then((_) {
                   showAlertDialog(
                     context,
                     title: localText.reward_dialog_watch_title,
-                    content: '💎 +1',
+                    content: '💎 +3',
                     defaultActionText: localText.confirm,
                   );
                   context.read<GemData>().fetch();
