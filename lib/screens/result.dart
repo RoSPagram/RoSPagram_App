@@ -165,7 +165,12 @@ class Result extends StatelessWidget {
               }
               else {
                 return Center(
-                  child: Text('Loading...'),
+                  child: Padding(
+                    padding: EdgeInsets.all(32),
+                    child: LinearProgressIndicator(
+                      color: Colors.black12,
+                    ),
+                  ),
                 );
               }
             },

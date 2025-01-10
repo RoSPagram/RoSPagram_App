@@ -110,18 +110,23 @@ class _PlayState extends State<Play> {
                   );
                 }
                 final userData = snapshot.data?[userIndex];
-                final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, userData['index']);
-                final userRank = getUserRank(top);
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: rankColorGradient(userRank),
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
+                return Consumer<RankingData>(
+                  builder: (context, rankingData, child) {
+                    final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
+                    final userRank = getUserRank(top);
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: rankColorGradient(userRank),
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
+                      child: child,
+                    );
+                  },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -141,13 +146,17 @@ class _PlayState extends State<Play> {
                           ),
                         ),
                       ),
-                      Text(
-                        getRankNameFromCode(userRank),
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                          fontSize: 16,
-                        ),
-                      ),
+                      Consumer<RankingData>(builder: (context, rankingData, child) {
+                        final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
+                        final userRank = getUserRank(top);
+                        return Text(
+                          getRankNameFromCode(userRank),
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.5),
+                            fontSize: 16,
+                          ),
+                        );
+                      }),
                       Padding(
                         padding: EdgeInsets.only(top: 32, bottom: 32),
                         child: isStart ? Column(
@@ -274,7 +283,7 @@ class _PlayState extends State<Play> {
                                       supabase.from('match').update({
                                         'respond': handIndex,
                                       }).match({'from': widget.userId, 'to': context.read<MyInfo>().id})
-                                      .then((_) {
+                                          .then((_) {
                                         Navigator.pop(context);
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
                                       });
@@ -384,7 +393,12 @@ class _PlayState extends State<Play> {
               }
               else {
                 return Center(
-                  child: Text('Loading...'),
+                  child: Padding(
+                    padding: EdgeInsets.all(32),
+                    child: LinearProgressIndicator(
+                      color: Colors.black12,
+                    ),
+                  ),
                 );
               }
             },
