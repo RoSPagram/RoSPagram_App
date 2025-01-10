@@ -17,13 +17,7 @@ class Match extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localText = AppLocalizations.of(context)!;
-
     final myInfo = context.read<MyInfo>();
-    final from = context.read<MatchDataFrom>();
-    final to = context.read<MatchDataTo>();
-
-    int matchFromLen = context.watch<MatchDataFrom>().list.length;
-    int matchToLen = context.watch<MatchDataTo>().list.length;
 
     return DefaultTabController(
       length: 2,
@@ -59,64 +53,80 @@ class Match extends StatelessWidget {
             indicatorColor: Colors.black,
             labelColor: Colors.black,
             unselectedLabelColor: Colors.grey,
-            tabs: <Tab>[
-              Tab(
-                text: '${localText.match_tab_from}',
-                icon: matchFromLen > 0 ? CounterBadge(value: matchFromLen) : SizedBox.shrink(),
+            tabs: <Widget>[
+              Consumer<MatchDataFrom>(
+                builder: (context, from, child) {
+                  return Tab(
+                    text: '${localText.match_tab_from}',
+                    icon: from.list.isNotEmpty ? CounterBadge(value: from.list.length) : SizedBox.shrink(),
+                  );
+                },
               ),
-              Tab(
-                text: '${localText.match_tab_to}',
-                icon: matchToLen > 0 ? CounterBadge(value: matchToLen) : SizedBox.shrink(),
+              Consumer<MatchDataTo>(
+                builder: (context, to, child) {
+                  return Tab(
+                    text: '${localText.match_tab_to}',
+                    icon: to.list.isNotEmpty ? CounterBadge(value: to.list.length) : SizedBox.shrink(),
+                  );
+                },
               ),
             ],
           ),
           Expanded(
             child: TabBarView(
               children: [
-                context.watch<MatchDataFrom>().list.isEmpty ? Center(child: Text('${localText.match_no}')) : ListView.builder(
-                  itemCount: context.watch<MatchDataFrom>().list.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return MatchListItem(
-                      userName: context.watch<MatchDataFrom>().list[index]['username'],
-                      avatarData: context.watch<MatchDataFrom>().list[index]['avatar'],
-                      description: '${localText.match_item_from_desc}',
-                      desciptionColor: Colors.red,
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => Play(userId: from.list[index]['id'], isRequest: false)));
+                Consumer<MatchDataFrom>(
+                  builder: (context, from, child) {
+                    return from.list.isEmpty ? Center(child: Text('${localText.match_no}')) : ListView.builder(
+                      itemCount: from.list.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return MatchListItem(
+                          userName: from.list[index]['username'],
+                          avatarData: from.list[index]['avatar'],
+                          description: '${localText.match_item_from_desc}',
+                          desciptionColor: Colors.red,
+                          onTap: () {
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => Play(userId: from.list[index]['id'], isRequest: false)));
+                          },
+                        );
                       },
                     );
                   },
                 ),
-                context.watch<MatchDataTo>().list.isEmpty ? Center(child: Text('${localText.match_no}')) : ListView.builder(
-                  itemCount: context.watch<MatchDataTo>().list.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return MatchListItem(
-                      userName: context.watch<MatchDataTo>().list[index]['username'],
-                      avatarData: context.watch<MatchDataTo>().list[index]['avatar'],
-                      description: context.watch<MatchDataTo>().list[index]['respond'] == 0 ? '${localText.match_item_to_desc_cancel}' : '${localText.match_item_to_desc_show}',
-                      desciptionColor: context.watch<MatchDataTo>().list[index]['respond'] == 0 ? Colors.red : Colors.green,
-                      onTap: () {
-                        if (context.read<MatchDataTo>().list[index]['respond'] == 0) {
-                          showAlertDialog(
-                            context,
-                            title: '${localText.match_dialog_cancel_title}',
-                            content: '${localText.match_dialog_cancel_content}',
-                            defaultActionText: '${localText.no}',
-                            destructiveActionText: '${localText.yes}',
-                            destructiveActionOnPressed: () {
-                              supabase.from('match').delete().match({
-                                'from': context.read<MyInfo>().id,
-                                'to': to.list[index]['id']
-                              }).then((_) {
-                                to.fetch();
-                                Navigator.pop(context);
-                              });
-                            },
-                          );
-                        }
-                        else {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: myInfo.id, to: to.list[index]['id'])));
-                        }
+                Consumer<MatchDataTo>(
+                  builder: (context, to, child) {
+                    return to.list.isEmpty ? Center(child: Text('${localText.match_no}')) : ListView.builder(
+                      itemCount: to.list.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return MatchListItem(
+                          userName: to.list[index]['username'],
+                          avatarData: to.list[index]['avatar'],
+                          description: to.list[index]['respond'] == 0 ? '${localText.match_item_to_desc_cancel}' : '${localText.match_item_to_desc_show}',
+                          desciptionColor: to.list[index]['respond'] == 0 ? Colors.red : Colors.green,
+                          onTap: () {
+                            if (context.read<MatchDataTo>().list[index]['respond'] == 0) {
+                              showAlertDialog(
+                                context,
+                                title: '${localText.match_dialog_cancel_title}',
+                                content: '${localText.match_dialog_cancel_content}',
+                                defaultActionText: '${localText.no}',
+                                destructiveActionText: '${localText.yes}',
+                                destructiveActionOnPressed: () {
+                                  supabase.from('match').delete().match({
+                                    'from': context.read<MyInfo>().id,
+                                    'to': to.list[index]['id']
+                                  }).then((_) {
+                                    to.fetch();
+                                    Navigator.pop(context);
+                                  });
+                                },
+                              );
+                            }
+                            else {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: myInfo.id, to: to.list[index]['id'])));
+                            }
+                          },
+                        );
                       },
                     );
                   },

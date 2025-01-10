@@ -47,26 +47,30 @@ class Rank extends StatelessWidget {
             ),
           ),
         ),
-        context.watch<RankingData>().list.isEmpty ? Center(child: Text('No ranked users')) : Expanded(
-          child: ListView.builder(
-            itemCount: context.watch<RankingData>().list.length,
-            itemBuilder: (BuildContext context, int index) {
-              return RankListItem(
-                index: context.watch<RankingData>().list[index]['index'],
-                avatarData: context.watch<RankingData>().list[index]['avatar'],
-                userName: context.watch<RankingData>().list[index]['username'],
-                onTap: () {
-                  requestRewardedInterstitialAd();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => UserProfile(userId: context.read<RankingData>().list[index]['id']),
-                      )
+        Consumer<RankingData>(
+          builder: (context, rankingData, child) {
+            return rankingData.list.isEmpty ? Center(child: Text('No ranked users')) : Expanded(
+              child: ListView.builder(
+                itemCount: rankingData.list.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return RankListItem(
+                    index: rankingData.list[index]['index'],
+                    avatarData: rankingData.list[index]['avatar'],
+                    userName: rankingData.list[index]['username'],
+                    onTap: () {
+                      requestRewardedInterstitialAd();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => UserProfile(userId: rankingData.list[index]['id']),
+                          )
+                      );
+                    },
                   );
                 },
-              );
-            },
-          ),
+              ),
+            );
+          },
         ),
       ],
     );

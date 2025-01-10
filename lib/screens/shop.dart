@@ -18,14 +18,6 @@ import '../utilities/avatar_util.dart';
 import '../utilities/ad_util.dart';
 import '../constants.dart';
 
-// const PRICE_CHANGE_NAME = 50;
-// const PRICE_RANDOM_AVATAR = 20;
-// const PRICE_FACE_POSITION = 20;
-// const PRICE_BODY_POSITION = 20;
-// const PRICE_BODY_COLOR = 20;
-// const PRICE_BACKGROUND_COLOR = 20;
-// const PRICE_CHEEK_COLOR = 10;
-
 class Shop extends StatelessWidget {
   const Shop({super.key});
 
@@ -39,26 +31,30 @@ class Shop extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.all(8),
-          child: Text(
-            '💎 x${context.watch<GemData>().count}',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
+          child: Consumer<GemData>(
+            builder: (context, gemData, child) {
+              return Text(
+                '💎 x${gemData.count}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              );
+            },
           ),
         ),
         Expanded(
           child: Consumer<PriceData>(
-            builder: (context, provider, child) {
+            builder: (context, priceData, child) {
               return GridView.builder(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                 ),
-                itemCount: provider.items.length,
+                itemCount: priceData.items.length,
                 itemBuilder: (context, index) {
-                  final items = provider.items;
+                  final items = priceData.items;
                   switch(items[index]['id']) {
                     case 'change_name':
                       return ShopListItem(
