@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,28 +15,31 @@ class RankHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localText = AppLocalizations.of(context)!;
-    final MyInfo myInfo = context.read<MyInfo>();
-    final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, context.watch<MyInfo>().index);
-    final userRank = getUserRank(top);
-
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: rankColorGradient(userRank),
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
+    return Consumer2<RankingData, MyInfo>(
+      builder: (context, rankingData, myInfo, child) {
+        final top = getTopPercentage(rankingData.rankedUsersCount, myInfo.index);
+        final userRank = getUserRank(top);
+        return Container(
+          width: MediaQuery.of(context).size.width,
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: rankColorGradient(userRank),
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(64), bottomRight: Radius.circular(64)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.25),
+                  blurRadius: 5.0,
+                  spreadRadius: 0.0,
+                  offset: const Offset(0, 1),
+                )
+              ]
           ),
-          borderRadius: BorderRadius.only(bottomLeft: Radius.circular(64), bottomRight: Radius.circular(64)),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.25),
-              blurRadius: 5.0,
-              spreadRadius: 0.0,
-              offset: const Offset(0, 1),
-            )
-          ]
-      ),
+          child: child,
+        );
+      },
       child: Material(
         color: Colors.transparent,
         child: InkWell(
@@ -49,42 +53,53 @@ class RankHeader extends StatelessWidget {
               children: [
                 Flexible(
                   flex: 1,
-                  child: context.watch<MyInfo>().index == 0 ? Text(
-                    '---',
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.5),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
-                  ) : Text(
-                    '#${context.watch<MyInfo>().index}',
-                    style: TextStyle(
-                      color: Colors.black.withOpacity(0.5),
-                      fontWeight: FontWeight.bold,
-                      fontSize: 18,
-                    ),
+                  child: Consumer<MyInfo>(
+                    builder: (context, myInfo, child) {
+                      return Text(
+                        myInfo.index == 0 ? '---' : '#${myInfo.index}',
+                        style: TextStyle(
+                          color: Colors.black.withOpacity(0.5),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                        ),
+                      );
+                    },
                   ),
                 ),
                 Flexible(
                     flex: 1,
                     child: Column(
                       children: [
-                        ProfileAvatar(
-                          avatarData: myInfo.avatarData,
-                          width: 32,
-                          height: 32,
+                        Consumer<MyInfo>(
+                          builder: (context, myInfo, child) {
+                            return ProfileAvatar(
+                              avatarData: jsonDecode(myInfo.avatarData),
+                              width: 32,
+                              height: 32,
+                            );
+                          },
                         ),
-                        Text(
-                          '${context.watch<MyInfo>().username}',
-                          style: TextStyle(
-                            color: Colors.black.withOpacity(0.75),
-                          ),
+                        Consumer<MyInfo>(
+                          builder: (context, myInfo, child) {
+                            return Text(
+                              '${myInfo.username}',
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.75),
+                              ),
+                            );
+                          },
                         ),
-                        Text(
-                          getRankNameFromCode(userRank),
-                          style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
-                          ),
+                        Consumer2<RankingData, MyInfo>(
+                          builder: (context, rankingData, myInfo, child) {
+                            final top = getTopPercentage(rankingData.rankedUsersCount, myInfo.index);
+                            final userRank = getUserRank(top);
+                            return Text(
+                              getRankNameFromCode(userRank),
+                              style: TextStyle(
+                                color: Colors.black.withOpacity(0.5),
+                              ),
+                            );
+                          },
                         ),
                       ],
                     )
@@ -100,11 +115,16 @@ class RankHeader extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        top == 0 ? '---' : '${top.toStringAsFixed(2)}%',
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                        ),
+                      Consumer2<RankingData, MyInfo>(
+                        builder: (context, rankingData, myInfo, child) {
+                          final top = getTopPercentage(rankingData.rankedUsersCount, myInfo.index);
+                          return Text(
+                            top == 0 ? '---' : '${top.toStringAsFixed(2)}%',
+                            style: TextStyle(
+                              color: Colors.black.withOpacity(0.5),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),

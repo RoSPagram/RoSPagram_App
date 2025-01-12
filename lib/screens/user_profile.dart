@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -27,19 +28,23 @@ class UserProfile extends StatelessWidget {
           builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
             if (snapshot.hasData) {
               final userData = snapshot.data?[0];
-              final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, userData['index']);
-              final userRank = getUserRank(top);
-
-              return Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: rankColorGradient(userRank),
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                ),
+              return Consumer<RankingData>(
+                builder: (context, rankingData, child) {
+                  final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
+                  final userRank = getUserRank(top);
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: rankColorGradient(userRank),
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                      ),
+                    ),
+                    child: child,
+                  );
+                },
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
@@ -63,7 +68,7 @@ class UserProfile extends StatelessWidget {
                       //   height: 64,
                       // ),
                       ProfileAvatar(
-                        avatarData: userData['avatar'],
+                        avatarData: jsonDecode(userData['avatar']),
                         width: 150,
                         height: 150,
                       ),
@@ -78,12 +83,18 @@ class UserProfile extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        getRankNameFromCode(userRank),
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                          fontSize: 16,
-                        ),
+                      Consumer<RankingData>(
+                        builder: (context, rankingData, child) {
+                          final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
+                          final userRank = getUserRank(top);
+                          return Text(
+                            getRankNameFromCode(userRank),
+                            style: TextStyle(
+                              color: Colors.black.withOpacity(0.5),
+                              fontSize: 16,
+                            ),
+                          );
+                        },
                       ),
                       Container(
                         padding: EdgeInsets.only(top: 32, bottom: 32),
@@ -120,13 +131,18 @@ class UserProfile extends StatelessWidget {
                                     fontSize: 20,
                                   ),
                                 ),
-                                Text(
-                                  top == 0 ? '---' : '${top.toStringAsFixed(2)}%',
-                                  style: TextStyle(
-                                    color: Colors.black.withOpacity(0.5),
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 20,
-                                  ),
+                                Consumer<RankingData>(
+                                  builder: (context, rankingData, child) {
+                                    final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
+                                    return Text(
+                                      top == 0 ? '---' : '${top.toStringAsFixed(2)}%',
+                                      style: TextStyle(
+                                        color: Colors.black.withOpacity(0.5),
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 20,
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
@@ -164,7 +180,12 @@ class UserProfile extends StatelessWidget {
             }
             else {
               return Center(
-                child: Text('Loading...'),
+                child: Padding(
+                  padding: EdgeInsets.all(32),
+                  child: LinearProgressIndicator(
+                    color: Colors.black12,
+                  ),
+                ),
               );
             }
           },

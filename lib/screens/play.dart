@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,6 +7,7 @@ import '../widgets/profile_avatar.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/firebase_util.dart';
 import '../utilities/alert_dialog.dart';
+import '../utilities/ad_util.dart';
 import '../providers/my_info.dart';
 import '../providers/match_data_to.dart';
 import '../providers/ranking_data.dart';
@@ -46,10 +48,26 @@ class _PlayState extends State<Play> {
   @override
   Widget build(BuildContext context) {
     final localText = AppLocalizations.of(context)!;
-    return WillPopScope(
-      onWillPop: () {
-        return Future(() => false);
-      },
+    // void requestRewardedInterstitialAd() {
+    //   showRewardedInterstitialAd(
+    //     context,
+    //     msg: 'Watch ad now, get 💎 +1',
+    //     actionText: 'Watch Ad',
+    //     onUserEarnedReward: (ad, reward) {
+    //       supabase.rpc('add_user_gems', params: {'user_id': context.read<MyInfo>().id}).then((_) {
+    //         showAlertDialog(
+    //           context,
+    //           title: localText.reward_dialog_watch_title,
+    //           content: '💎 +1',
+    //           defaultActionText: localText.confirm,
+    //         );
+    //         context.read<GemData>().fetch();
+    //       });
+    //     },
+    //   );
+    // }
+    return PopScope(
+      canPop: false,
       child: Scaffold(
         body: SafeArea(
           child: FutureBuilder(
@@ -71,6 +89,7 @@ class _PlayState extends State<Play> {
                               defaultActionText: '${localText.no}',
                               destructiveActionText: '${localText.yes}',
                               destructiveActionOnPressed: () {
+                                requestRewardedInterstitialAd();
                                 Navigator.pop(context);
                                 Navigator.pop(context);
                               },
@@ -91,23 +110,28 @@ class _PlayState extends State<Play> {
                   );
                 }
                 final userData = snapshot.data?[userIndex];
-                final top = getTopPercentage(context.watch<RankingData>().rankedUsersCount, userData['index']);
-                final userRank = getUserRank(top);
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: rankColorGradient(userRank),
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
+                return Consumer<RankingData>(
+                  builder: (context, rankingData, child) {
+                    final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
+                    final userRank = getUserRank(top);
+                    return Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: rankColorGradient(userRank),
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                        ),
+                      ),
+                      child: child,
+                    );
+                  },
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       ProfileAvatar(
-                        avatarData: userData['avatar'],
+                        avatarData: jsonDecode(userData['avatar']),
                         width: 128,
                         height: 128,
                       ),
@@ -122,13 +146,17 @@ class _PlayState extends State<Play> {
                           ),
                         ),
                       ),
-                      Text(
-                        getRankNameFromCode(userRank),
-                        style: TextStyle(
-                          color: Colors.black.withOpacity(0.5),
-                          fontSize: 16,
-                        ),
-                      ),
+                      Consumer<RankingData>(builder: (context, rankingData, child) {
+                        final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
+                        final userRank = getUserRank(top);
+                        return Text(
+                          getRankNameFromCode(userRank),
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.5),
+                            fontSize: 16,
+                          ),
+                        );
+                      }),
                       Padding(
                         padding: EdgeInsets.only(top: 32, bottom: 32),
                         child: isStart ? Column(
@@ -231,6 +259,7 @@ class _PlayState extends State<Play> {
                                             {'type': 'match_from'}
                                         );
                                         context.read<MatchDataTo>().fetch();
+                                        requestRewardedInterstitialAd();
                                         Navigator.pop(context);
                                       }).onError((error, stackTrace) {
                                         showAlertDialog(
@@ -254,7 +283,7 @@ class _PlayState extends State<Play> {
                                       supabase.from('match').update({
                                         'respond': handIndex,
                                       }).match({'from': widget.userId, 'to': context.read<MyInfo>().id})
-                                      .then((_) {
+                                          .then((_) {
                                         Navigator.pop(context);
                                         Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
                                       });
@@ -364,7 +393,12 @@ class _PlayState extends State<Play> {
               }
               else {
                 return Center(
-                  child: Text('Loading...'),
+                  child: Padding(
+                    padding: EdgeInsets.all(32),
+                    child: LinearProgressIndicator(
+                      color: Colors.black12,
+                    ),
+                  ),
                 );
               }
             },

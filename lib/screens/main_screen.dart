@@ -8,6 +8,7 @@ import '../providers/match_data_from.dart';
 import '../providers/match_data_to.dart';
 import '../providers/ranking_data.dart';
 import '../providers/gem_data.dart';
+import '../providers/price_data.dart';
 import './home.dart';
 import './match.dart';
 import './rank.dart';
@@ -45,6 +46,7 @@ class _MainScreenState extends State<MainScreen> {
     context.read<MatchDataTo>().fetch();
     context.read<RankingData>().fetch();
     context.read<GemData>().fetch();
+    context.read<PriceData>().fetch();
 
     FirebaseMessaging.onMessage.listen((message) async {
       // showFlutterNotification(message);
@@ -95,8 +97,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    int matchFromLen = context.watch<MatchDataFrom>().list.length;
-    int matchToLen = context.watch<MatchDataTo>().list.length;
     final localText = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
@@ -115,21 +115,23 @@ class _MainScreenState extends State<MainScreen> {
             icon: Stack(
               children: [
                 Icon(Icons.flag),
-                if (matchFromLen != 0 || matchToLen != 0)
-                Positioned(
-                  top: 0,
-                  right: 0,
-                  child: SizedBox(
-                    width: 10,
-                    height: 10,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
+                Consumer2<MatchDataFrom, MatchDataTo>(builder: (context, from, to, child) {
+                  if (from.list.isEmpty && to.list.isEmpty) return SizedBox.shrink();
+                  return Positioned(
+                    top: 0,
+                    right: 0,
+                    child: SizedBox(
+                      width: 10,
+                      height: 10,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
                       ),
                     ),
-                  ),
-                )
+                  );
+                }),
               ],
             ),
             label: '${localText.main_screen_navbar_match}',

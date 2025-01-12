@@ -4,6 +4,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import './utilities/shared_prefs.dart';
+import './utilities/ad_util.dart';
 import './utilities/firebase_util.dart';
 import './utilities/supabase_util.dart';
 import './screens/sign_in.dart';
@@ -13,6 +14,9 @@ import './providers/match_data_from.dart';
 import './providers/match_data_to.dart';
 import './providers/ranking_data.dart';
 import './providers/gem_data.dart';
+import './providers/price_data.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +24,7 @@ Future<void> main() async {
   await SharedPrefs().init();
   initSupabase();
   initFirebase();
+  initAdmob();
   runApp(const MyApp());
 }
 
@@ -37,6 +42,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => MatchDataTo(context: context)),
         ChangeNotifierProvider(create: (context) => RankingData()),
         ChangeNotifierProvider(create: (context) => GemData(context: context)),
+        ChangeNotifierProvider(create: (context) => PriceData()),
       ],
       child: MaterialApp(
         localizationsDelegates: const [
@@ -54,6 +60,7 @@ class MyApp extends StatelessWidget {
           // colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           // useMaterial3: true,
         ),
+        navigatorKey: navigatorKey,
         home: SignIn(),
         debugShowCheckedModeBanner: false,
       ),
