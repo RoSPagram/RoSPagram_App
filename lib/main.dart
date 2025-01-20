@@ -3,10 +3,12 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import './utilities/shared_prefs.dart';
 import './utilities/ad_util.dart';
 import './utilities/firebase_util.dart';
 import './utilities/supabase_util.dart';
+import './utilities/version_check.dart';
 import './screens/sign_in.dart';
 import './providers/my_info.dart';
 import './providers/token_data.dart';
@@ -61,7 +63,56 @@ class MyApp extends StatelessWidget {
           // useMaterial3: true,
         ),
         navigatorKey: navigatorKey,
-        home: SignIn(),
+        home: FutureBuilder(
+          future: checkAppVersion(context),
+          builder: (context, snapshot) {
+            final localText = AppLocalizations.of(context)!;
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // 로딩 상태
+              return Scaffold(
+                body: Center(child: LinearProgressIndicator(color: Colors.black12)),
+              );
+            }
+
+            if (snapshot.hasError) {
+              // 오류 상태
+              return Scaffold(
+                body: Center(child: Text('Error: ${snapshot.error}')),
+              );
+            }
+
+            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+              // 업데이트가 필요한 경우
+              return Scaffold(
+                body: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        localText.update_required,
+                        style: TextStyle(
+                          fontSize: 18,
+                        ),
+                      ),
+                      FilledButton(
+                        style: FilledButton.styleFrom(backgroundColor: Color(0xff000000), foregroundColor: Color(0xffffffff)),
+                        onPressed: () async {
+                          if (await canLaunchUrlString(snapshot.data!)) {
+                            await launchUrlString(snapshot.data!);
+                          }
+                        },
+                        child: Text(localText.update),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            // 업데이트가 필요하지 않은 경우
+            return SignIn();
+          },
+        ),
         debugShowCheckedModeBanner: false,
       ),
     );
