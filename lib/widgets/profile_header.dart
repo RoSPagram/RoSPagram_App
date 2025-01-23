@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './profile_avatar.dart';
-import './win_loss_record.dart';
+import 'profile_avatar.dart';
+import 'level_view.dart';
+import 'win_loss_record.dart';
 import '../constants.dart';
 import '../providers/my_info.dart';
 import '../providers/ranking_data.dart';
@@ -65,13 +66,18 @@ class ProfileHeader extends StatelessWidget {
                         return Text(
                           '${myInfo.username}',
                           style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         );
                       },
                     ),
+                  ),
+                  Consumer<MyInfo>(
+                    builder: (context, myInfo, child) {
+                      return LevelView(xp: myInfo.xp);
+                    },
                   ),
                   Consumer2<RankingData, MyInfo>(
                     builder: (context, rankingData, myInfo, child) {
