@@ -114,6 +114,7 @@ class SignIn extends StatelessWidget {
     context.read<MyInfo>().loss = userData[0]['loss'];
     context.read<MyInfo>().draw = userData[0]['draw'];
     context.read<MyInfo>().fcm_token = userData[0]['fcm_token'] ?? fcmToken;
+    context.read<MyInfo>().xp = userData[0]['xp'];
     context.read<MyInfo>().notifyListeners();
 
     return true;
