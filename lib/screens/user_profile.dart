@@ -6,6 +6,7 @@ import '../constants.dart';
 import '../utilities/supabase_util.dart';
 import '../providers/ranking_data.dart';
 import '../widgets/profile_avatar.dart';
+import '../widgets/level_view.dart';
 import '../widgets/win_loss_record.dart';
 
 class UserProfile extends StatelessWidget {
@@ -57,7 +58,7 @@ class UserProfile extends StatelessWidget {
                           },
                           child: Icon(
                             Icons.close,
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             size: 32,
                           ),
                         ),
@@ -73,16 +74,17 @@ class UserProfile extends StatelessWidget {
                         height: 150,
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 16, bottom: 16),
+                        padding: EdgeInsets.only(top: 16),
                         child: Text(
                           '${userData['username']}',
                           style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
+                      LevelView(xp: userData['xp']),
                       Consumer<RankingData>(
                         builder: (context, rankingData, child) {
                           final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
@@ -90,7 +92,7 @@ class UserProfile extends StatelessWidget {
                           return Text(
                             getRankNameFromCode(userRank),
                             style: TextStyle(
-                              color: Colors.black.withOpacity(0.5),
+                              color: Colors.black.withValues(alpha: 0.5),
                               fontSize: 16,
                             ),
                           );
@@ -106,7 +108,7 @@ class UserProfile extends StatelessWidget {
                                 Text(
                                   localText.ranking,
                                   style: TextStyle(
-                                    color: Colors.black.withOpacity(0.5),
+                                    color: Colors.black.withValues(alpha: 0.5),
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
                                   ),
@@ -114,7 +116,7 @@ class UserProfile extends StatelessWidget {
                                 Text(
                                   '#${userData['index']}',
                                   style: TextStyle(
-                                    color: Colors.black.withOpacity(0.5),
+                                    color: Colors.black.withValues(alpha: 0.5),
                                     fontWeight: FontWeight.w500,
                                     fontSize: 20,
                                   ),
@@ -126,7 +128,7 @@ class UserProfile extends StatelessWidget {
                                 Text(
                                   localText.top,
                                   style: TextStyle(
-                                    color: Colors.black.withOpacity(0.5),
+                                    color: Colors.black.withValues(alpha: 0.5),
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20,
                                   ),
@@ -137,7 +139,7 @@ class UserProfile extends StatelessWidget {
                                     return Text(
                                       top == 0 ? '---' : '${top.toStringAsFixed(2)}%',
                                       style: TextStyle(
-                                        color: Colors.black.withOpacity(0.5),
+                                        color: Colors.black.withValues(alpha: 0.5),
                                         fontWeight: FontWeight.w500,
                                         fontSize: 20,
                                       ),
@@ -152,7 +154,7 @@ class UserProfile extends StatelessWidget {
                       // Text(
                       //   'Win-Loss Record',
                       //   style: TextStyle(
-                      //     color: Colors.black.withOpacity(0.5),
+                      //     color: Colors.black.withValues(alpha: 0.5),
                       //     fontWeight: FontWeight.w500,
                       //     fontSize: 20,
                       //   ),
