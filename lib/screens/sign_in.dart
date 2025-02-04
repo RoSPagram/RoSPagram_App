@@ -48,7 +48,8 @@ class _StarButtonState extends State<StartButton> {
 
         SharedPrefs.instance.setString('uuid', newUUID);
 
-        final time = await NTP.now();
+        DateTime time = await NTP.now();
+        time = time.toUtc();
         final date = DateFormat('yyyy-MM-dd').format(time);
 
         await supabase.from('users').insert({
@@ -96,7 +97,8 @@ class SignIn extends StatelessWidget {
       updates['lang'] = currentLang;
     }
 
-    final time = await NTP.now();
+    DateTime time = await NTP.now();
+    time = time.toUtc();
     final date = DateFormat('yyyy-MM-dd').format(time);
     if (userData[0]['last_login'] != date) {
       updates['last_login'] = date;
