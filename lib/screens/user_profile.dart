@@ -84,7 +84,7 @@ class UserProfile extends StatelessWidget {
                           ),
                         ),
                       ),
-                      LevelView(xp: userData['xp']),
+                      LevelView(xp: userData['xp'], showProgress: true,),
                       Consumer<RankingData>(
                         builder: (context, rankingData, child) {
                           final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
