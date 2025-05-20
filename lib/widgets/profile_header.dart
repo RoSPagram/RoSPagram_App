@@ -76,7 +76,7 @@ class ProfileHeader extends StatelessWidget {
                   ),
                   Consumer<MyInfo>(
                     builder: (context, myInfo, child) {
-                      return LevelView(xp: myInfo.xp);
+                      return LevelView(xp: myInfo.xp, showProgress: true,);
                     },
                   ),
                   Consumer2<RankingData, MyInfo>(
