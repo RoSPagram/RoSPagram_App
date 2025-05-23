@@ -72,6 +72,12 @@ class AppLocalizationsKo extends AppLocalizations {
   String get play_btn_dialog_content => '토큰을 사용할까요?';
 
   @override
+  String get random_match_title => '플레이어 선택';
+
+  @override
+  String get random_match_dialog_content => '이 플레이어로 선택할까요?';
+
+  @override
   String get match_title => '승부 요청';
 
   @override

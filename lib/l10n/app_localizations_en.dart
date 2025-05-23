@@ -72,6 +72,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get play_btn_dialog_content => 'Start with a token?';
 
   @override
+  String get random_match_title => 'Select Player';
+
+  @override
+  String get random_match_dialog_content => 'Pick this player?';
+
+  @override
   String get match_title => 'Game Request';
 
   @override

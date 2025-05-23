@@ -221,6 +221,18 @@ abstract class AppLocalizations {
   /// **'Start with a token?'**
   String get play_btn_dialog_content;
 
+  /// No description provided for @random_match_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Player'**
+  String get random_match_title;
+
+  /// No description provided for @random_match_dialog_content.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick this player?'**
+  String get random_match_dialog_content;
+
   /// No description provided for @match_title.
   ///
   /// In en, this message translates to:

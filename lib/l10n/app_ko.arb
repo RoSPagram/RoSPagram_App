@@ -21,6 +21,8 @@
   "play_btn_text": "플레이",
   "play_btn_dialog_title": "플레이",
   "play_btn_dialog_content": "토큰을 사용할까요?",
+  "random_match_title": "플레이어 선택",
+  "random_match_dialog_content": "이 플레이어로 선택할까요?",
   "match_title": "승부 요청",
   "match_tab_from": "받음",
   "match_tab_to": "보냄",
