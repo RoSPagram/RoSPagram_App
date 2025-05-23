@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'profile_avatar.dart';
 
 class MatchListItem extends StatelessWidget {
-  const MatchListItem({super.key, required this.userName, required this.avatarData, required this.description, this.desciptionColor = Colors.red, required this.onTap});
+  const MatchListItem({super.key, required this.userName, required this.avatarData, this.description = '', this.descriptionColor = Colors.red, required this.onTap});
 
   final String userName;
   final String avatarData;
   final String description;
-  final Color desciptionColor;
+  final Color descriptionColor;
   final void Function() onTap;
 
   @override
@@ -28,6 +28,7 @@ class MatchListItem extends StatelessWidget {
         ],
       ),
       child: Material(
+        color: Colors.transparent,
         child: InkWell(
           onTap: this.onTap,
           borderRadius: BorderRadius.circular(16),
@@ -60,12 +61,13 @@ class MatchListItem extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Text(
-                        this.description,
-                        style: TextStyle(
-                          color: this.desciptionColor,
+                      if (this.description.isNotEmpty)
+                        Text(
+                          this.description,
+                          style: TextStyle(
+                            color: this.descriptionColor,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),
@@ -73,7 +75,6 @@ class MatchListItem extends StatelessWidget {
             ),
           ),
         ),
-        color: Colors.transparent,
       ),
     );
   }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rospagram/l10n/app_localizations.dart';
 import '../constants.dart';
 import '../widgets/profile_avatar.dart';
 import '../utilities/supabase_util.dart';
@@ -97,12 +97,12 @@ class _PlayState extends State<Play> {
                           },
                           icon: Icon(Icons.cancel),
                           iconSize: 48,
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                         ),
                         Text(
                           '${localText.cancel}',
                           style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                           ),
                         ),
                       ],
@@ -140,7 +140,7 @@ class _PlayState extends State<Play> {
                         child: Text(
                           '${userData['username']}',
                           style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
@@ -152,7 +152,7 @@ class _PlayState extends State<Play> {
                         return Text(
                           getRankNameFromCode(userRank),
                           style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             fontSize: 16,
                           ),
                         );
@@ -184,7 +184,7 @@ class _PlayState extends State<Play> {
                                     child: Text('✊',
                                       style: TextStyle(
                                         fontSize: 48,
-                                        color: handIndex == 1 ? null : Colors.black.withOpacity(0.5),
+                                        color: handIndex == 1 ? null : Colors.black.withValues(alpha: 0.5),
                                       ),
                                     ),
                                   ),
@@ -198,7 +198,7 @@ class _PlayState extends State<Play> {
                                     child: Text('✌️',
                                       style: TextStyle(
                                         fontSize: 48,
-                                        color: handIndex == 2 ? null : Colors.black.withOpacity(0.5),
+                                        color: handIndex == 2 ? null : Colors.black.withValues(alpha: 0.5),
                                       ),
                                     ),
                                   ),
@@ -212,7 +212,7 @@ class _PlayState extends State<Play> {
                                     child: Text('🖐️',
                                       style: TextStyle(
                                         fontSize: 48,
-                                        color: handIndex == 3 ? null : Colors.black.withOpacity(0.5),
+                                        color: handIndex == 3 ? null : Colors.black.withValues(alpha: 0.5),
                                       ),
                                     ),
                                   ),
@@ -376,12 +376,12 @@ class _PlayState extends State<Play> {
                               },
                               icon: Icon(Icons.cancel),
                               iconSize: 48,
-                              color: Colors.black.withOpacity(0.5),
+                              color: Colors.black.withValues(alpha: 0.5),
                             ),
                             Text(
                               '${localText.cancel}',
                               style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
+                                color: Colors.black.withValues(alpha: 0.5),
                               ),
                             ),
                           ],
