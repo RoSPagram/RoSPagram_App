@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:async'; // Timer를 사용하기 위해 추가
+import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:rospagram/l10n/app_localizations.dart';
 import '../screens/play.dart';
@@ -8,6 +8,7 @@ import '../utilities/supabase_util.dart';
 import '../utilities/alert_dialog.dart';
 import '../utilities/ad_util.dart';
 import '../providers/my_info.dart';
+import '../providers/token_data.dart';
 
 class RandomMatchList extends StatefulWidget {
   const RandomMatchList({super.key});
@@ -101,7 +102,8 @@ class _RandomMatchListState extends State<RandomMatchList> {
                           content: '${localText.random_match_dialog_content}?',
                           defaultActionText: localText.no,
                           destructiveActionText: localText.yes,
-                          destructiveActionOnPressed: () {
+                          destructiveActionOnPressed: () async {
+                            await context.read<TokenData>().useToken();
                             Navigator.pop(context);
                             Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Play(userId: list[index]['id'], isRequest: true)));
                           },
