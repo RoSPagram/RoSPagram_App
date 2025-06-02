@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rospagram/l10n/app_localizations.dart';
 import '../constants.dart';
+import '../widgets/level_view.dart';
 import '../widgets/profile_avatar.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/firebase_util.dart';
@@ -137,6 +138,7 @@ class _PlayState extends State<Play> {
                           ),
                         ),
                       ),
+                      LevelView(xp: userData['xp'], showProgress: false),
                       Consumer<RankingData>(builder: (context, rankingData, child) {
                         final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
                         final userRank = getUserRank(top);
@@ -207,87 +209,62 @@ class _PlayState extends State<Play> {
                                 ],
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: !widget.isRequest ? null : () {
-                                    setState(() {
-                                      handIndex = 0;
-                                    });
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_back,
-                                        color: Colors.white,
-                                      ),
-                                      Text(localText.back),
-                                    ],
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: handIndex == 0 ? null : () {
-                                    if (widget.isRequest) {
-                                      supabase.from('match').insert({
-                                        'from': context.read<MyInfo>().id,
-                                        'to': userData['id'],
-                                        'send': handIndex
-                                      }).then((_) {
-                                        sendPushMessage(
-                                            userData['fcm_token'],
-                                            context.read<MyInfo>().username,
-                                            '🚩 ${lookupAppLocalizations(Locale(userData['lang'] ?? 'en')).push_msg_body_match_req}',
-                                            {'type': 'match_from'}
-                                        );
-                                        context.read<MatchDataTo>().fetch();
-                                        requestRewardedInterstitialAd();
+                            ElevatedButton(
+                              onPressed: handIndex == 0 ? null : () {
+                                if (widget.isRequest) {
+                                  supabase.from('match').insert({
+                                    'from': context.read<MyInfo>().id,
+                                    'to': userData['id'],
+                                    'send': handIndex
+                                  }).then((_) {
+                                    sendPushMessage(
+                                        userData['fcm_token'],
+                                        context.read<MyInfo>().username,
+                                        '🚩 ${lookupAppLocalizations(Locale(userData['lang'] ?? 'en')).push_msg_body_match_req}',
+                                        {'type': 'match_from'}
+                                    );
+                                    context.read<MatchDataTo>().fetch();
+                                    requestRewardedInterstitialAd();
+                                    Navigator.pop(context);
+                                  }).onError((error, stackTrace) {
+                                    showAlertDialog(
+                                      context,
+                                      title: localText.play_dialog_already_title,
+                                      content: localText.play_dialog_already_content,
+                                      defaultActionText: localText.cancel,
+                                      destructiveActionText: localText.play_dialog_already_action,
+                                      destructiveActionOnPressed: () {
+                                        setState(() {
+                                          handIndex = 0;
+                                        });
                                         Navigator.pop(context);
-                                      }).onError((error, stackTrace) {
-                                        showAlertDialog(
-                                          context,
-                                          title: localText.play_dialog_already_title,
-                                          content: localText.play_dialog_already_content,
-                                          defaultActionText: localText.cancel,
-                                          destructiveActionText: localText.play_dialog_already_action,
-                                          destructiveActionOnPressed: () {
-                                            setState(() {
-                                              handIndex = 0;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      });
-                                    }
-                                    else {
-                                      supabase.from('match').update({
-                                        'respond': handIndex,
-                                      }).match({'from': widget.userId, 'to': context.read<MyInfo>().id})
-                                          .then((_) {
-                                        Navigator.pop(context);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
-                                      });
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                    foregroundColor: Colors.white,
+                                      },
+                                    );
+                                  });
+                                }
+                                else {
+                                  supabase.from('match').update({
+                                    'respond': handIndex,
+                                  }).match({'from': widget.userId, 'to': context.read<MyInfo>().id})
+                                      .then((_) {
+                                    Navigator.pop(context);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
+                                  });
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(
+                                    Icons.check,
+                                    color: Colors.white,
                                   ),
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
-                                      Text(localText.confirm),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                                  Text(localText.confirm),
+                                ],
+                              ),
                             ),
                           ],
                         ),
