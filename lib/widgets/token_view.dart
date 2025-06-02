@@ -57,9 +57,10 @@ class _TokenViewState extends State<TokenView> {
     _timer = Timer.periodic(Duration(seconds: 1), _updateRemainingTime);
   }
 
-  Future<void> _useToken() async {
-    bool success = await context.read<TokenData>().useToken();
-    if (!success) {
+  Future<void> _play() async {
+    bool isEmpty = await context.read<TokenData>().isTokenEmpty();
+    if (isEmpty) {
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.token_view_msg_no)),
       );
@@ -132,7 +133,7 @@ class _TokenViewState extends State<TokenView> {
                 content: '${localText.play_btn_dialog_content}\n🪙 -1',
                 defaultActionText: localText.no,
                 destructiveActionText: localText.yes,
-                destructiveActionOnPressed: _useToken,
+                destructiveActionOnPressed: _play,
               );
             },
             style: ElevatedButton.styleFrom(
