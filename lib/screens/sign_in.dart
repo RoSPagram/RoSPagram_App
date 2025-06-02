@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ntp/ntp.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rospagram/l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../providers/my_info.dart';
 import '../utilities/avatar_util.dart';

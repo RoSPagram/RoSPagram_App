@@ -21,6 +21,8 @@
   "play_btn_text": "Play",
   "play_btn_dialog_title": "Play",
   "play_btn_dialog_content": "Start with a token?",
+  "random_match_title": "Select Player",
+  "random_match_dialog_content": "Pick this player?",
   "match_title": "Game Request",
   "match_tab_from": "From",
   "match_tab_to": "To",

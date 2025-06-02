@@ -1,13 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rospagram/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
-import '../screens/play.dart';
+import '../screens/random_match_list.dart';
 import '../providers/token_data.dart';
 import '../utilities/alert_dialog.dart';
 
 class TokenView extends StatefulWidget {
-  const TokenView({Key? key}) : super(key: key);
+  const TokenView({super.key});
 
   @override
   State<TokenView> createState() => _TokenViewState();
@@ -57,10 +57,10 @@ class _TokenViewState extends State<TokenView> {
     _timer = Timer.periodic(Duration(seconds: 1), _updateRemainingTime);
   }
 
-  Future<void> _useToken() async {
-    bool success = await context.read<TokenData>().useToken();
-    Navigator.pop(context); // Close alert dialog
-    if (!success) {
+  Future<void> _play() async {
+    bool isEmpty = await context.read<TokenData>().isTokenEmpty();
+    if (isEmpty) {
+      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(AppLocalizations.of(context)!.token_view_msg_no)),
       );
@@ -70,9 +70,9 @@ class _TokenViewState extends State<TokenView> {
     if (remaining != null && _timer == null) {
       _startTimer();
     }
-    Navigator.push(
+    Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => Play(isRequest: true))
+        MaterialPageRoute(builder: (context) => RandomMatchList())
     );
   }
 
@@ -129,11 +129,11 @@ class _TokenViewState extends State<TokenView> {
             onPressed: () {
               showAlertDialog(
                 context,
-                title: '${localText.play_btn_dialog_title}',
+                title: localText.play_btn_dialog_title,
                 content: '${localText.play_btn_dialog_content}\n🪙 -1',
-                defaultActionText: '${localText.no}',
-                destructiveActionText: '${localText.yes}',
-                destructiveActionOnPressed: _useToken,
+                defaultActionText: localText.no,
+                destructiveActionText: localText.yes,
+                destructiveActionOnPressed: _play,
               );
             },
             style: ElevatedButton.styleFrom(
@@ -144,7 +144,7 @@ class _TokenViewState extends State<TokenView> {
             child: Column(
               children: [
                 Text(
-                  '${localText.play_btn_text}',
+                  localText.play_btn_text,
                   style: TextStyle(
                     fontSize: 32,
                   ),
