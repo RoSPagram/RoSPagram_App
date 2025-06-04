@@ -105,6 +105,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get match_dialog_cancel_content => 'Are you cancel this game?';
 
   @override
+  String get season_timer_until => 'Season Ends in';
+
+  @override
+  String get season_timer_days => 'D';
+
+  @override
+  String get season_timer_hours => 'h';
+
+  @override
+  String get season_timer_minutes => 'm';
+
+  @override
+  String get season_timer_seconds => 's';
+
+  @override
   String get shop_item_change_name => 'Change name';
 
   @override

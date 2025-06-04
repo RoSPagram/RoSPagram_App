@@ -105,6 +105,21 @@ class AppLocalizationsKo extends AppLocalizations {
   String get match_dialog_cancel_content => '게임을 취소할까요?';
 
   @override
+  String get season_timer_until => '시즌 종료까지';
+
+  @override
+  String get season_timer_days => '일';
+
+  @override
+  String get season_timer_hours => '시간';
+
+  @override
+  String get season_timer_minutes => '분';
+
+  @override
+  String get season_timer_seconds => '초';
+
+  @override
   String get shop_item_change_name => '이름 변경';
 
   @override
