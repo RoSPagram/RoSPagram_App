@@ -6,6 +6,7 @@ import '../providers/my_info.dart';
 import '../providers/ranking_data.dart';
 import '../widgets/rank_header.dart';
 import '../widgets/rank_list_item.dart';
+import '../widgets/season_timer.dart';
 
 class Rank extends StatelessWidget {
   const Rank({super.key});
@@ -47,31 +48,32 @@ class Rank extends StatelessWidget {
             ),
           ),
         ),
-        Consumer<RankingData>(
-          builder: (context, rankingData, child) {
-            return rankingData.list.isEmpty ? Center(child: Text('No ranked users')) : Expanded(
-              child: ListView.builder(
-                itemCount: rankingData.list.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return RankListItem(
-                    index: rankingData.list[index]['index'],
-                    avatarData: rankingData.list[index]['avatar'],
-                    userName: rankingData.list[index]['username'],
-                    onTap: () {
-                      requestRewardedInterstitialAd();
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => UserProfile(userId: rankingData.list[index]['id']),
-                          )
-                      );
-                    },
-                  );
-                },
-              ),
-            );
-          },
+        Expanded(
+            child: Consumer<RankingData>(
+              builder: (context, rankingData, child) {
+                return rankingData.list.isEmpty ? Center(child: Text('No ranked users')) : ListView.builder(
+                  itemCount: rankingData.list.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return RankListItem(
+                      index: rankingData.list[index]['index'],
+                      avatarData: rankingData.list[index]['avatar'],
+                      userName: rankingData.list[index]['username'],
+                      onTap: () {
+                        requestRewardedInterstitialAd();
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UserProfile(userId: rankingData.list[index]['id']),
+                            )
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
         ),
+        SeasonTimer(),
       ],
     );
   }
