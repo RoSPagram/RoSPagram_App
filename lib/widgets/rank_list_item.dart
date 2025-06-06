@@ -53,7 +53,7 @@ class RankListItem extends StatelessWidget {
           onTap: this.onTap,
           borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: EdgeInsets.only(top: 16, bottom: 16, right: 8, left: 8),
+            padding: EdgeInsets.all(16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,25 +66,23 @@ class RankListItem extends StatelessWidget {
                     fontSize: 18,
                   ),
                 ),
-                Column(
-                  children: [
-                    // ProfileImage(
-                    //   url: this.imgUrl,
-                    //   width: 32,
-                    //   height: 32,
-                    // ),
-                    ProfileAvatar(
-                      avatarData: jsonDecode(avatarData),
-                      width: 48,
-                      height: 48,
+                Expanded(
+                    child: Column(
+                      spacing: 8,
+                      children: [
+                        ProfileAvatar(
+                          avatarData: jsonDecode(avatarData),
+                          width: 48,
+                          height: 48,
+                        ),
+                        Text(
+                          '${this.userName}',
+                          style: TextStyle(
+                            color: Colors.black.withOpacity(0.75),
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      '${this.userName}',
-                      style: TextStyle(
-                        color: Colors.black.withOpacity(0.75),
-                      ),
-                    ),
-                  ],
                 ),
                 Consumer<RankingData>(
                   builder: (context, rankingData, child) {
