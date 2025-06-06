@@ -101,7 +101,7 @@ class _SeasonTimerState extends State<SeasonTimer> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            localText.season_timer_until, // 이 부분은 l10n에 추가해야 합니다.
+            '⏳ ${localText.season_timer_until}', // 이 부분은 l10n에 추가해야 합니다.
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
