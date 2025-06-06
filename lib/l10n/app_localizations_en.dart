@@ -36,6 +36,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get top => 'TOP';
 
   @override
+  String get test_season => 'Test Season';
+
+  @override
+  String get year => 'Year';
+
+  @override
+  String get month => 'Month';
+
+  @override
+  String get no_data => 'No Data';
+
+  @override
   String get update_required => 'Update required.';
 
   @override
@@ -103,6 +115,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get match_dialog_cancel_content => 'Are you cancel this game?';
+
+  @override
+  String get rank_previous_records => 'Previous records';
 
   @override
   String get season_timer_until => 'Season Ends in';
