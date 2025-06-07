@@ -66,10 +66,6 @@ class _TokenViewState extends State<TokenView> {
       );
       return;
     }
-    remaining = context.read<TokenData>().timeUntilNextToken();
-    if (remaining != null && _timer == null) {
-      _startTimer();
-    }
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => RandomMatchList())
@@ -100,15 +96,23 @@ class _TokenViewState extends State<TokenView> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                tokenWidget(0),
-                tokenWidget(1),
-                tokenWidget(2),
-                tokenWidget(3),
-                tokenWidget(4),
-              ],
+            child: Consumer<TokenData>(
+              builder: (context, tokenData, child) {
+                remaining = tokenData.timeUntilNextToken();
+                if (remaining != null && _timer == null) {
+                  _startTimer();
+                }
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    tokenWidget(0),
+                    tokenWidget(1),
+                    tokenWidget(2),
+                    tokenWidget(3),
+                    tokenWidget(4),
+                  ],
+                );
+              },
             ),
           ),
           if (remaining != null)
