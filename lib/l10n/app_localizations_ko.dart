@@ -36,6 +36,18 @@ class AppLocalizationsKo extends AppLocalizations {
   String get top => '상위';
 
   @override
+  String get test_season => '테스트 시즌';
+
+  @override
+  String get year => '년도';
+
+  @override
+  String get month => '월';
+
+  @override
+  String get no_data => '데이터 없음';
+
+  @override
   String get update_required => '업데이트가 필요합니다.';
 
   @override
@@ -103,6 +115,24 @@ class AppLocalizationsKo extends AppLocalizations {
 
   @override
   String get match_dialog_cancel_content => '게임을 취소할까요?';
+
+  @override
+  String get rank_previous_records => '이전 기록';
+
+  @override
+  String get season_timer_until => '시즌 종료까지';
+
+  @override
+  String get season_timer_days => '일';
+
+  @override
+  String get season_timer_hours => '시간';
+
+  @override
+  String get season_timer_minutes => '분';
+
+  @override
+  String get season_timer_seconds => '초';
 
   @override
   String get shop_item_change_name => '이름 변경';

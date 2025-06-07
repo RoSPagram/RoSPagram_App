@@ -8,6 +8,7 @@ import './utilities/shared_prefs.dart';
 import './utilities/ad_util.dart';
 import './utilities/firebase_util.dart';
 import './utilities/supabase_util.dart';
+import './utilities/turso_util.dart';
 import './utilities/version_check.dart';
 import './screens/sign_in.dart';
 import './providers/my_info.dart';
@@ -26,6 +27,7 @@ Future<void> main() async {
   await SharedPrefs().init();
   initSupabase();
   initFirebase();
+  initTurso();
   initAdmob();
   runApp(const MyApp());
 }

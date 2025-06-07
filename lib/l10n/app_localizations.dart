@@ -149,6 +149,30 @@ abstract class AppLocalizations {
   /// **'TOP'**
   String get top;
 
+  /// No description provided for @test_season.
+  ///
+  /// In en, this message translates to:
+  /// **'Test Season'**
+  String get test_season;
+
+  /// No description provided for @year.
+  ///
+  /// In en, this message translates to:
+  /// **'Year'**
+  String get year;
+
+  /// No description provided for @month.
+  ///
+  /// In en, this message translates to:
+  /// **'Month'**
+  String get month;
+
+  /// No description provided for @no_data.
+  ///
+  /// In en, this message translates to:
+  /// **'No Data'**
+  String get no_data;
+
   /// No description provided for @update_required.
   ///
   /// In en, this message translates to:
@@ -286,6 +310,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you cancel this game?'**
   String get match_dialog_cancel_content;
+
+  /// No description provided for @rank_previous_records.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous records'**
+  String get rank_previous_records;
+
+  /// No description provided for @season_timer_until.
+  ///
+  /// In en, this message translates to:
+  /// **'Season Ends in'**
+  String get season_timer_until;
+
+  /// No description provided for @season_timer_days.
+  ///
+  /// In en, this message translates to:
+  /// **'D'**
+  String get season_timer_days;
+
+  /// No description provided for @season_timer_hours.
+  ///
+  /// In en, this message translates to:
+  /// **'h'**
+  String get season_timer_hours;
+
+  /// No description provided for @season_timer_minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'m'**
+  String get season_timer_minutes;
+
+  /// No description provided for @season_timer_seconds.
+  ///
+  /// In en, this message translates to:
+  /// **'s'**
+  String get season_timer_seconds;
 
   /// No description provided for @shop_item_change_name.
   ///
