@@ -18,6 +18,7 @@ class MyInfo extends User with ChangeNotifier {
       win = userData[0]['win'];
       loss = userData[0]['loss'];
       draw = userData[0]['draw'];
+      xp = userData[0]['xp'];
       notifyListeners();
     });
   }

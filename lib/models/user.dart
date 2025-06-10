@@ -9,6 +9,7 @@ class User {
   double score;
   String last_login;
   String fcm_token;
+  int xp;
 
   User({
     this.id = '',
@@ -20,6 +21,7 @@ class User {
     this.draw = 0,
     this.score = 0,
     this.last_login = '',
-    this.fcm_token = ''
+    this.fcm_token = '',
+    this.xp = 0
   });
 }

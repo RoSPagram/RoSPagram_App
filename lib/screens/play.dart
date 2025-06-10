@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rospagram/l10n/app_localizations.dart';
 import '../constants.dart';
+import '../widgets/level_view.dart';
 import '../widgets/profile_avatar.dart';
 import '../utilities/supabase_util.dart';
 import '../utilities/firebase_util.dart';
@@ -14,7 +15,7 @@ import '../providers/ranking_data.dart';
 import './result.dart';
 
 class Play extends StatefulWidget {
-  const Play({super.key, this.userId = '', required this.isRequest});
+  const Play({super.key, required this.userId, required this.isRequest});
 
   final String userId;
   final bool isRequest;
@@ -24,15 +25,7 @@ class Play extends StatefulWidget {
 }
 
 class _PlayState extends State<Play> {
-  bool isStart = false;
-  bool fetchData = true;
   int handIndex = 0;
-  int userIndex = 0;
-
-  Future<List<dynamic>> _fetchRandomUsers() async {
-    final List<dynamic> usersData = await supabase.rpc('find_users_to_match', params: {'sender_id': context.read<MyInfo>().id});
-    return usersData;
-  }
 
   Future<List<dynamic>> _fetchUser(String userId) async {
     final List<dynamic> userData = await supabase.rpc('get_user_data', params: {'user_id': userId});
@@ -42,7 +35,6 @@ class _PlayState extends State<Play> {
   @override
   initState() {
     super.initState();
-    isStart = !widget.isRequest;
   }
 
   @override
@@ -71,7 +63,7 @@ class _PlayState extends State<Play> {
       child: Scaffold(
         body: SafeArea(
           child: FutureBuilder(
-            future: fetchData ? widget.isRequest ? _fetchRandomUsers() : _fetchUser(widget.userId) : null,
+            future: _fetchUser(widget.userId),
             builder: (BuildContext context, AsyncSnapshot<List<dynamic>> snapshot) {
               if (snapshot.hasData) {
                 if (snapshot.data?.length == 0) {
@@ -84,10 +76,10 @@ class _PlayState extends State<Play> {
                           onPressed: () {
                             showAlertDialog(
                               context,
-                              title: '${localText.play_dialog_exit_title}',
-                              content: '${localText.play_dialog_exit_content}',
-                              defaultActionText: '${localText.no}',
-                              destructiveActionText: '${localText.yes}',
+                              title: localText.play_dialog_exit_title,
+                              content: localText.play_dialog_exit_content,
+                              defaultActionText: localText.no,
+                              destructiveActionText: localText.yes,
                               destructiveActionOnPressed: () {
                                 requestRewardedInterstitialAd();
                                 Navigator.pop(context);
@@ -97,19 +89,19 @@ class _PlayState extends State<Play> {
                           },
                           icon: Icon(Icons.cancel),
                           iconSize: 48,
-                          color: Colors.black.withOpacity(0.5),
+                          color: Colors.black.withValues(alpha: 0.5),
                         ),
                         Text(
-                          '${localText.cancel}',
+                          localText.cancel,
                           style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                           ),
                         ),
                       ],
                     ),
                   );
                 }
-                final userData = snapshot.data?[userIndex];
+                final userData = snapshot.data?[0];
                 return Consumer<RankingData>(
                   builder: (context, rankingData, child) {
                     final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
@@ -138,34 +130,35 @@ class _PlayState extends State<Play> {
                       Padding(
                         padding: EdgeInsets.only(top: 16, bottom: 16),
                         child: Text(
-                          '${userData['username']}',
+                          userData['username'],
                           style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             fontSize: 20,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                       ),
+                      LevelView(xp: userData['xp'], showProgress: false),
                       Consumer<RankingData>(builder: (context, rankingData, child) {
                         final top = getTopPercentage(rankingData.rankedUsersCount, userData['index']);
                         final userRank = getUserRank(top);
                         return Text(
                           getRankNameFromCode(userRank),
                           style: TextStyle(
-                            color: Colors.black.withOpacity(0.5),
+                            color: Colors.black.withValues(alpha: 0.5),
                             fontSize: 16,
                           ),
                         );
                       }),
                       Padding(
                         padding: EdgeInsets.only(top: 32, bottom: 32),
-                        child: isStart ? Column(
+                        child: Column(
                           children: [
                             Text(
-                              '${localText.play_select}',
+                              localText.play_select,
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.black.withOpacity(0.75),
+                                color: Colors.black.withValues(alpha: 0.75),
                               ),
                             ),
                             Padding(
@@ -178,13 +171,12 @@ class _PlayState extends State<Play> {
                                     onPressed: () {
                                       setState(() {
                                         handIndex = 1;
-                                        fetchData = false;
                                       });
                                     },
                                     child: Text('✊',
                                       style: TextStyle(
                                         fontSize: 48,
-                                        color: handIndex == 1 ? null : Colors.black.withOpacity(0.5),
+                                        color: handIndex == 1 ? null : Colors.black.withValues(alpha: 0.5),
                                       ),
                                     ),
                                   ),
@@ -192,13 +184,12 @@ class _PlayState extends State<Play> {
                                     onPressed: () {
                                       setState(() {
                                         handIndex = 2;
-                                        fetchData = false;
                                       });
                                     },
                                     child: Text('✌️',
                                       style: TextStyle(
                                         fontSize: 48,
-                                        color: handIndex == 2 ? null : Colors.black.withOpacity(0.5),
+                                        color: handIndex == 2 ? null : Colors.black.withValues(alpha: 0.5),
                                       ),
                                     ),
                                   ),
@@ -206,151 +197,73 @@ class _PlayState extends State<Play> {
                                     onPressed: () {
                                       setState(() {
                                         handIndex = 3;
-                                        fetchData = false;
                                       });
                                     },
                                     child: Text('🖐️',
                                       style: TextStyle(
                                         fontSize: 48,
-                                        color: handIndex == 3 ? null : Colors.black.withOpacity(0.5),
+                                        color: handIndex == 3 ? null : Colors.black.withValues(alpha: 0.5),
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
                             ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: !widget.isRequest ? null : () {
-                                    setState(() {
-                                      isStart = false;
-                                      handIndex = 0;
-                                      fetchData = false;
-                                    });
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_back,
-                                        color: Colors.white,
-                                      ),
-                                      Text('${localText.back}'),
-                                    ],
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.grey,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                ),
-                                ElevatedButton(
-                                  onPressed: handIndex == 0 ? null : () {
-                                    if (widget.isRequest) {
-                                      supabase.from('match').insert({
-                                        'from': context.read<MyInfo>().id,
-                                        'to': userData['id'],
-                                        'send': handIndex
-                                      }).then((_) {
-                                        sendPushMessage(
-                                            userData['fcm_token'],
-                                            '${context.read<MyInfo>().username}',
-                                            '🚩 ${lookupAppLocalizations(Locale(userData['lang'] ?? 'en')).push_msg_body_match_req}',
-                                            {'type': 'match_from'}
-                                        );
-                                        context.read<MatchDataTo>().fetch();
-                                        requestRewardedInterstitialAd();
-                                        Navigator.pop(context);
-                                      }).onError((error, stackTrace) {
-                                        showAlertDialog(
-                                          context,
-                                          title: '${localText.play_dialog_already_title}',
-                                          content: '${localText.play_dialog_already_content}',
-                                          defaultActionText: '${localText.cancel}',
-                                          destructiveActionText: '${localText.play_dialog_already_action}',
-                                          destructiveActionOnPressed: () {
-                                            setState(() {
-                                              isStart = false;
-                                              handIndex = 0;
-                                              fetchData = false;
-                                            });
-                                            Navigator.pop(context);
-                                          },
-                                        );
-                                      });
-                                    }
-                                    else {
-                                      supabase.from('match').update({
-                                        'respond': handIndex,
-                                      }).match({'from': widget.userId, 'to': context.read<MyInfo>().id})
-                                          .then((_) {
-                                        Navigator.pop(context);
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
-                                      });
-                                    }
-                                  },
-                                  child: Column(
-                                    children: [
-                                      Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
-                                      Text('${localText.confirm}'),
-                                    ],
-                                  ),
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.green,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ) : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
                             ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  isStart = true;
-                                  fetchData = false;
-                                });
+                              onPressed: handIndex == 0 ? null : () {
+                                if (widget.isRequest) {
+                                  supabase.from('match').insert({
+                                    'from': context.read<MyInfo>().id,
+                                    'to': userData['id'],
+                                    'send': handIndex
+                                  }).then((_) {
+                                    sendPushMessage(
+                                        userData['fcm_token'],
+                                        context.read<MyInfo>().username,
+                                        '🚩 ${lookupAppLocalizations(Locale(userData['lang'] ?? 'en')).push_msg_body_match_req}',
+                                        {'type': 'match_from'}
+                                    );
+                                    context.read<MatchDataTo>().fetch();
+                                    requestRewardedInterstitialAd();
+                                    Navigator.pop(context);
+                                  }).onError((error, stackTrace) {
+                                    showAlertDialog(
+                                      context,
+                                      title: localText.play_dialog_already_title,
+                                      content: localText.play_dialog_already_content,
+                                      defaultActionText: localText.cancel,
+                                      destructiveActionText: localText.play_dialog_already_action,
+                                      destructiveActionOnPressed: () {
+                                        setState(() {
+                                          handIndex = 0;
+                                        });
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                  });
+                                }
+                                else {
+                                  supabase.from('match').update({
+                                    'respond': handIndex,
+                                  }).match({'from': widget.userId, 'to': context.read<MyInfo>().id})
+                                      .then((_) {
+                                    Navigator.pop(context);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => Result(from: widget.userId, to: context.read<MyInfo>().id)));
+                                  });
+                                }
                               },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                              ),
                               child: Column(
                                 children: [
                                   Icon(
-                                    Icons.flag,
-                                    size: 64,
+                                    Icons.check,
                                     color: Colors.white,
                                   ),
-                                  Text('${localText.play_btn_start}'),
+                                  Text(localText.confirm),
                                 ],
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.red,
-                                foregroundColor: Colors.white,
-                              ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  userIndex = ++userIndex < snapshot.data!.length ? userIndex : 0;
-                                  fetchData = userIndex == 0 ? true : false;
-                                });
-                              },
-                              child: Column(
-                                children: [
-                                  Icon(
-                                    Icons.refresh,
-                                    size: 64,
-                                    color: Colors.white,
-                                  ),
-                                  Text('${localText.play_btn_reload}'),
-                                ],
-                              ),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.blue,
-                                foregroundColor: Colors.white,
                               ),
                             ),
                           ],
@@ -364,10 +277,10 @@ class _PlayState extends State<Play> {
                               onPressed: () {
                                 showAlertDialog(
                                   context,
-                                  title: '${localText.play_dialog_exit_title}',
-                                  content: '${localText.play_dialog_exit_content}',
-                                  defaultActionText: '${localText.no}',
-                                  destructiveActionText: '${localText.yes}',
+                                  title: localText.play_dialog_exit_title,
+                                  content: localText.play_dialog_exit_content,
+                                  defaultActionText: localText.no,
+                                  destructiveActionText: localText.yes,
                                   destructiveActionOnPressed: () {
                                     Navigator.pop(context);
                                     Navigator.pop(context);
@@ -376,12 +289,12 @@ class _PlayState extends State<Play> {
                               },
                               icon: Icon(Icons.cancel),
                               iconSize: 48,
-                              color: Colors.black.withOpacity(0.5),
+                              color: Colors.black.withValues(alpha: 0.5),
                             ),
                             Text(
-                              '${localText.cancel}',
+                              localText.cancel,
                               style: TextStyle(
-                                color: Colors.black.withOpacity(0.5),
+                                color: Colors.black.withValues(alpha: 0.5),
                               ),
                             ),
                           ],

@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rospagram/l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import '../main.dart';
 import '../providers/my_info.dart';

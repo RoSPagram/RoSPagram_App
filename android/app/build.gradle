@@ -32,7 +32,7 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace "org.rospagram.rospagram"
     compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    ndkVersion "27.0.12077973"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -53,7 +53,7 @@ android {
         applicationId "org.rospagram.rospagram"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 23
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -84,5 +84,5 @@ flutter {
 dependencies {
     implementation platform('com.google.firebase:firebase-bom:33.7.0')
     implementation 'com.google.firebase:firebase-analytics'
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
 }

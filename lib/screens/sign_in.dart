@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 import 'package:ntp/ntp.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:rospagram/l10n/app_localizations.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../providers/my_info.dart';
 import '../utilities/avatar_util.dart';
@@ -48,7 +48,8 @@ class _StarButtonState extends State<StartButton> {
 
         SharedPrefs.instance.setString('uuid', newUUID);
 
-        final time = await NTP.now();
+        DateTime time = await NTP.now();
+        time = time.toUtc();
         final date = DateFormat('yyyy-MM-dd').format(time);
 
         await supabase.from('users').insert({
@@ -96,7 +97,8 @@ class SignIn extends StatelessWidget {
       updates['lang'] = currentLang;
     }
 
-    final time = await NTP.now();
+    DateTime time = await NTP.now();
+    time = time.toUtc();
     final date = DateFormat('yyyy-MM-dd').format(time);
     if (userData[0]['last_login'] != date) {
       updates['last_login'] = date;
@@ -114,6 +116,7 @@ class SignIn extends StatelessWidget {
     context.read<MyInfo>().loss = userData[0]['loss'];
     context.read<MyInfo>().draw = userData[0]['draw'];
     context.read<MyInfo>().fcm_token = userData[0]['fcm_token'] ?? fcmToken;
+    context.read<MyInfo>().xp = userData[0]['xp'];
     context.read<MyInfo>().notifyListeners();
 
     return true;

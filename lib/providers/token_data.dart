@@ -8,7 +8,8 @@ class TokenData extends ChangeNotifier {
   TokenData({required this.context});
 
   static const int MAX_TOKENS = 5;
-  static const Duration RECHARGE_INTERVAL = Duration(minutes: 10, milliseconds: 500);
+  static const int INTERVAL_MIN = 5;
+  static const Duration RECHARGE_INTERVAL = Duration(minutes: INTERVAL_MIN, milliseconds: 500);
 
   final BuildContext context;
   int count = 0;
@@ -61,13 +62,13 @@ class TokenData extends ChangeNotifier {
 
     await syncServerTime();
     final diff = currentTime!.difference(lastUpdated!);
-    if (diff.inMinutes >= 10 && count < MAX_TOKENS) {
+    if (diff.inMinutes >= INTERVAL_MIN && count < MAX_TOKENS) {
       _rechargeTokens(diff);
     }
   }
 
   void _rechargeTokens(Duration diff) {
-    int tokensToAdd = diff.inMinutes ~/ 10;
+    int tokensToAdd = diff.inMinutes ~/ INTERVAL_MIN;
     int newTokenCount = count + tokensToAdd;
     if (newTokenCount > MAX_TOKENS) {
       newTokenCount = MAX_TOKENS;
@@ -75,7 +76,7 @@ class TokenData extends ChangeNotifier {
 
     if (newTokenCount != count) {
       count = newTokenCount;
-      lastUpdated = lastUpdated!.add(Duration(minutes: tokensToAdd * 10));
+      lastUpdated = lastUpdated!.add(Duration(minutes: tokensToAdd * INTERVAL_MIN));
 
       supabase.from('user_tokens').update({
         'count': count,
@@ -84,23 +85,23 @@ class TokenData extends ChangeNotifier {
     }
   }
 
-  /// 토큰 사용
-  Future<bool> useToken() async {
-    // await syncServerTime();
+  Future<bool> isTokenEmpty() async {
     // 사용 전에 토큰 충전 기회가 있는지 체크 (optional)
     await rechargeTokensIfNeeded();
+    return count == 0;
+  }
 
-    if (count > 0) {
-      if (count == 5) lastUpdated = currentTime!;
-      count -= 1;
-      await supabase.from('user_tokens').update({
-        'count': count,
-        'last_updated': lastUpdated!.toIso8601String()
-      }).eq('id', context.read<MyInfo>().id);
-      return true;
-    } else {
-      return false;
-    }
+  /// 토큰 사용
+  Future<void> useToken() async {
+    // await syncServerTime();
+
+    if (count == 5) lastUpdated = currentTime!;
+    count -= 1;
+    await supabase.from('user_tokens').update({
+      'count': count,
+      'last_updated': lastUpdated!.toIso8601String()
+    }).eq('id', context.read<MyInfo>().id);
+    notifyListeners();
   }
 
   /// 다음 토큰 충전까지 남은 시간 계산
