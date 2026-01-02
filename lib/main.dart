@@ -25,10 +25,10 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: 'env/.env');
   await SharedPrefs().init();
-  initSupabase();
-  initFirebase();
-  initTurso();
-  initAdmob();
+  await initSupabase();
+  await initFirebase();
+  await initTurso();
+  await initAdmob();
   runApp(const MyApp());
 }
 

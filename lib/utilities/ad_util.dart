@@ -155,8 +155,8 @@ void showRewardedAd(RewardedAd? rewardedAd, {
   rewardedAd?.show(onUserEarnedReward: onUserEarnedReward);
 }
 
-void initAdmob() {
-  MobileAds.instance.initialize();
+Future<void> initAdmob() async {
+  await MobileAds.instance.initialize();
   loadRewardedInterstitialAd();
   loadRewardedAd();
   String? storedInterstitialTime = SharedPrefs.instance.getString('interstitial_time');
