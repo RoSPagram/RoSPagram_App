@@ -13,24 +13,59 @@ class PreviousSeasonView extends StatefulWidget {
 
 class _PreviousSeasonViewState extends State<PreviousSeasonView> {
   int _selectedYear = DateTime.now().toUtc().year;
-  int _selectedMonth = DateTime.now().toUtc().month - 1;
+  int _selectedMonth = DateTime.now().toUtc().month;
   List<Map<String, dynamic>> _list = [];
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    _initializeSelection();
+    _getList();
+  }
+
+  void _initializeSelection() {
+    final now = DateTime.now().toUtc();
+    _selectedYear = now.year;
+    _selectedMonth = now.month - 1;
+
     // 현재 년도가 2025년보다 이전일 경우 2025년으로 초기화
     if (_selectedYear < 2025) {
       _selectedYear = 2025;
+      _selectedMonth = 5; // 2025년 기준 최소 유효 월
     }
-    _getList();
+
+    // 현재 선택된 년도에서 유효한 월 목록을 가져옴
+    List<int> availableMonths = _getMonths(_selectedYear);
+
+    // 만약 현재 월이 유효하지 않다면 (예: 1월이라 이전 달 리스트가 비어있음)
+    if (availableMonths.isEmpty || !availableMonths.contains(_selectedMonth)) {
+      // 이전 년도로 이동 시도
+      if (_selectedYear > 2025) {
+        _selectedYear--;
+        availableMonths = _getMonths(_selectedYear);
+        if (availableMonths.isNotEmpty) {
+          _selectedMonth = availableMonths.last;
+        }
+      } else {
+        // 2025년인데 유효한 월이 없는 경우 (이런 경우는 로직상 드물지만 방어 코드)
+        if (availableMonths.isNotEmpty) {
+          _selectedMonth = availableMonths.last;
+        } else {
+          // 최악의 경우 기본값 설정
+          _selectedMonth = 5;
+        }
+      }
+    }
   }
 
   List<int> _getYears() {
     List<int> years = [];
-    for (int year = 2025; year <= DateTime.now().toUtc().year; year++) {
-      years.add(year);
+    final currentYear = DateTime.now().toUtc().year;
+    for (int year = 2025; year <= currentYear; year++) {
+      if (_getMonths(year).isNotEmpty) {
+        years.add(year);
+      }
     }
     return years;
   }
@@ -98,11 +133,20 @@ class _PreviousSeasonViewState extends State<PreviousSeasonView> {
                   );
                 }).toList(),
                 onChanged: (int? newValue) {
-                  setState(() {
-                    _selectedYear = newValue!;
-                    _isLoading = true;
-                    _getList();
-                  });
+                  if (newValue != null) {
+                    setState(() {
+                      _selectedYear = newValue;
+                      // 년도가 바뀌면 해당 년도의 유효한 월로 조정
+                      List<int> availableMonths = _getMonths(_selectedYear);
+                      if (availableMonths.isNotEmpty) {
+                        if (!availableMonths.contains(_selectedMonth)) {
+                          _selectedMonth = availableMonths.last;
+                        }
+                      }
+                      _isLoading = true;
+                      _getList();
+                    });
+                  }
                 },
               ),
               const SizedBox(width: 20),
