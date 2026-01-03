@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 late LibsqlClient tursoReplicaClient;
 
-void initTurso() async {
+Future<void> initTurso() async {
   final dir = await getApplicationCacheDirectory();
   tursoReplicaClient = LibsqlClient.replica(
     "${dir.path}/records.db",
